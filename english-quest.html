@@ -1,0 +1,2230 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Quest 🎮 — טל ואלעד</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --purple:#7c3aed; --gold:#f59e0b; --green:#10b981; --red:#ef4444;
+  --dark:#0f0e17; --card:#1c1b2e; --card2:#252440; --text:#e8e8f0; --muted:#7070a0;
+}
+body { font-family:'Heebo',sans-serif; background:var(--dark); color:var(--text); min-height:100vh; direction:rtl; }
+.screen { display:none; min-height:100vh; flex-direction:column; }
+.screen.active { display:flex; }
+
+/* HOME */
+#home {
+  background:radial-gradient(ellipse at top, #2d1b69 0%, #0f0e17 60%);
+  align-items:center; padding:30px 18px 50px; gap:14px;
+  text-align:center;
+}
+.logo-anim { font-size:52px; animation:float 3s ease-in-out infinite; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.home-title { font-size:2.2em; font-weight:900; background:linear-gradient(135deg,#c084fc,#f59e0b); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.home-sub { color:var(--muted); font-size:0.95em; }
+
+/* Leaderboard banner */
+.leader-banner {
+  margin:14px 0 6px; padding:14px 18px;
+  background:linear-gradient(135deg, rgba(245,158,11,0.18), rgba(124,58,237,0.18));
+  border:1px solid rgba(245,158,11,0.35); border-radius:20px;
+  display:flex; align-items:center; gap:12px;
+  max-width:480px; width:100%;
+  box-shadow:0 6px 22px rgba(245,158,11,0.15);
+}
+.lb-emoji { font-size:34px; line-height:1; }
+.lb-text { flex:1; text-align:right; }
+.lb-text .lb-title { font-size:1.05em; font-weight:900; color:#fcd34d; margin-bottom:2px; }
+.lb-text .lb-sub { font-size:0.82em; color:#e8d8b0; }
+.lb-tie { background:linear-gradient(135deg, rgba(16,185,129,0.18), rgba(124,58,237,0.18)); border-color:rgba(16,185,129,0.35); }
+.lb-tie .lb-title { color:#6ee7b7; }
+.lb-tie .lb-sub { color:#b0e8d5; }
+.lb-empty { background:linear-gradient(135deg, rgba(124,58,237,0.2), rgba(168,85,247,0.15)); border-color:rgba(168,85,247,0.3); }
+.lb-empty .lb-title { color:#c084fc; }
+.lb-empty .lb-sub { color:#b8a8e0; }
+
+.home-who { color:#c084fc; font-size:1.05em; font-weight:700; margin-top:6px; }
+.player-cards { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-top:4px; width:100%; max-width:520px; }
+.player-card {
+  flex:1; min-width:200px;
+  background:linear-gradient(160deg, #251a4d 0%, #1c1437 100%);
+  border:2px solid rgba(168,85,247,0.18); border-radius:22px;
+  padding:18px 14px 16px; cursor:pointer; transition:all 0.25s;
+  position:relative; overflow:hidden;
+  text-align:center;
+}
+.player-card::before {
+  content:''; position:absolute; top:-30px; right:-30px;
+  width:90px; height:90px; border-radius:50%;
+  background:rgba(168,85,247,0.12); pointer-events:none;
+}
+.player-card:hover { transform:translateY(-6px); box-shadow:0 16px 40px rgba(124,58,237,0.4); border-color:rgba(168,85,247,0.5); }
+.pc-tal:hover { border-color:#a855f7; }
+.pc-elad:hover { border-color:#f59e0b; }
+.pc-lock {
+  position:absolute; top:12px; left:12px; font-size:14px;
+  background:rgba(0,0,0,0.3); padding:3px 8px; border-radius:10px;
+  color:#9d8fc7; font-weight:700;
+}
+.pc-emoji { display:flex; align-items:center; justify-content:center; margin-bottom:6px; position:relative; z-index:1; }
+.pc-emoji img { width:84px; height:84px; object-fit:contain; filter:drop-shadow(0 6px 14px rgba(124,58,237,0.4)); }
+.pc-name { font-size:1.4em; font-weight:900; color:#fff; position:relative; z-index:1; }
+.pc-stat-row { display:flex; justify-content:center; gap:12px; margin-top:8px; position:relative; z-index:1; }
+.pc-stat { display:flex; align-items:center; gap:3px; font-size:0.82em; color:#d1c4f0; font-weight:700; }
+.pc-stat .pc-icon { font-size:14px; }
+.pc-lead-badge {
+  margin-top:8px; display:inline-flex; align-items:center; gap:4px;
+  font-size:0.72em; font-weight:900; padding:3px 10px; border-radius:10px;
+  background:linear-gradient(135deg,#f59e0b,#f97316); color:#fff;
+}
+.pc-behind {
+  margin-top:8px; display:inline-block;
+  font-size:0.72em; font-weight:700; padding:3px 10px; border-radius:10px;
+  background:rgba(239,68,68,0.18); color:#fca5a5; border:1px solid rgba(239,68,68,0.3);
+}
+
+.reset-btn { margin-top:8px; background:none; border:1px solid #333; border-radius:20px; padding:6px 16px; color:var(--muted); cursor:pointer; font-size:0.78em; font-family:'Heebo',sans-serif; }
+.reset-btn:hover { border-color:#555; color:var(--text); }
+
+/* Password modal */
+.pw-modal-bg {
+  position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px);
+  display:flex; align-items:center; justify-content:center; z-index:1000;
+  opacity:0; pointer-events:none; transition:opacity 0.2s;
+}
+.pw-modal-bg.show { opacity:1; pointer-events:all; }
+.pw-modal {
+  background:linear-gradient(160deg, #2b1f5c 0%, #1a0f3d 100%);
+  border:2px solid rgba(168,85,247,0.35);
+  border-radius:24px; padding:28px 26px; max-width:340px; width:90%;
+  text-align:center; box-shadow:0 20px 60px rgba(124,58,237,0.5);
+  transform:scale(0.85); transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.pw-modal-bg.show .pw-modal { transform:scale(1); }
+.pw-mascot img { width:96px; height:96px; object-fit:contain; margin-bottom:6px; filter:drop-shadow(0 6px 14px rgba(124,58,237,0.5)); }
+.pw-title { font-size:1.4em; font-weight:900; color:#fff; margin-bottom:4px; }
+.pw-sub { color:#b8a8e0; font-size:0.88em; margin-bottom:18px; }
+.pw-input {
+  width:100%; background:rgba(0,0,0,0.35);
+  border:2px solid rgba(168,85,247,0.3);
+  border-radius:14px; padding:14px 18px;
+  color:#fff; font-family:'Heebo',sans-serif;
+  font-size:1.3em; font-weight:800; text-align:center;
+  outline:none; letter-spacing:6px; direction:ltr;
+}
+.pw-input:focus { border-color:#a855f7; }
+.pw-input.shake { animation:pwShake 0.4s; border-color:#ef4444; }
+@keyframes pwShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+.pw-error { color:#fca5a5; font-size:0.85em; font-weight:700; margin-top:8px; min-height:20px; }
+.pw-actions { display:flex; gap:10px; margin-top:14px; }
+.pw-btn {
+  flex:1; padding:12px; border:none; border-radius:14px;
+  font-family:'Heebo',sans-serif; font-size:0.95em; font-weight:800;
+  cursor:pointer; transition:transform 0.15s;
+}
+.pw-btn-go { background:linear-gradient(135deg, #7c3aed, #a855f7); color:#fff; box-shadow:0 4px 14px rgba(124,58,237,0.4); }
+.pw-btn-cancel { background:rgba(255,255,255,0.08); color:#b8a8e0; }
+.pw-btn:hover { transform:translateY(-2px); }
+.pw-keypad { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
+.pw-key {
+  background:rgba(124,58,237,0.18); border:1px solid rgba(168,85,247,0.25);
+  border-radius:12px; padding:14px; font-size:1.3em; font-weight:900;
+  color:#fff; cursor:pointer; font-family:'Heebo',sans-serif;
+  transition:transform 0.1s;
+}
+.pw-key:active { transform:scale(0.94); background:rgba(124,58,237,0.32); }
+.pw-key.pw-key-back { font-size:1em; }
+
+/* MAP — redesigned dark purple kid-app style */
+:root { --bg-dark:#1a1130; --bg-deep:#0d0820; --card-purple:#2b1f5c; --accent:#7c3aed; --accent-2:#a855f7; --pill-bg:#1e1845; }
+#map {
+  padding:0; min-height:100vh; padding-bottom:90px;
+  background:
+    radial-gradient(circle at 15% 8%, rgba(168,85,247,0.18) 0%, transparent 35%),
+    radial-gradient(circle at 90% 25%, rgba(124,58,237,0.15) 0%, transparent 40%),
+    radial-gradient(ellipse at center 50%, #1f1448 0%, #0d0820 70%);
+}
+/* Star decoration */
+#map::before {
+  content:''; position:fixed; inset:0; pointer-events:none; opacity:0.3;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, white, transparent),
+    radial-gradient(1px 1px at 60% 10%, white, transparent),
+    radial-gradient(1.5px 1.5px at 80% 70%, white, transparent),
+    radial-gradient(1px 1px at 30% 80%, white, transparent),
+    radial-gradient(1px 1px at 70% 40%, white, transparent),
+    radial-gradient(2px 2px at 10% 55%, white, transparent);
+  z-index:0;
+}
+.map-inner { position:relative; z-index:1; padding:14px 16px 20px; max-width:760px; margin:0 auto; }
+
+/* Top icon bar */
+.top-bar {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:16px;
+}
+.icon-circle {
+  width:46px; height:46px; border-radius:50%;
+  background:rgba(124,58,237,0.18); border:1px solid rgba(168,85,247,0.3);
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:20px; cursor:pointer; transition:transform 0.2s;
+  position:relative;
+}
+.icon-circle:hover { transform:scale(1.08); background:rgba(124,58,237,0.32); }
+.icon-circle .badge-dot {
+  position:absolute; top:8px; right:10px; width:8px; height:8px;
+  background:#ef4444; border-radius:50%; border:2px solid var(--bg-deep);
+}
+
+/* Welcome card */
+.welcome-card {
+  background:linear-gradient(135deg, #2b1f5c 0%, #1f1545 100%);
+  border:1px solid rgba(168,85,247,0.25);
+  border-radius:24px; padding:18px 20px;
+  display:grid; grid-template-columns:1fr auto auto; gap:14px; align-items:center;
+  box-shadow:0 12px 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+  margin-bottom:22px;
+}
+.wel-text h1 { font-size:1.7em; font-weight:900; color:#fff; margin-bottom:4px; display:flex; gap:6px; align-items:center; }
+.wel-text p { color:#b8a8e0; font-size:0.92em; margin-bottom:14px; }
+.wel-cta {
+  display:inline-flex; align-items:center; gap:8px;
+  background:linear-gradient(135deg, #7c3aed, #a855f7);
+  color:#fff; border:none; border-radius:18px;
+  padding:11px 22px; font-family:'Heebo',sans-serif;
+  font-size:0.95em; font-weight:800; cursor:pointer;
+  box-shadow:0 6px 18px rgba(124,58,237,0.5);
+  transition:transform 0.15s;
+}
+.wel-cta:hover { transform:translateY(-2px); }
+.wel-stats {
+  display:flex; flex-direction:column; gap:10px;
+  padding-right:14px; border-right:1px solid rgba(168,85,247,0.18);
+}
+.wel-stat { display:flex; gap:8px; align-items:center; }
+.wel-stat .ws-icon { font-size:22px; line-height:1; }
+.wel-stat b { font-size:1.1em; font-weight:900; color:#fff; display:block; line-height:1.1; }
+.wel-stat small { font-size:0.7em; color:#9d8fc7; }
+.wel-mascot {
+  width:92px; height:92px;
+  background:radial-gradient(circle, #7c3aed 0%, #4c1d95 100%);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 8px 24px rgba(124,58,237,0.5);
+  overflow:hidden;
+}
+.wel-mascot img { width:100%; height:100%; object-fit:cover; }
+
+/* Section title with decorations */
+.map-title {
+  text-align:center; font-size:1.35em; font-weight:900; color:#fff;
+  margin:8px 0 20px; display:flex; align-items:center; justify-content:center; gap:14px;
+}
+.map-title::before, .map-title::after {
+  content:'✦'; color:#a855f7; font-size:0.7em; opacity:0.8;
+}
+
+/* Level cards — horizontal layout */
+.levels-grid { display:flex; flex-direction:column; gap:14px; }
+.level-card {
+  background:linear-gradient(135deg, rgba(43,31,92,0.7) 0%, rgba(31,21,69,0.85) 100%);
+  border:1px solid rgba(168,85,247,0.18);
+  border-radius:22px; padding:20px;
+  cursor:pointer; transition:all 0.25s;
+  position:relative; overflow:hidden;
+  display:grid; grid-template-columns:1fr 130px; gap:14px; align-items:center;
+  box-shadow:0 8px 24px rgba(0,0,0,0.3);
+}
+.level-card.unlocked:hover {
+  transform:translateY(-3px); border-color:rgba(168,85,247,0.45);
+  box-shadow:0 14px 36px rgba(124,58,237,0.3);
+}
+.level-card.unlocked.featured {
+  border:2px solid rgba(168,85,247,0.55);
+  box-shadow:0 0 0 4px rgba(168,85,247,0.12), 0 14px 36px rgba(124,58,237,0.35);
+}
+.level-card.locked { cursor:not-allowed; }
+.level-card.locked .lc-content { opacity:0.5; }
+.level-card.locked .lc-illust { opacity:0.55; filter:grayscale(0.5); }
+
+/* card content */
+.lc-content { display:flex; flex-direction:column; gap:8px; min-width:0; }
+.lc-pill {
+  display:inline-block; background:var(--pill-bg);
+  border:1px solid rgba(168,85,247,0.3);
+  color:#c084fc; font-size:0.75em; font-weight:800;
+  padding:4px 12px; border-radius:14px; width:fit-content;
+}
+.lc-title { font-size:1.35em; font-weight:900; color:#fff; line-height:1.15; }
+.lc-formula {
+  display:inline-block; background:var(--pill-bg);
+  border:1px solid rgba(168,85,247,0.25);
+  color:#a855f7; font-size:0.78em; font-weight:700;
+  padding:5px 12px; border-radius:12px; width:fit-content;
+  font-family:'SF Mono','Menlo',monospace;
+}
+.lc-formula.lc-formula-warn { color:#fcd34d; border-color:rgba(252,211,77,0.3); }
+
+/* play area: button + label + divider + players */
+.lc-action-row {
+  display:grid; grid-template-columns:auto 1fr;
+  gap:14px; align-items:center; margin-top:6px;
+  padding-top:12px; border-top:1px solid rgba(168,85,247,0.15);
+}
+.lc-play-btn {
+  width:52px; height:52px; border-radius:50%;
+  background:linear-gradient(135deg, #7c3aed, #a855f7);
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:22px; border:none; cursor:pointer;
+  box-shadow:0 6px 16px rgba(124,58,237,0.6);
+  flex-shrink:0;
+}
+.lc-play-btn:hover { animation:playPulse 0.7s ease infinite; }
+@keyframes playPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+.lc-play-label { font-size:0.85em; color:#b8a8e0; font-weight:700; }
+.lc-players { display:flex; flex-direction:column; gap:4px; }
+.lc-player-row {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:8px; font-size:0.85em;
+}
+.lc-player-row .pr-name { color:#d1c4f0; font-weight:700; display:flex; align-items:center; gap:4px; }
+.lc-player-row .pr-name .pr-emoji { font-size:1.1em; }
+.lc-stars { display:flex; gap:1px; }
+.lc-stars .star { font-size:14px; }
+.lc-stars .star.on { color:#fbbf24; text-shadow:0 0 6px rgba(251,191,36,0.6); }
+.lc-stars .star.off { color:rgba(255,255,255,0.18); }
+
+/* Illustration on the right (in RTL, that's the left visually... wait) */
+.lc-illust {
+  width:130px; height:130px; display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+.lc-illust img { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 8px 18px rgba(124,58,237,0.4)); }
+.lc-illust .sparkle {
+  position:absolute; font-size:14px; opacity:0.6;
+  animation:sparkleTwinkle 2s ease-in-out infinite;
+}
+.lc-illust .sparkle:nth-child(2) { top:5%; right:5%; animation-delay:0.3s; }
+.lc-illust .sparkle:nth-child(3) { bottom:15%; left:0; animation-delay:0.8s; }
+.lc-illust .sparkle:nth-child(4) { top:40%; left:-5%; animation-delay:1.3s; }
+@keyframes sparkleTwinkle { 0%,100%{opacity:0.3;transform:scale(0.7)} 50%{opacity:1;transform:scale(1.2)} }
+
+/* Locked overlay info */
+.lc-lock-msg {
+  display:flex; align-items:center; gap:8px;
+  background:rgba(13,8,32,0.5); padding:8px 12px; border-radius:12px;
+  border:1px dashed rgba(168,85,247,0.25);
+  font-size:0.78em; color:#9d8fc7; font-weight:700;
+  margin-top:8px;
+}
+.lc-lock-icon-mini { width:22px; height:22px; flex-shrink:0; }
+.lc-lock-icon-mini img { width:100%; height:100%; object-fit:contain; }
+
+/* Perfect badge */
+.lc-perfect-badge {
+  position:absolute; top:14px; left:14px;
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);
+  color:#5b3000; font-size:0.7em; font-weight:900;
+  padding:4px 10px; border-radius:10px;
+  box-shadow:0 4px 10px rgba(245,158,11,0.4);
+}
+
+/* Bottom nav */
+.bottom-nav {
+  position:fixed; bottom:0; left:0; right:0;
+  background:rgba(13,8,32,0.92);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-top:1px solid rgba(168,85,247,0.18);
+  padding:8px 12px 14px; display:flex; justify-content:space-around;
+  z-index:20;
+}
+.bn-item {
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  background:none; border:none; cursor:pointer; padding:6px 8px;
+  color:#7d6da8; font-family:'Heebo',sans-serif;
+  font-size:0.72em; font-weight:700; transition:color 0.2s;
+}
+.bn-item .bn-icon { font-size:18px; line-height:1; }
+.bn-item:hover { color:#c084fc; }
+.bn-item.active { color:#a855f7; }
+.bn-item.active .bn-icon-wrap {
+  background:linear-gradient(135deg, #7c3aed, #a855f7); color:#fff;
+  width:46px; height:46px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:-2px; box-shadow:0 6px 16px rgba(124,58,237,0.6);
+  transform:translateY(-12px);
+}
+.bn-item.active .bn-icon-wrap .bn-icon { font-size:22px; }
+
+/* Drawer for menu */
+.drawer-bg {
+  position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:50;
+  opacity:0; pointer-events:none; transition:opacity 0.25s;
+}
+.drawer-bg.open { opacity:1; pointer-events:all; }
+.drawer {
+  position:fixed; top:0; right:0; bottom:0; width:280px;
+  background:#1f1545; border-left:1px solid rgba(168,85,247,0.2);
+  padding:24px 20px; transform:translateX(100%); transition:transform 0.3s;
+  z-index:51; display:flex; flex-direction:column; gap:14px;
+}
+.drawer.open { transform:translateX(0); }
+.drawer h3 { color:#fff; font-weight:900; font-size:1.2em; margin-bottom:8px; }
+.drawer-item {
+  background:rgba(124,58,237,0.15); border:1px solid rgba(168,85,247,0.2);
+  border-radius:14px; padding:12px 14px; color:#fff; font-family:'Heebo',sans-serif;
+  font-size:0.92em; font-weight:700; cursor:pointer; text-align:right;
+  display:flex; gap:10px; align-items:center;
+}
+.drawer-item:hover { background:rgba(124,58,237,0.28); }
+
+/* Mobile tweaks */
+@media (max-width:520px) {
+  .welcome-card { grid-template-columns:1fr auto; }
+  .wel-stats { display:none; }
+  .wel-mascot { width:78px; height:78px; }
+  .lc-illust { width:100px; height:100px; }
+  .level-card { grid-template-columns:1fr 100px; padding:16px; }
+  .lc-title { font-size:1.15em; }
+}
+
+/* ===== STORIES ===== */
+#stories, #story-read, #story-quiz {
+  padding:0; min-height:100vh; padding-bottom:90px;
+  background:
+    radial-gradient(circle at 15% 8%, rgba(168,85,247,0.18) 0%, transparent 35%),
+    radial-gradient(circle at 90% 25%, rgba(124,58,237,0.15) 0%, transparent 40%),
+    radial-gradient(ellipse at center 50%, #1f1448 0%, #0d0820 70%);
+}
+.stories-inner { position:relative; z-index:1; padding:14px 16px 20px; max-width:760px; margin:0 auto; }
+.stories-list { display:flex; flex-direction:column; gap:14px; }
+.story-card {
+  background:linear-gradient(135deg, rgba(43,31,92,0.7) 0%, rgba(31,21,69,0.85) 100%);
+  border:1px solid rgba(168,85,247,0.18);
+  border-radius:22px; padding:18px;
+  cursor:pointer; transition:all 0.25s;
+  display:grid; grid-template-columns:auto 1fr auto; gap:16px; align-items:center;
+  box-shadow:0 8px 24px rgba(0,0,0,0.3);
+}
+.story-card:hover { transform:translateY(-3px); border-color:rgba(168,85,247,0.45); }
+.story-thumb {
+  width:90px; height:90px; border-radius:18px;
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  display:flex; align-items:center; justify-content:center;
+  font-size:2.8em; flex-shrink:0;
+  box-shadow:0 6px 18px rgba(124,58,237,0.4);
+  overflow:hidden;
+}
+.story-thumb img { width:100%; height:100%; object-fit:cover; }
+.story-info { display:flex; flex-direction:column; gap:4px; min-width:0; }
+.story-title { font-size:1.2em; font-weight:900; color:#fff; }
+.story-sub { font-size:0.85em; color:#b8a8e0; font-style:italic; }
+.story-meta { display:flex; gap:10px; margin-top:6px; }
+.story-meta-chip {
+  background:rgba(124,58,237,0.2); border:1px solid rgba(168,85,247,0.25);
+  padding:3px 10px; border-radius:10px;
+  font-size:0.75em; font-weight:700; color:#c084fc;
+}
+.story-stars { font-size:1em; letter-spacing:2px; color:#fbbf24; }
+.story-stars .off { color:rgba(255,255,255,0.18); }
+.story-arrow {
+  width:44px; height:44px; border-radius:50%;
+  background:linear-gradient(135deg,#7c3aed,#a855f7); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.2em; flex-shrink:0;
+  box-shadow:0 4px 12px rgba(124,58,237,0.5);
+}
+
+/* Story read */
+.story-hero {
+  text-align:center; margin-bottom:18px; padding:20px 16px;
+  background:linear-gradient(135deg, rgba(124,58,237,0.18), rgba(168,85,247,0.1));
+  border-radius:22px; border:1px solid rgba(168,85,247,0.2);
+}
+.story-hero-img { font-size:5em; margin-bottom:8px; }
+.story-hero-img img { width:140px; height:140px; object-fit:contain; filter:drop-shadow(0 8px 18px rgba(124,58,237,0.4)); }
+.story-hero h1 { color:#fff; font-size:1.6em; font-weight:900; margin-bottom:4px; }
+.story-hero p { color:#b8a8e0; font-style:italic; font-size:0.95em; }
+.story-read-actions {
+  display:flex; gap:10px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;
+}
+.story-read-actions button {
+  background:rgba(124,58,237,0.18); border:1px solid rgba(168,85,247,0.3);
+  color:#fff; border-radius:14px; padding:8px 14px;
+  font-family:'Heebo',sans-serif; font-size:0.85em; font-weight:700;
+  cursor:pointer; display:flex; align-items:center; gap:6px;
+}
+.story-read-actions button:hover { background:rgba(124,58,237,0.32); }
+.story-read-actions button.active { background:linear-gradient(135deg,#7c3aed,#a855f7); border-color:transparent; }
+.story-sentences { display:flex; flex-direction:column; gap:12px; margin-bottom:18px; }
+.sent-card {
+  background:rgba(43,31,92,0.45); border:1px solid rgba(168,85,247,0.18);
+  border-radius:18px; padding:14px;
+}
+.sent-en {
+  font-size:1.25em; font-weight:700; color:#fff;
+  direction:ltr; text-align:left; line-height:1.5;
+  cursor:pointer;
+  display:flex; align-items:center; gap:10px; justify-content:flex-start;
+}
+.sent-speak-btn {
+  background:linear-gradient(135deg,#7c3aed,#a855f7); border:none;
+  color:#fff; width:36px; height:36px; border-radius:50%;
+  cursor:pointer; font-size:0.95em; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 3px 10px rgba(124,58,237,0.4);
+}
+.sent-speak-btn.speaking { animation:pulse 0.8s infinite; }
+.sent-he {
+  color:#fcd34d; font-size:0.95em; font-weight:600;
+  margin-top:8px; padding-top:8px; border-top:1px dashed rgba(168,85,247,0.2);
+  display:none;
+}
+.sent-he.show { display:block; animation:fbIn 0.3s; }
+.sent-toggle {
+  background:none; border:none; color:#a855f7; cursor:pointer;
+  font-family:'Heebo',sans-serif; font-size:0.78em; font-weight:700;
+  margin-top:6px; padding:3px 0;
+}
+.story-start-quiz-btn {
+  width:100%; background:linear-gradient(135deg, #10b981, #059669);
+  color:#fff; border:none; border-radius:16px; padding:16px;
+  font-family:'Heebo',sans-serif; font-size:1.1em; font-weight:900;
+  cursor:pointer; box-shadow:0 8px 24px rgba(16,185,129,0.4);
+  margin-bottom:14px;
+}
+.story-start-quiz-btn:hover { transform:translateY(-2px); }
+
+/* Story quiz reuses the q-card / opts styles from main game */
+.story-quiz-progress {
+  display:flex; align-items:center; gap:10px; margin-bottom:14px;
+  background:rgba(43,31,92,0.5); border:1px solid rgba(168,85,247,0.18);
+  border-radius:14px; padding:8px 14px;
+}
+.story-quiz-progress .sqp-fill {
+  flex:1; height:8px; background:rgba(0,0,0,0.3); border-radius:6px; overflow:hidden;
+}
+.story-quiz-progress .sqp-bar {
+  height:100%; background:linear-gradient(90deg,#7c3aed,#a855f7);
+  border-radius:6px; transition:width 0.3s;
+}
+.story-quiz-q {
+  background:rgba(43,31,92,0.6); border:1px solid rgba(168,85,247,0.25);
+  border-radius:18px; padding:18px; margin-bottom:14px;
+  font-size:1.1em; font-weight:800; color:#fff; text-align:center; line-height:1.5;
+}
+.story-quiz-opts { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+@media (max-width:480px) { .story-quiz-opts { grid-template-columns:1fr; } }
+.sq-opt {
+  background:rgba(43,31,92,0.55); border:2px solid rgba(168,85,247,0.25);
+  color:#fff; border-radius:14px; padding:14px 16px;
+  font-family:'Heebo',sans-serif; font-size:0.95em; font-weight:700;
+  cursor:pointer; transition:all 0.2s; text-align:right;
+}
+.sq-opt:hover { border-color:#a855f7; background:rgba(124,58,237,0.25); }
+.sq-opt.selected { border-color:#a855f7; background:rgba(124,58,237,0.35); }
+.sq-opt.correct { border-color:#10b981; background:rgba(16,185,129,0.25); color:#6ee7b7; }
+.sq-opt.wrong { border-color:#ef4444; background:rgba(239,68,68,0.25); color:#fca5a5; }
+
+/* LESSON */
+#lesson { padding:20px; max-width:680px; margin:0 auto; }
+.back-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:0.9em; display:flex; align-items:center; gap:4px; padding:6px 0; margin-bottom:16px; font-family:'Heebo',sans-serif; }
+.back-btn:hover { color:var(--text); }
+.lesson-hero { text-align:center; margin-bottom:22px; }
+.lesson-icon { font-size:3.2em; margin-bottom:8px; }
+.lesson-title { font-size:1.8em; font-weight:900; }
+.lesson-en { font-size:0.9em; color:var(--muted); }
+.formula-box {
+  background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(245,158,11,0.08));
+  border:2px solid rgba(124,58,237,0.35); border-radius:16px;
+  padding:18px; text-align:center; margin-bottom:18px;
+}
+.formula-label { font-size:0.78em; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:1px; }
+.formula-text { font-size:1.5em; font-weight:900; color:#c084fc; font-family:monospace; }
+.formula-he { font-size:0.9em; color:var(--muted); margin-top:6px; }
+.expl-box { background:var(--card); border-radius:14px; padding:16px; margin-bottom:16px; font-size:1em; line-height:1.8; }
+.examples-lbl { font-size:0.85em; color:var(--muted); font-weight:700; margin-bottom:10px; }
+.example-card { background:var(--card2); border-radius:12px; padding:14px 16px; margin-bottom:10px; }
+.ex-en { font-size:1.3em; font-weight:800; direction:ltr; text-align:left; margin-bottom:4px; }
+.ex-he { font-size:0.88em; color:var(--muted); }
+.ex-tokens { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+.tok { padding:3px 10px; border-radius:16px; font-size:0.75em; font-weight:700; direction:ltr; }
+.tok-s { background:rgba(99,102,241,0.25); border:1px solid rgba(99,102,241,0.5); color:#a5b4fc; }
+.tok-v { background:rgba(16,185,129,0.2); border:1px solid rgba(16,185,129,0.4); color:#6ee7b7; }
+.tok-o { background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#fcd34d; }
+.tok-art { background:rgba(236,72,153,0.2); border:1px solid rgba(236,72,153,0.4); color:#f9a8d4; }
+.rule-box {
+  background:rgba(124,58,237,0.1); border:2px solid rgba(124,58,237,0.3);
+  border-radius:14px; padding:14px 16px; margin-bottom:22px; line-height:1.7; font-weight:600; color:#c4b5fd;
+}
+.play-btn {
+  width:100%; padding:18px; background:linear-gradient(135deg,var(--purple),#9333ea);
+  border:none; border-radius:16px; color:white; font-size:1.2em; font-weight:900;
+  cursor:pointer; transition:all 0.2s; font-family:'Heebo',sans-serif;
+  box-shadow:0 8px 24px rgba(124,58,237,0.35);
+}
+.play-btn:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(124,58,237,0.5); }
+
+/* GAME */
+#game { padding:16px; max-width:680px; margin:0 auto; }
+.game-bar { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+.game-x { background:none; border:none; color:var(--muted); font-size:1.3em; cursor:pointer; padding:4px; }
+.prog-wrap { flex:1; height:8px; background:#2a2a45; border-radius:4px; overflow:hidden; }
+.prog-fill { height:100%; background:linear-gradient(90deg,var(--purple),var(--gold)); border-radius:4px; transition:width 0.4s; }
+.q-num { font-size:0.85em; color:var(--muted); white-space:nowrap; }
+.score-pill { background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.3); border-radius:20px; padding:4px 12px; font-size:0.85em; font-weight:800; color:var(--gold); }
+.q-card { background:var(--card); border-radius:18px; padding:20px 18px; margin-bottom:14px; text-align:center; }
+.q-type-lbl { font-size:0.75em; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:1px; }
+.q-he { font-size:1.3em; font-weight:800; margin-bottom:6px; }
+.q-hint-lbl { font-size:0.82em; color:var(--muted); }
+
+/* SCRAMBLE */
+.answer-zone {
+  min-height:54px; background:rgba(124,58,237,0.08); border:2px dashed rgba(124,58,237,0.35);
+  border-radius:14px; padding:10px 12px; display:flex; gap:8px; flex-wrap:wrap;
+  align-items:center; justify-content:center; margin-bottom:14px; transition:border-color 0.2s;
+  direction:ltr;
+}
+.answer-zone.filled { border-style:solid; border-color:rgba(124,58,237,0.55); }
+.word-pool { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:14px; min-height:44px; direction:ltr; }
+.wtile {
+  background:var(--card2); border:2px solid #3a3a60; border-radius:10px;
+  padding:8px 14px; cursor:pointer; font-size:1em; font-weight:700;
+  transition:all 0.15s; direction:ltr; color:#fff; font-family:'Heebo',sans-serif;
+  user-select:none;
+}
+.wtile:hover { border-color:var(--purple); transform:scale(1.06); }
+.wtile.placed { background:rgba(124,58,237,0.25); border-color:var(--purple); }
+.wtile.correct-t { background:rgba(16,185,129,0.25); border-color:var(--green); color:#6ee7b7; }
+.wtile.wrong-t { background:rgba(239,68,68,0.25); border-color:var(--red); color:#fca5a5; }
+
+/* FILL */
+.fill-sent {
+  font-size:1.25em; font-weight:700; direction:ltr; text-align:center;
+  margin-bottom:20px; line-height:1.9; color:#fff;
+}
+.blank-spot { display:inline-block; min-width:72px; border-bottom:3px solid var(--purple); padding:0 6px; color:#c084fc; font-weight:900; }
+.opts-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.opt-btn {
+  padding:14px 10px; background:var(--card2); border:2px solid #3a3a60; border-radius:12px;
+  cursor:pointer; font-size:1.05em; font-weight:700; transition:all 0.2s; color:#fff;
+  font-family:'Heebo',sans-serif; direction:ltr;
+}
+.opt-btn:hover:not(:disabled) { border-color:var(--purple); }
+.opt-btn.correct-a { border-color:var(--green); background:rgba(16,185,129,0.2); color:#6ee7b7; }
+.opt-btn.wrong-a { border-color:var(--red); background:rgba(239,68,68,0.2); color:#fca5a5; }
+.opt-btn:disabled { cursor:not-allowed; }
+
+/* ERROR */
+.err-sent {
+  display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+  margin-bottom:18px; direction:ltr;
+}
+.wclick {
+  padding:8px 14px; background:var(--card2); border:2px solid #3a3a60; border-radius:10px;
+  cursor:pointer; font-size:1em; font-weight:700; transition:all 0.2s; color:#fff;
+  font-family:'Heebo',sans-serif; direction:ltr;
+}
+.wclick:hover { border-color:var(--red); }
+.wclick.selected-w { border-color:var(--red); background:rgba(239,68,68,0.2); color:#fca5a5; }
+.wclick.correct-w { border-color:var(--green); background:rgba(16,185,129,0.2); color:#6ee7b7; }
+.wclick.static-w { cursor:default; }
+.wclick.static-w:hover { border-color:#3a3a60; }
+
+/* Feedback */
+.fb-box { border-radius:13px; padding:12px 16px; margin-bottom:13px; font-weight:700; text-align:center; line-height:1.6; animation:fbIn 0.35s ease; }
+@keyframes fbIn { 0%{opacity:0;transform:translateY(-10px) scale(0.95)} 100%{opacity:1;transform:translateY(0) scale(1)} }
+.fb-ok { background:rgba(16,185,129,0.15); border:2px solid var(--green); color:#6ee7b7; }
+.fb-ok .fb-big { font-size:1.25em; font-weight:900; display:block; margin-bottom:4px; }
+.fb-bad { background:rgba(239,68,68,0.15); border:2px solid var(--red); color:#fca5a5; }
+.fb-bad .fb-big { font-size:1.1em; font-weight:900; display:block; margin-bottom:4px; }
+.fb-info { background:rgba(245,158,11,0.12); border:2px solid rgba(245,158,11,0.4); color:#fcd34d; font-size:0.88em; }
+.fb-why { display:block; margin-top:6px; font-size:0.92em; opacity:0.95; font-weight:600; }
+.streak-pill {
+  display:inline-flex; align-items:center; gap:4px;
+  background:rgba(239,68,68,0.18); border:1px solid rgba(239,68,68,0.4);
+  border-radius:18px; padding:3px 10px; font-size:0.78em; font-weight:800; color:#fca5a5;
+  margin-right:6px;
+}
+/* Confetti */
+.confetti-piece {
+  position:fixed; top:-20px; width:10px; height:14px; z-index:9999;
+  pointer-events:none; animation:confettiFall linear forwards;
+}
+@keyframes confettiFall {
+  0% { transform:translateY(0) rotate(0deg); opacity:1; }
+  100% { transform:translateY(110vh) rotate(720deg); opacity:0; }
+}
+/* Streak badge */
+.streak-banner {
+  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0);
+  background:linear-gradient(135deg,#f59e0b,#ef4444);
+  color:#fff; padding:24px 38px; border-radius:28px;
+  font-size:1.8em; font-weight:900; z-index:9998;
+  box-shadow:0 16px 50px rgba(245,158,11,0.6); pointer-events:none;
+  text-align:center; line-height:1.2;
+  animation:streakPop 1.9s ease-out forwards;
+}
+.streak-banner small { display:block; font-size:0.55em; opacity:0.95; margin-top:4px; font-weight:700; }
+@keyframes streakPop {
+  0% { transform:translate(-50%,-50%) scale(0) rotate(-20deg); opacity:0; }
+  18% { transform:translate(-50%,-50%) scale(1.25) rotate(8deg); opacity:1; }
+  35% { transform:translate(-50%,-50%) scale(1) rotate(0); opacity:1; }
+  82% { transform:translate(-50%,-50%) scale(1); opacity:1; }
+  100% { transform:translate(-50%,-50%) scale(1.4); opacity:0; }
+}
+/* Correct flash on score pill */
+@keyframes scoreFlash {
+  0%{transform:scale(1)} 50%{transform:scale(1.3); color:#fff} 100%{transform:scale(1)}
+}
+.score-pill.flash { animation:scoreFlash 0.5s ease; }
+
+/* Buttons */
+.check-btn {
+  width:100%; padding:15px; background:linear-gradient(135deg,var(--green),#059669);
+  border:none; border-radius:14px; color:white; font-size:1.1em; font-weight:900;
+  cursor:pointer; font-family:'Heebo',sans-serif; margin-bottom:9px; transition:all 0.2s;
+}
+.check-btn:hover:not(:disabled) { transform:translateY(-2px); }
+.check-btn:disabled { opacity:0.4; cursor:not-allowed; }
+.next-btn {
+  width:100%; padding:15px; background:linear-gradient(135deg,var(--purple),#9333ea);
+  border:none; border-radius:14px; color:white; font-size:1.1em; font-weight:900;
+  cursor:pointer; font-family:'Heebo',sans-serif; display:none; transition:all 0.2s;
+}
+.next-btn.show { display:block; }
+.next-btn:hover { transform:translateY(-2px); }
+
+/* RESULTS */
+#results {
+  background:radial-gradient(ellipse at top, #2d1b69 0%, #0f0e17 60%);
+  align-items:center; justify-content:center; padding:30px 20px; text-align:center; gap:10px;
+}
+.res-emoji { font-size:80px; animation:pop 0.5s ease; }
+@keyframes pop { 0%{transform:scale(0.3)} 75%{transform:scale(1.2)} 100%{transform:scale(1)} }
+.res-title { font-size:2em; font-weight:900; }
+.res-score { font-size:1.1em; color:var(--gold); }
+.res-stars { font-size:2em; margin:4px 0; }
+.battle-box { background:var(--card); border-radius:20px; padding:22px; width:100%; max-width:480px; margin:8px auto; }
+.battle-heading { font-size:0.9em; color:var(--muted); margin-bottom:16px; font-weight:700; }
+.battle-row { display:flex; align-items:center; gap:12px; }
+.bp { flex:1; text-align:center; }
+.bp-emoji { font-size:2.2em; }
+.bp-name { font-size:0.88em; font-weight:800; margin-top:4px; }
+.bp-pts-big { font-size:1.9em; font-weight:900; }
+.bp-lvls { font-size:0.78em; color:var(--muted); }
+.battle-mid { flex:2; }
+.bbar { height:14px; background:#1a1a2e; border-radius:7px; overflow:hidden; display:flex; margin-bottom:6px; }
+.bbar-l { height:100%; background:linear-gradient(90deg,var(--purple),#9333ea); border-radius:7px 0 0 7px; transition:width 0.9s ease; }
+.bbar-r { height:100%; background:linear-gradient(90deg,var(--gold),#d97706); border-radius:0 7px 7px 0; transition:width 0.9s ease; }
+.bbar-gap { font-size:0.78em; color:var(--muted); text-align:center; }
+.leader-badge { display:inline-block; margin-top:12px; background:linear-gradient(135deg,var(--gold),#d97706); color:white; font-weight:900; padding:6px 20px; border-radius:20px; font-size:0.9em; }
+.res-btns { display:flex; flex-direction:column; gap:10px; width:100%; max-width:400px; }
+.rbtn-primary { padding:15px; background:linear-gradient(135deg,var(--purple),#9333ea); border:none; border-radius:14px; color:white; font-size:1em; font-weight:900; cursor:pointer; font-family:'Heebo',sans-serif; transition:all 0.2s; }
+.rbtn-primary:hover { transform:translateY(-2px); }
+.rbtn-secondary { padding:15px; background:var(--card); border:2px solid #2a2a45; border-radius:14px; color:var(--text); font-size:1em; font-weight:700; cursor:pointer; font-family:'Heebo',sans-serif; }
+.rbtn-secondary:hover { border-color:#555; }
+
+/* points toast */
+.pts-toast {
+  position:fixed; top:18px; left:50%; transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--gold),#d97706); color:#1a0a00; padding:8px 22px;
+  border-radius:22px; font-weight:900; font-size:1.05em; z-index:999;
+  animation:toastAnim 2.2s ease forwards; pointer-events:none; white-space:nowrap;
+}
+@keyframes toastAnim {
+  0%{opacity:0;transform:translateX(-50%) translateY(-16px)}
+  15%{opacity:1;transform:translateX(-50%) translateY(0)}
+  80%{opacity:1;transform:translateX(-50%) translateY(0)}
+  100%{opacity:0;transform:translateX(-50%) translateY(-10px)}
+}
+
+@media(max-width:500px){
+  .home-title{font-size:2.1em}
+  .levels-grid{grid-template-columns:1fr}
+  .opts-grid{grid-template-columns:1fr}
+  .formula-text{font-size:1.1em}
+  .battle-row{flex-direction:column;gap:8px}
+  .battle-mid{width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="logo-anim">🎮</div>
+  <h1 class="home-title">English Quest</h1>
+  <p class="home-sub">לומדים דקדוק אנגלי בדרך הכי כיפית!</p>
+
+  <div class="leader-banner" id="leader-banner">
+    <div class="lb-emoji">🏆</div>
+    <div class="lb-text">
+      <div class="lb-title" id="lb-title">מי יהיה המוביל הראשון?</div>
+      <div class="lb-sub" id="lb-sub">תיכנסו כדי להתחיל את התחרות!</div>
+    </div>
+  </div>
+
+  <p class="home-who">מי משחק/ת עכשיו?</p>
+  <div class="player-cards">
+    <div class="player-card pc-tal" onclick="tryLogin('tal')">
+      <div class="pc-lock">🔒</div>
+      <div class="pc-emoji"><img src="images/tal.png" alt="טל"></div>
+      <div class="pc-name">טל</div>
+      <div class="pc-stat-row" id="pc-tal-stats"></div>
+      <div id="pc-tal-badge"></div>
+    </div>
+    <div class="player-card pc-elad" onclick="tryLogin('elad')">
+      <div class="pc-lock">🔒</div>
+      <div class="pc-emoji"><img src="images/elad.png" alt="אלעד"></div>
+      <div class="pc-name">אלעד</div>
+      <div class="pc-stat-row" id="pc-elad-stats"></div>
+      <div id="pc-elad-badge"></div>
+    </div>
+  </div>
+  <button class="reset-btn" onclick="confirmReset()">אפס נתונים</button>
+</div>
+
+<!-- Password modal -->
+<div class="pw-modal-bg" id="pw-modal-bg" onclick="if(event.target===this)closePwModal()">
+  <div class="pw-modal">
+    <div class="pw-mascot"><img id="pw-mascot-img" src="" alt=""></div>
+    <div class="pw-title" id="pw-title">שלום</div>
+    <div class="pw-sub">הזן/י את הסיסמה שלך</div>
+    <input type="password" id="pw-input" class="pw-input" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="••••••" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="pw-error" id="pw-error"></div>
+    <div class="pw-keypad" id="pw-keypad">
+      <button class="pw-key" onclick="pwKey('1')">1</button>
+      <button class="pw-key" onclick="pwKey('2')">2</button>
+      <button class="pw-key" onclick="pwKey('3')">3</button>
+      <button class="pw-key" onclick="pwKey('4')">4</button>
+      <button class="pw-key" onclick="pwKey('5')">5</button>
+      <button class="pw-key" onclick="pwKey('6')">6</button>
+      <button class="pw-key" onclick="pwKey('7')">7</button>
+      <button class="pw-key" onclick="pwKey('8')">8</button>
+      <button class="pw-key" onclick="pwKey('9')">9</button>
+      <button class="pw-key pw-key-back" onclick="pwBack()">⌫</button>
+      <button class="pw-key" onclick="pwKey('0')">0</button>
+      <button class="pw-key" onclick="checkPassword()">✓</button>
+    </div>
+    <div class="pw-actions">
+      <button class="pw-btn pw-btn-cancel" onclick="closePwModal()">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAP -->
+<div id="map" class="screen">
+  <div class="map-inner">
+    <!-- top icon bar -->
+    <div class="top-bar">
+      <button class="icon-circle" onclick="toggleDrawer()" aria-label="תפריט">☰</button>
+      <button class="icon-circle" aria-label="התראות">🔔<span class="badge-dot"></span></button>
+    </div>
+
+    <!-- welcome card -->
+    <div class="welcome-card">
+      <div class="wel-text">
+        <h1><span id="wel-name"></span> 👋</h1>
+        <p id="wel-sub">ברוך/ה שובך! מוכן/ה ללמוד?</p>
+        <button class="wel-cta" onclick="quickStart()">🎮 התחל משחקון</button>
+      </div>
+      <div class="wel-stats">
+        <div class="wel-stat"><span class="ws-icon">⭐</span><div><b id="wel-pts">0</b><small>נקודות</small></div></div>
+        <div class="wel-stat"><span class="ws-icon">🔥</span><div><b id="wel-streak">0</b><small>רצף יומי</small></div></div>
+        <div class="wel-stat"><span class="ws-icon">💎</span><div><b id="wel-stars">0</b><small>כוכבים</small></div></div>
+      </div>
+      <div class="wel-mascot"><img id="wel-mascot-img" src="images/elad.png" alt=""></div>
+    </div>
+
+    <div class="map-title">בחר שלב ללמידה</div>
+    <div class="levels-grid" id="levels-grid"></div>
+  </div>
+
+  <!-- bottom nav -->
+  <div class="bottom-nav">
+    <button class="bn-item active"><span class="bn-icon-wrap"><span class="bn-icon">🏠</span></span><span>בית</span></button>
+    <button class="bn-item" onclick="showScreen('stories')"><span class="bn-icon-wrap"><span class="bn-icon">📚</span></span><span>סיפורים</span></button>
+  </div>
+
+  <!-- drawer -->
+  <div class="drawer-bg" id="drawer-bg" onclick="toggleDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <h3>תפריט ⚙️</h3>
+    <button class="drawer-item" onclick="toggleDrawer();logout()">👥 החלף שחקן (התנתק)</button>
+    <button class="drawer-item" onclick="toggleDrawer();window.location.href='learn.html'">📖 ללמוד אוצר מילים</button>
+    <button class="drawer-item" onclick="toggleDrawer();confirmReset()">🔄 אפס נתונים</button>
+  </div>
+</div>
+
+<!-- STORIES list -->
+<div id="stories" class="screen">
+  <div class="stories-inner">
+    <div class="top-bar">
+      <button class="icon-circle" onclick="showScreen('map')">←</button>
+      <h2 style="color:#fff; font-size:1.3em; font-weight:900; margin:0;">📚 סיפורים</h2>
+      <div style="width:46px"></div>
+    </div>
+    <p style="text-align:center; color:#b8a8e0; margin-bottom:20px; font-size:0.92em;">
+      קרא/י סיפור באנגלית ואז ענה/י על שאלות. כל סיפור = 3 כוכבים אפשריים!
+    </p>
+    <div class="stories-list" id="stories-list"></div>
+  </div>
+  <div class="bottom-nav">
+    <button class="bn-item" onclick="showScreen('map')"><span class="bn-icon-wrap"><span class="bn-icon">🏠</span></span><span>בית</span></button>
+    <button class="bn-item active"><span class="bn-icon-wrap"><span class="bn-icon">📚</span></span><span>סיפורים</span></button>
+  </div>
+</div>
+
+<!-- STORY read -->
+<div id="story-read" class="screen">
+  <div class="stories-inner">
+    <button class="back-btn" onclick="showScreen('stories')">← חזור לסיפורים</button>
+    <div class="story-hero">
+      <div class="story-hero-img" id="story-hero-img">📖</div>
+      <h1 id="story-read-title"></h1>
+      <p id="story-read-subtitle"></p>
+    </div>
+    <div class="story-read-actions">
+      <button id="story-toggle-all-he" onclick="toggleAllHe()">🇮🇱 הצג תרגום</button>
+      <button id="story-read-all" onclick="readWholeStory()">🔊 השמע הכל</button>
+    </div>
+    <div class="story-sentences" id="story-sentences"></div>
+    <button class="story-start-quiz-btn" onclick="startStoryQuiz()">🎯 שאלות הבנה</button>
+  </div>
+</div>
+
+<!-- STORY quiz -->
+<div id="story-quiz" class="screen">
+  <div class="stories-inner">
+    <button class="back-btn" onclick="showScreen('story-read')">← חזור לסיפור</button>
+    <div class="story-quiz-progress">
+      <span style="font-weight:800;color:#fff" id="sq-num">1/4</span>
+      <div class="sqp-fill"><div class="sqp-bar" id="sq-bar" style="width:0%"></div></div>
+      <span class="score-pill" id="sq-score" style="background:rgba(124,58,237,0.18);border:1px solid rgba(168,85,247,0.3);padding:4px 12px;border-radius:14px;font-weight:800;color:#fff;font-size:0.85em;">⭐ 0</span>
+    </div>
+    <div class="story-quiz-q" id="sq-q"></div>
+    <div class="story-quiz-opts" id="sq-opts"></div>
+    <div id="sq-feedback"></div>
+    <button class="check-btn" id="sq-check" onclick="checkStoryAnswer()" disabled>בדוק ✓</button>
+    <button class="next-btn" id="sq-next" onclick="nextStoryQ()">הבא ←</button>
+  </div>
+</div>
+
+<!-- LESSON -->
+<div id="lesson" class="screen">
+  <div style="padding:20px; max-width:680px; margin:0 auto; flex:1;">
+    <button class="back-btn" onclick="showScreen('map')">← חזור למפה</button>
+    <div class="lesson-hero">
+      <div class="lesson-icon" id="ls-icon"></div>
+      <div class="lesson-title" id="ls-title"></div>
+      <div class="lesson-en" id="ls-en"></div>
+    </div>
+    <div class="formula-box">
+      <div class="formula-label">הנוסחה</div>
+      <div class="formula-text" id="ls-formula"></div>
+      <div class="formula-he" id="ls-formula-he"></div>
+    </div>
+    <div class="expl-box" id="ls-expl"></div>
+    <div class="examples-lbl">📚 דוגמאות:</div>
+    <div id="ls-examples"></div>
+    <div class="rule-box" id="ls-rule"></div>
+    <button class="play-btn" onclick="startGame()">🎮 בוא נשחק!</button>
+    <div style="height:30px;"></div>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="game" class="screen">
+  <div style="padding:16px; max-width:680px; margin:0 auto; flex:1; display:flex; flex-direction:column;">
+    <div class="game-bar">
+      <button class="game-x" onclick="showScreen('map')">✕</button>
+      <div class="prog-wrap"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="q-num" id="q-num">1/5</div>
+      <div class="score-pill" id="score-pill">⭐ 0</div>
+    </div>
+    <div class="q-card">
+      <div class="q-type-lbl" id="q-type-lbl">שאלה</div>
+      <div class="q-he" id="q-he"></div>
+      <div class="q-hint-lbl" id="q-hint"></div>
+    </div>
+    <div id="game-area" style="flex:1;"></div>
+    <div id="feedback-area"></div>
+    <button class="check-btn" id="check-btn" onclick="checkAnswer()">בדוק ✓</button>
+    <button class="next-btn" id="next-btn" onclick="nextQ()">הבא ←</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="results" class="screen">
+  <div class="res-emoji" id="res-emoji">🏆</div>
+  <div class="res-title" id="res-title"></div>
+  <div class="res-stars" id="res-stars"></div>
+  <div class="res-score" id="res-score"></div>
+  <div class="battle-box">
+    <div class="battle-heading">🥊 לוח תחרות — מי מוביל?</div>
+    <div id="battle-area"></div>
+  </div>
+  <div class="res-btns">
+    <button class="rbtn-primary" id="next-lvl-btn">השלב הבא →</button>
+    <button class="rbtn-secondary" onclick="showScreen('map')">חזור למפה</button>
+    <button class="rbtn-secondary" onclick="showScreen('home')">החלף שחקן</button>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+
+const CURRICULUM = [
+  {
+    id: 1,
+    icon: '🏗️',
+    title: 'המשפט הפשוט',
+    titleEn: 'Simple Sentence',
+    color: '#6366f1',
+    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #4338ca 100%)',
+    formula: 'Subject + Verb',
+    formulaHe: 'מי + מה עושה',
+    expl: 'כל משפט באנגלית חייב להתחיל ב-<b>מי (Subject)</b> ואחריו <b>מה עושה (Verb)</b>. בעברית אפשר לדלג על "אני" — באנגלית אסור! תמיד אומרים <b>I learn</b>, לא רק <b>learn</b>.',
+    examples: [
+      { en: 'I learn.', he: 'אני לומד/ת.', tokens: [{w:'I',t:'s'},{w:'learn',t:'v'}] },
+      { en: 'Mia wins.', he: 'מיה מנצחת.', tokens: [{w:'Mia',t:'s'},{w:'wins',t:'v'}] },
+      { en: 'We play.', he: 'אנחנו משחקים.', tokens: [{w:'We',t:'s'},{w:'play',t:'v'}] },
+    ],
+    rule: '💡 כלל הזהב: באנגלית תמיד "מי" לפני "מה עושה". אף פעם לא הפוך!',
+    game: {
+      type: 'scramble',
+      qs: [
+        { he: 'אני לומד/ת.', words: ['learn','I'], correct: ['I','learn'], why: 'מי (I) תמיד לפני מה עושה (learn)' },
+        { he: 'הם מנצחים.', words: ['win','They'], correct: ['They','win'], why: 'They = מי. הסדר: מי ← פועל' },
+        { he: 'היא עוזרת.', words: ['She','helps'], correct: ['She','helps'], why: 'אחרי She/He/It הפועל מקבל s — helps, לא help!' },
+        { he: 'אנחנו מחכים.', words: ['wait','We'], correct: ['We','wait'], why: 'We = מי בהתחלה, wait = פועל אחריו' },
+        { he: 'הוא משחק.', words: ['He','plays'], correct: ['He','plays'], why: 'He → plays (עם s כי זה גוף שלישי יחיד)' },
+        { he: 'הם לומדים.', words: ['learn','They'], correct: ['They','learn'], why: 'They (רבים) → learn (בלי s — רק he/she/it מקבלים s)' },
+        { he: 'אתה רץ.', words: ['run','You'], correct: ['You','run'], why: 'You = מי בהתחלה, run = פועל' },
+        { he: 'היא שרה.', words: ['sings','She'], correct: ['She','sings'], why: 'She → sings (עם s, גוף שלישי יחיד)' },
+        { he: 'אני בוכה.', words: ['cry','I'], correct: ['I','cry'], why: 'I + פועל בלי s' },
+        { he: 'הוא ישן.', words: ['sleeps','He'], correct: ['He','sleeps'], why: 'He → sleeps (גוף שלישי יחיד = +s)' },
+        { he: 'הם רצים.', words: ['run','They'], correct: ['They','run'], why: 'They רבים → run בלי s' },
+        { he: 'אני קופץ/ת.', words: ['jump','I'], correct: ['I','jump'], why: 'I + פועל בלי s' },
+        { he: 'אתם משחקים.', words: ['You','play'], correct: ['You','play'], why: 'You + פועל בלי s' },
+        { he: 'הוא קורא.', words: ['He','reads'], correct: ['He','reads'], why: 'He → reads (גוף שלישי יחיד = +s)' },
+        { he: 'אנחנו חושבים.', words: ['think','We'], correct: ['We','think'], why: 'We רבים → think בלי s' },
+        { he: 'היא צוחקת.', words: ['She','laughs'], correct: ['She','laughs'], why: 'She → laughs (גוף שלישי יחיד = +s)' },
+        { he: 'אתה מחכה.', words: ['You','wait'], correct: ['You','wait'], why: 'You + פועל בלי s' },
+        { he: 'הם שותים.', words: ['drink','They'], correct: ['They','drink'], why: 'They רבים → drink בלי s' },
+      ]
+    }
+  },
+  {
+    id: 2,
+    icon: '🎯',
+    title: 'מי + מה עושה + מה',
+    titleEn: 'Subject + Verb + Object',
+    color: '#0ea5e9',
+    gradient: 'linear-gradient(135deg, #06b6d4 0%, #0369a1 100%)',
+    formula: 'Subject + Verb + Object',
+    formulaHe: 'מי + מה עושה + מה/את מה',
+    expl: 'עכשיו נוסיף את <b>המשלים (Object)</b> — מה עושים? את מי? מה? בעברית הסדר גמיש, באנגלית הסדר <b>קבוע תמיד</b>: מי ← מה עושה ← מה.',
+    examples: [
+      { en: 'I learn English.', he: 'אני לומד/ת אנגלית.', tokens: [{w:'I',t:'s'},{w:'learn',t:'v'},{w:'English',t:'o'}] },
+      { en: 'We play chess.', he: 'אנחנו משחקים שחמט.', tokens: [{w:'We',t:'s'},{w:'play',t:'v'},{w:'chess',t:'o'}] },
+      { en: 'She helps the team.', he: 'היא עוזרת לקבוצה.', tokens: [{w:'She',t:'s'},{w:'helps',t:'v'},{w:'the team',t:'o'}] },
+    ],
+    rule: '💡 סדר קבוע באנגלית: מי ← מה עושה ← מה. אסור להזיז!',
+    game: {
+      type: 'scramble',
+      qs: [
+        { he: 'אני לומד/ת אנגלית.', words: ['English','I','learn'], correct: ['I','learn','English'], why: 'הסדר באנגלית: מי (I) ← פועל (learn) ← מה (English). אסור להזיז!' },
+        { he: 'אנחנו משחקים שחמט.', words: ['chess','We','play'], correct: ['We','play','chess'], why: 'We (מי) ← play (פועל) ← chess (מה). המושא תמיד אחרי הפועל!' },
+        { he: 'היא עוזרת לקבוצה.', words: ['helps','the team','She'], correct: ['She','helps','the team'], why: 'She → helps → the team. אחרי She הפועל עם s (helps)!' },
+        { he: 'הם מנצחים במרוץ.', words: ['win','They','the race'], correct: ['They','win','the race'], why: 'They (מי) → win (פועל) → the race (מה). They רבים, אז win בלי s!' },
+        { he: 'הוא מוצא את הפרח.', words: ['finds','the flower','He'], correct: ['He','finds','the flower'], why: 'הסדר: מי → פועל → מה. אסור לשים the flower לפני finds!' },
+        { he: 'אנחנו אוהבים שחמט.', words: ['chess','We','like'], correct: ['We','like','chess'], why: 'We → like → chess. שחמט הוא משחק כללי, לפיכך בלי a/the.' },
+        { he: 'הוא אוכל תפוח.', words: ['eats','He','an apple'], correct: ['He','eats','an apple'], why: 'He → eats → an apple. an לפני apple (תנועה!)' },
+        { he: 'אני שותה מיץ.', words: ['drink','juice','I'], correct: ['I','drink','juice'], why: 'I → drink → juice. מיץ באופן כללי = בלי מגדיר' },
+        { he: 'הם רואים סרט.', words: ['a movie','watch','They'], correct: ['They','watch','a movie'], why: 'They → watch → a movie. a = סרט כלשהו' },
+        { he: 'היא קוראת ספר.', words: ['reads','a book','She'], correct: ['She','reads','a book'], why: 'She → reads (עם s!) → a book' },
+        { he: 'אנחנו אוכלים פיצה.', words: ['eat','We','pizza'], correct: ['We','eat','pizza'], why: 'We → eat → pizza. פיצה כללית = בלי a/the' },
+        { he: 'הוא מנקה את החדר.', words: ['the room','He','cleans'], correct: ['He','cleans','the room'], why: 'He → cleans (עם s!) → the room (חדר ספציפי)' },
+        { he: 'אתה אוהב מוזיקה.', words: ['like','You','music'], correct: ['You','like','music'], why: 'You → like → music. מוזיקה כללית = בלי מגדיר' },
+        { he: 'היא משחקת כדורגל.', words: ['plays','football','She'], correct: ['She','plays','football'], why: 'She → plays (עם s!) → football (משחק כללי = בלי מגדיר)' },
+        { he: 'אני מצייר ציור.', words: ['draw','I','a picture'], correct: ['I','draw','a picture'], why: 'I → draw → a picture (ציור כלשהו)' },
+        { he: 'הם פותחים את הדלת.', words: ['open','the door','They'], correct: ['They','open','the door'], why: 'They → open → the door (דלת ספציפית)' },
+        { he: 'אנחנו רוכבים על אופניים.', words: ['ride','a bike','We'], correct: ['We','ride','a bike'], why: 'We → ride → a bike (אופניים כלשהם)' },
+      ]
+    }
+  },
+  {
+    id: 3,
+    icon: '🔤',
+    title: 'a, an, the',
+    titleEn: 'Articles',
+    color: '#10b981',
+    gradient: 'linear-gradient(135deg, #34d399 0%, #047857 100%)',
+    formula: 'a / an / the + noun',
+    formulaHe: 'מגדיר + שם עצם',
+    expl: '<b>a</b> = משהו אחד כלשהו (עיצור). <b>an</b> = משהו אחד כלשהו (לפני תנועה: a,e,i,o,u). <b>the</b> = ספציפי, יודעים על מה מדברים. <b>ללא מגדיר</b> = דברים כלליים כמו chess, English.',
+    examples: [
+      { en: 'I have a hobby.', he: 'יש לי תחביב (כלשהו).', tokens: [{w:'a',t:'art'},{w:'hobby',t:'o'}] },
+      { en: 'It is an idea.', he: 'זה רעיון. (idea מתחיל ב-i!)', tokens: [{w:'an',t:'art'},{w:'idea',t:'o'}] },
+      { en: 'We swim in the pool.', he: 'אנחנו שוחים בבריכה (הספציפית).', tokens: [{w:'the',t:'art'},{w:'pool',t:'o'}] },
+    ],
+    rule: '💡 a לפני עיצור (a hobby), an לפני תנועה (an idea, an old car), the = ספציפי, ריק = כללי (chess, English)',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: 'I have ___ hobby.', opts: ['a','an','the','—'], correct: 0, he: 'יש לי תחביב', hint: 'hobby מתחיל ב-h = עיצור' },
+        { sent: 'It is ___ old book.', opts: ['a','an','the','—'], correct: 1, he: 'זה ספר ישן', hint: 'old מתחיל ב-o = תנועה!' },
+        { sent: 'We swim in ___ pool.', opts: ['a','an','the','—'], correct: 2, he: 'אנחנו שוחים בבריכה', hint: 'הבריכה הספציפית שלנו' },
+        { sent: 'She has ___ idea.', opts: ['a','an','the','—'], correct: 1, he: 'יש לה רעיון', hint: 'idea מתחיל ב-i = תנועה!' },
+        { sent: 'He plays ___ chess.', opts: ['a','an','the','—'], correct: 3, he: 'הוא משחק שחמט', hint: 'שחמט = משחק כללי, לא צריך מגדיר' },
+        { sent: 'I find ___ flower.', opts: ['a','an','the','—'], correct: 0, he: 'אני מוצא/ת פרח', hint: 'flower מתחיל ב-f = עיצור' },
+      ]
+    }
+  },
+  {
+    id: 4,
+    icon: '👤',
+    title: 'כינויי גוף',
+    titleEn: 'Subject Pronouns',
+    color: '#ec4899',
+    gradient: 'linear-gradient(135deg, #f472b6 0%, #be185d 100%)',
+    formula: 'I / you / he / she / we / they',
+    formulaHe: 'כינויי גוף — במקום שם',
+    expl: 'במקום לחזור על שם, משתמשים ב<b>כינוי</b>. חשוב: <b>I</b> תמיד באות גדולה! <b>he/she</b> = יחיד, <b>they</b> = רבים.',
+    examples: [
+      { en: 'Sam wins → He wins.', he: 'סם מנצח ← הוא מנצח.', tokens: [{w:'He',t:'s'},{w:'=',t:''},{w:'Sam',t:'o'}] },
+      { en: 'Mia learns → She learns.', he: 'מיה לומדת ← היא לומדת.', tokens: [{w:'She',t:'s'},{w:'=',t:''},{w:'Mia',t:'o'}] },
+      { en: 'The kids play → They play.', he: 'הילדים משחקים ← הם משחקים.', tokens: [{w:'They',t:'s'},{w:'=',t:''},{w:'kids',t:'o'}] },
+    ],
+    rule: '💡 I=אני | you=אתה/את | he=הוא | she=היא | we=אנחנו | they=הם/הן. ו-I תמיד I גדולה!',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: '___ play chess. (Mia + Sam)', opts: ['He','She','We','They'], correct: 3, he: 'הם משחקים שחמט', hint: 'שניים = רבים = they' },
+        { sent: '___ learns English. (Mia)', opts: ['He','She','They','I'], correct: 1, he: 'היא לומדת אנגלית', hint: 'Mia = בת = she' },
+        { sent: '___ win the race. (Sam)', opts: ['He','She','They','We'], correct: 0, he: 'הוא מנצח במרוץ', hint: 'Sam = בן = he' },
+        { sent: '___ have a hobby. (all of us)', opts: ['I','He','We','They'], correct: 2, he: 'לנו יש תחביב', hint: 'כולנו ביחד = we' },
+        { sent: '___ help the team. (I + you)', opts: ['We','They','I','She'], correct: 0, he: 'אנחנו עוזרים לקבוצה', hint: 'אני + אתה = we' },
+        { sent: '___ find the flower. (a girl)', opts: ['He','She','They','I'], correct: 1, he: 'היא מוצאת את הפרח', hint: 'בנות = she' },
+      ]
+    }
+  },
+  {
+    id: 5,
+    icon: '❓',
+    title: 'שאלות: Do / Does',
+    titleEn: 'Yes/No Questions',
+    color: '#f59e0b',
+    gradient: 'linear-gradient(135deg, #fbbf24 0%, #b45309 100%)',
+    formula: 'Do/Does + Subject + Verb?',
+    formulaHe: 'Do/Does + מי + פועל בסיס?',
+    expl: 'כדי לשאול שאלת כן/לא: מוסיפים <b>Do</b> (לרוב) או <b>Does</b> (he/she/it) בהתחלה. חשוב: <b>הפועל חוזר לצורת הבסיס!</b> She plays → Does she play? (לא plays!)',
+    examples: [
+      { en: 'You play. → Do you play?', he: 'את/ה משחק/ת ← האם את/ה משחק/ת?', tokens: [{w:'Do',t:'art'},{w:'you',t:'s'},{w:'play',t:'v'}] },
+      { en: 'He wins. → Does he win?', he: 'הוא מנצח ← האם הוא מנצח?', tokens: [{w:'Does',t:'art'},{w:'he',t:'s'},{w:'win',t:'v'}] },
+      { en: 'They learn. → Do they learn?', he: 'הם לומדים ← האם הם לומדים?', tokens: [{w:'Do',t:'art'},{w:'they',t:'s'},{w:'learn',t:'v'}] },
+    ],
+    rule: '💡 I/you/we/they → Do | he/she/it → Does. אחרי Does הפועל ללא s! (does he win, לא does he wins)',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: '___ you like chess?', opts: ['Do','Does','Is','Have'], correct: 0, he: 'האם אתה אוהב שחמט?', hint: 'you → Do' },
+        { sent: '___ she win the race?', opts: ['Do','Does','Is','Have'], correct: 1, he: 'האם היא מנצחת במרוץ?', hint: 'she → Does' },
+        { sent: '___ they learn English?', opts: ['Do','Does','Is','Have'], correct: 0, he: 'האם הם לומדים אנגלית?', hint: 'they → Do' },
+        { sent: '___ he play in the pool?', opts: ['Do','Does','Is','Have'], correct: 1, he: 'האם הוא משחק בבריכה?', hint: 'he → Does' },
+        { sent: '___ we wait here?', opts: ['Do','Does','Is','Have'], correct: 0, he: 'האם אנחנו מחכים פה?', hint: 'we → Do' },
+        { sent: '___ it take time?', opts: ['Do','Does','Is','Have'], correct: 1, he: 'האם זה לוקח זמן?', hint: 'it → Does' },
+      ]
+    }
+  },
+  {
+    id: 6,
+    icon: '🚫',
+    title: "don't / doesn't",
+    titleEn: 'Negation',
+    color: '#ef4444',
+    gradient: 'linear-gradient(135deg, #f87171 0%, #991b1b 100%)',
+    formula: "Subject + don't/doesn't + Verb",
+    formulaHe: 'מי + לא + פועל',
+    expl: 'כדי לשלול משפט: מוסיפים <b>don\'t</b> (לרוב) או <b>doesn\'t</b> (he/she/it) לפני הפועל. הפועל חוזר לבסיס! She doesn\'t <b>play</b> (לא plays)',
+    examples: [
+      { en: "I don't wait.", he: 'אני לא מחכה.', tokens: [{w:"don't",t:'art'},{w:'wait',t:'v'}] },
+      { en: "She doesn't win.", he: 'היא לא מנצחת.', tokens: [{w:"doesn't",t:'art'},{w:'win',t:'v'}] },
+      { en: "They don't play chess.", he: 'הם לא משחקים שחמט.', tokens: [{w:"don't",t:'art'},{w:'play',t:'v'}] },
+    ],
+    rule: "💡 I/you/we/they → don't | he/she/it → doesn't. הפועל אחריהם תמיד בסיס ללא s!",
+    game: {
+      type: 'error',
+      qs: [
+        { sent: "She don't play chess.", err: "don't", fix: "doesn't", expl: "she = גוף שלישי יחיד → doesn't" },
+        { sent: "They doesn't learn English.", err: "doesn't", fix: "don't", expl: "they = רבים → don't" },
+        { sent: "He don't win the race.", err: "don't", fix: "doesn't", expl: "he = גוף שלישי יחיד → doesn't" },
+        { sent: "I doesn't have a hobby.", err: "doesn't", fix: "don't", expl: "I = גוף ראשון → don't" },
+        { sent: "We doesn't play together.", err: "doesn't", fix: "don't", expl: "we = רבים → don't" },
+        { sent: "It don't take time.", err: "don't", fix: "doesn't", expl: "it = גוף שלישי יחיד → doesn't" },
+      ]
+    }
+  },
+  {
+    id: 7,
+    icon: '🎒',
+    title: 'have / has — יש לי',
+    titleEn: 'Have / Has',
+    color: '#06b6d4',
+    gradient: 'linear-gradient(135deg, #22d3ee 0%, #0e7490 100%)',
+    formula: 'I/You/We/They have | He/She/It has',
+    formulaHe: 'יש ל...',
+    expl: 'באנגלית "<b>יש ל...</b>" זה <b>have</b> או <b>has</b>. הכלל פשוט: <b>I, You, We, They → have</b>. <b>He, She, It → has</b>. הוא תמיד אומר על משהו שיש לנו: ספר, אח, חבר, תחביב...',
+    examples: [
+      { en: 'I have a dog.', he: 'יש לי כלב.', tokens: [{w:'I',t:'s'},{w:'have',t:'v'},{w:'a dog',t:'o'}] },
+      { en: 'She has a book.', he: 'יש לה ספר.', tokens: [{w:'She',t:'s'},{w:'has',t:'v'},{w:'a book',t:'o'}] },
+      { en: 'We have a pool.', he: 'יש לנו בריכה.', tokens: [{w:'We',t:'s'},{w:'have',t:'v'},{w:'a pool',t:'o'}] },
+      { en: 'He has a hobby.', he: 'יש לו תחביב.', tokens: [{w:'He',t:'s'},{w:'has',t:'v'},{w:'a hobby',t:'o'}] },
+      { en: 'They have many friends.', he: 'יש להם הרבה חברים.', tokens: [{w:'They',t:'s'},{w:'have',t:'v'},{w:'friends',t:'o'}] },
+    ],
+    rule: '💡 הכלל הקל: <b>he/she/it → has</b> (עם s כמו פעלים אחרים). <b>כל השאר → have</b>.',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: 'I ___ a brother.', opts: ['have','has','am','do'], correct: 0, he: 'יש לי אח.', hint: 'I → have' },
+        { sent: 'She ___ a cat.', opts: ['have','has','is','does'], correct: 1, he: 'יש לה חתול.', hint: 'She → has' },
+        { sent: 'We ___ a big house.', opts: ['has','have','are','do'], correct: 1, he: 'יש לנו בית גדול.', hint: 'We (רבים) → have' },
+        { sent: 'He ___ a new bike.', opts: ['have','has','is','do'], correct: 1, he: 'יש לו אופניים חדשים.', hint: 'He → has' },
+        { sent: 'They ___ a secret.', opts: ['has','have','is','does'], correct: 1, he: 'יש להם סוד.', hint: 'They (רבים) → have' },
+        { sent: 'It ___ four legs.', opts: ['have','has','are','do'], correct: 1, he: 'יש לו ארבע רגליים.', hint: 'It → has' },
+        { sent: 'You ___ a nice toy.', opts: ['has','have','is','does'], correct: 1, he: 'יש לך צעצוע נחמד.', hint: 'You → have' },
+        { sent: 'Mia ___ a beautiful flower.', opts: ['have','has','is','do'], correct: 1, he: 'למיה יש פרח יפה.', hint: 'מיה = שם של בת = she → has' },
+        { sent: 'Sam and Ben ___ a team.', opts: ['has','have','is','does'], correct: 1, he: 'לסם ובן יש קבוצה.', hint: 'שני אנשים = רבים = they → have' },
+        { sent: 'The dog ___ a ball.', opts: ['have','has','is','do'], correct: 1, he: 'לכלב יש כדור.', hint: 'הכלב = it → has' },
+        { sent: 'My parents ___ a car.', opts: ['has','have','is','does'], correct: 1, he: 'להורים שלי יש מכונית.', hint: 'parents = רבים → have' },
+        { sent: 'The teacher ___ many books.', opts: ['have','has','are','do'], correct: 1, he: 'למורה יש הרבה ספרים.', hint: 'the teacher = he/she → has' },
+      ]
+    }
+  }
+];
+
+// ===================== STORAGE =====================
+const S = {
+  get: (k, d=0) => { const v = localStorage.getItem(k); return v === null ? d : v; },
+  getN: (k) => parseInt(localStorage.getItem(k)||'0'),
+  set: (k,v) => localStorage.setItem(k,v),
+  getObj: (k,d={}) => { try { return JSON.parse(localStorage.getItem(k)||'null')||d; } catch(e){return d;} },
+  setObj: (k,v) => localStorage.setItem(k,JSON.stringify(v))
+};
+
+function getPoints(p) { return S.getN(`eq_${p}_pts`); }
+function addPoints(p, n) { S.set(`eq_${p}_pts`, getPoints(p)+n); }
+function getLevelData(p) { return S.getObj(`eq_${p}_lvls`, {}); }
+function setLevelData(p, data) { S.setObj(`eq_${p}_lvls`, data); }
+function getStars(p, id) { return getLevelData(p)[id]||0; }
+function saveStars(p, id, stars) {
+  const d = getLevelData(p);
+  d[id] = Math.max(d[id]||0, stars);
+  setLevelData(p, d);
+}
+function completedCount(p) { return Object.values(getLevelData(p)).filter(v=>v>0).length; }
+function isUnlocked(p, id) {
+  if (id===1) return true;
+  return getStars(p, id-1) > 0;
+}
+function totalStars(p) { return Object.values(getLevelData(p)).reduce((a,b)=>a+b,0); }
+
+// ===================== STATE =====================
+let player = null;
+let currentLevel = null;
+let gameState = { q: 0, score: 0, mistakes: 0, selected: [], answered: false, streak: 0, maxStreak: 0 };
+
+const PRAISE = [
+  '🎉 כל הכבוד אלוף/ה!',
+  '🌟 מעולה!',
+  '💫 מדהים!',
+  '🔥 וואו, ידעת!',
+  '⭐ מצוין!',
+  '🚀 פנטסטי!',
+  '🏆 כל הכבוד!',
+  '✨ יפה מאוד!'
+];
+function randomPraise() { return PRAISE[Math.floor(Math.random()*PRAISE.length)]; }
+
+// ===================== NAVIGATION =====================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  if (id==='home') refreshHome();
+  if (id==='map') refreshMap();
+  if (id==='stories') renderStories();
+}
+
+function refreshHome() {
+  ['tal','elad'].forEach(p => {
+    const pts = getPoints(p);
+    const stars = totalStars(p);
+    const lvls = completedCount(p);
+    const statsEl = document.getElementById(`pc-${p}-stats`);
+    statsEl.innerHTML = `
+      <span class="pc-stat"><span class="pc-icon">⭐</span>${pts.toLocaleString()}</span>
+      <span class="pc-stat"><span class="pc-icon">💎</span>${stars}</span>
+      <span class="pc-stat"><span class="pc-icon">🎯</span>${lvls}</span>
+    `;
+  });
+  // Leaderboard banner
+  const talPts = getPoints('tal'), eladPts = getPoints('elad');
+  const banner = document.getElementById('leader-banner');
+  const title = document.getElementById('lb-title');
+  const sub = document.getElementById('lb-sub');
+  const lbEmoji = banner.querySelector('.lb-emoji');
+  banner.classList.remove('lb-tie','lb-empty');
+
+  // badges per player
+  document.getElementById('pc-tal-badge').innerHTML = '';
+  document.getElementById('pc-elad-badge').innerHTML = '';
+
+  if (talPts === 0 && eladPts === 0) {
+    banner.classList.add('lb-empty');
+    lbEmoji.textContent = '🚀';
+    title.textContent = 'מי יהיה המוביל הראשון?';
+    sub.textContent = 'תיכנסו כדי להתחיל את התחרות!';
+  } else if (talPts === eladPts) {
+    banner.classList.add('lb-tie');
+    lbEmoji.textContent = '🤝';
+    title.textContent = `שוויון! ${talPts.toLocaleString()} : ${eladPts.toLocaleString()}`;
+    sub.textContent = 'מי ישבור את השוויון ראשון/ה?';
+  } else if (talPts > eladPts) {
+    lbEmoji.textContent = '🏆';
+    title.textContent = `טל מובילה! ${talPts.toLocaleString()} נקודות`;
+    sub.textContent = `אלעד מאחור ב-${(talPts-eladPts).toLocaleString()} נק' — בוא תפוס אותה! 💪`;
+    document.getElementById('pc-tal-badge').innerHTML = '<div class="pc-lead-badge">🏆 מובילה</div>';
+    document.getElementById('pc-elad-badge').innerHTML = `<div class="pc-behind">חסרות ${(talPts-eladPts).toLocaleString()} נק'</div>`;
+  } else {
+    lbEmoji.textContent = '🏆';
+    title.textContent = `אלעד מוביל! ${eladPts.toLocaleString()} נקודות`;
+    sub.textContent = `טל מאחור ב-${(eladPts-talPts).toLocaleString()} נק' — בואי תפסי אותו! 💪`;
+    document.getElementById('pc-elad-badge').innerHTML = '<div class="pc-lead-badge">🏆 מוביל</div>';
+    document.getElementById('pc-tal-badge').innerHTML = `<div class="pc-behind">חסרות ${(eladPts-talPts).toLocaleString()} נק'</div>`;
+  }
+}
+
+// ===================== PASSWORD GATE =====================
+const PASSWORDS = { tal: '121213', elad: '280315' };
+let pwPlayer = null;
+
+function tryLogin(p) {
+  // Already authenticated this session?
+  if (sessionStorage.getItem('eq_auth_'+p) === '1') {
+    selectPlayer(p);
+    return;
+  }
+  pwPlayer = p;
+  const meta = p==='tal' ? {name:'טל', img:'images/tal.png', greet:'שלום טל 🐼'} : {name:'אלעד', img:'images/elad.png', greet:'שלום אלעד 🐯'};
+  document.getElementById('pw-mascot-img').src = meta.img;
+  document.getElementById('pw-title').textContent = meta.greet;
+  document.getElementById('pw-input').value = '';
+  document.getElementById('pw-error').textContent = '';
+  document.getElementById('pw-modal-bg').classList.add('show');
+  setTimeout(()=>document.getElementById('pw-input').focus(), 100);
+}
+function closePwModal() {
+  document.getElementById('pw-modal-bg').classList.remove('show');
+  pwPlayer = null;
+}
+function pwKey(d) {
+  const inp = document.getElementById('pw-input');
+  if (inp.value.length < 6) inp.value += d;
+  document.getElementById('pw-error').textContent = '';
+  if (inp.value.length === 6) setTimeout(checkPassword, 150);
+}
+function pwBack() {
+  const inp = document.getElementById('pw-input');
+  inp.value = inp.value.slice(0,-1);
+  document.getElementById('pw-error').textContent = '';
+}
+function checkPassword() {
+  const entered = document.getElementById('pw-input').value;
+  if (entered === PASSWORDS[pwPlayer]) {
+    const who = pwPlayer;
+    sessionStorage.setItem('eq_auth_'+who, '1');
+    closePwModal();
+    selectPlayer(who);
+  } else {
+    const inp = document.getElementById('pw-input');
+    inp.classList.add('shake');
+    document.getElementById('pw-error').textContent = '❌ סיסמה שגויה — נסה שוב';
+    setTimeout(()=>{ inp.classList.remove('shake'); inp.value=''; }, 450);
+  }
+}
+
+function selectPlayer(p) {
+  player = p;
+  showScreen('map');
+}
+
+function logout() {
+  if (player) sessionStorage.removeItem('eq_auth_'+player);
+  player = null;
+  showScreen('home');
+}
+
+function refreshMap() {
+  if (!player) { showScreen('home'); return; }
+  const pl = player==='tal' ? {name:'טל',emoji:'🐼',img:'images/tal.png'} : {name:'אלעד',emoji:'🐯',img:'images/elad.png'};
+  const other = player==='tal' ? 'elad' : 'tal';
+  const otherPl = other==='tal' ? {name:'טל',emoji:'🐼'} : {name:'אלעד',emoji:'🐯'};
+
+  // Welcome card
+  document.getElementById('wel-name').textContent = pl.name;
+  document.getElementById('wel-mascot-img').src = pl.img;
+  document.getElementById('wel-pts').textContent = getPoints(player).toLocaleString();
+  document.getElementById('wel-stars').textContent = totalStars(player);
+  document.getElementById('wel-streak').textContent = getStreak(player);
+
+  // Welcome subtitle: friendly + competitive hint
+  const myPts = getPoints(player), theirPts = getPoints(other);
+  const diff = myPts - theirPts;
+  let sub = `שלום ${pl.name}! מוכן/ה ללמוד? 🎯`;
+  if (diff > 0) sub = `אתה מוביל/ה ב-${diff} נק' מול ${otherPl.name}! 🔥`;
+  else if (diff < 0) sub = `${otherPl.name} מוביל/ה ב-${Math.abs(diff)} נק' — תפוס/י אותו! 💪`;
+  else if (myPts>0) sub = `שוויון מול ${otherPl.name} 🤝 בוא/י תפרוץ קדימה!`;
+  document.getElementById('wel-sub').textContent = sub;
+
+  // Level cards
+  const grid = document.getElementById('levels-grid');
+  grid.innerHTML = '';
+  let firstUnplayed = CURRICULUM.find(lv => isUnlocked(player, lv.id) && getStars(player, lv.id) === 0);
+
+  CURRICULUM.forEach(lv => {
+    const unlocked = isUnlocked(player, lv.id);
+    const myStars = getStars(player, lv.id);
+    const theirStars = getStars(other, lv.id);
+    const isFeatured = unlocked && firstUnplayed && firstUnplayed.id===lv.id;
+    const prevLv = lv.id > 1 ? CURRICULUM.find(l => l.id === lv.id - 1) : null;
+    const card = document.createElement('div');
+    card.className = `level-card ${unlocked?'unlocked':'locked'}${isFeatured?' featured':''}`;
+
+    const starsHtml = (n) => [1,2,3].map(i=>`<span class="star ${i<=n?'on':'off'}">★</span>`).join('');
+    const pl2 = other==='tal'?{name:'טל',emoji:'🐼'}:{name:'אלעד',emoji:'🐯'};
+    const playLabel = unlocked ? (myStars>0 ? 'שחק/י שוב' : 'התחל/י ללמוד') : '';
+
+    card.innerHTML = `
+      ${myStars===3 ? '<div class="lc-perfect-badge">🏆 פרפקט!</div>' : ''}
+      <div class="lc-content">
+        <div class="lc-pill">שלב ${lv.id}</div>
+        <div class="lc-title">${lv.title}</div>
+        <div class="lc-formula">${lv.formula}</div>
+        ${unlocked ? `
+          <div class="lc-action-row">
+            <button class="lc-play-btn" aria-label="התחל">▶</button>
+            <div>
+              <div class="lc-play-label">${playLabel}</div>
+              <div class="lc-players">
+                <div class="lc-player-row">
+                  <span class="pr-name"><span class="pr-emoji">${pl.emoji}</span> ${pl.name}</span>
+                  <span class="lc-stars">${starsHtml(myStars)}</span>
+                </div>
+                <div class="lc-player-row">
+                  <span class="pr-name"><span class="pr-emoji">${pl2.emoji}</span> ${pl2.name}</span>
+                  <span class="lc-stars">${starsHtml(theirStars)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ` : `
+          <div class="lc-lock-msg">
+            <div class="lc-lock-icon-mini"><img src="images/lock.png" alt=""></div>
+            <span>השלם/י שלב ${prevLv?prevLv.id:lv.id-1} כדי לפתוח</span>
+          </div>
+        `}
+      </div>
+      <div class="lc-illust">
+        <img src="images/level${lv.id}.png" alt="" onerror="this.style.display='none';this.parentNode.querySelector('.lc-fallback-icon').style.display='flex';">
+        <div class="lc-fallback-icon" style="display:none;font-size:4.5em;align-items:center;justify-content:center;width:100%;height:100%;filter:drop-shadow(0 6px 14px rgba(124,58,237,0.4));">${lv.icon}</div>
+        <span class="sparkle">✨</span>
+        <span class="sparkle">✨</span>
+        <span class="sparkle">✨</span>
+      </div>
+    `;
+    if (unlocked) card.onclick = () => openLesson(lv.id);
+    grid.appendChild(card);
+  });
+}
+
+// New helpers for redesigned UI
+function getStreak(p) {
+  // simple session streak — return their best max streak if any saved, or count of completed levels
+  return completedCount(p);
+}
+function toggleDrawer() {
+  document.getElementById('drawer').classList.toggle('open');
+  document.getElementById('drawer-bg').classList.toggle('open');
+}
+function quickStart() {
+  // start the first unplayed unlocked level, or replay the first one
+  const target = CURRICULUM.find(lv => isUnlocked(player, lv.id) && getStars(player, lv.id) === 0) || CURRICULUM[0];
+  if (target) openLesson(target.id);
+}
+function showAchievements() {
+  const stars = totalStars(player);
+  const pts = getPoints(player);
+  const lvls = completedCount(player);
+  alert(`🏆 ההישגים שלך:\n\n⭐ ${stars} כוכבים\n💎 ${pts.toLocaleString()} נקודות\n🎯 ${lvls} שלבים הושלמו`);
+}
+
+// ===================== LESSON =====================
+function openLesson(id) {
+  currentLevel = CURRICULUM.find(l=>l.id===id);
+  if (!currentLevel) return;
+  const lv = currentLevel;
+
+  document.getElementById('ls-icon').textContent = lv.icon;
+  document.getElementById('ls-title').textContent = lv.title;
+  document.getElementById('ls-en').textContent = lv.titleEn;
+  document.getElementById('ls-formula').textContent = lv.formula;
+  document.getElementById('ls-formula-he').textContent = lv.formulaHe;
+  document.getElementById('ls-expl').innerHTML = lv.expl;
+  document.getElementById('ls-rule').innerHTML = lv.rule;
+
+  const exDiv = document.getElementById('ls-examples');
+  exDiv.innerHTML = '';
+  lv.examples.forEach(ex => {
+    const tokMap = {s:'tok-s',v:'tok-v',o:'tok-o',art:'tok-art'};
+    const toks = ex.tokens.filter(t=>t.t).map(t=>`<span class="tok ${tokMap[t.t]||''}">${t.w}</span>`).join('');
+    exDiv.innerHTML += `
+      <div class="example-card">
+        <div class="ex-en">${ex.en}</div>
+        <div class="ex-he">${ex.he}</div>
+        ${toks ? `<div class="ex-tokens">${toks}</div>` : ''}
+      </div>`;
+  });
+  showScreen('lesson');
+}
+
+// ===================== GAME ENGINE =====================
+function startGame() {
+  if (!currentLevel) return;
+  // pick a fresh random subset of questions (6 max) each play — keeps it varied
+  const pool = currentLevel.game.qs.slice();
+  const N = Math.min(6, pool.length);
+  // Fisher-Yates shuffle
+  for (let i=pool.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  currentLevel.game.activeQs = pool.slice(0, N);
+  gameState = { q: 0, score: 0, mistakes: 0, selected: [], answered: false, streak: 0, maxStreak: 0 };
+  showScreen('game');
+  renderQ();
+}
+
+// === streak / confetti helpers ===
+function updateScorePill() {
+  const pill = document.getElementById('score-pill');
+  const streakHtml = gameState.streak >= 2 ? `<span class="streak-pill">🔥 רצף ${gameState.streak}</span>` : '';
+  pill.innerHTML = `${streakHtml}⭐ ${gameState.score}`;
+  pill.classList.remove('flash'); void pill.offsetWidth; pill.classList.add('flash');
+}
+
+function fireConfetti(count) {
+  const colors = ['#7c3aed','#f59e0b','#10b981','#ec4899','#06b6d4','#fcd34d'];
+  for (let i=0; i<count; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random()*100 + 'vw';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration = (1.6 + Math.random()*1.4) + 's';
+    p.style.animationDelay = (Math.random()*0.25) + 's';
+    p.style.transform = `rotate(${Math.random()*360}deg)`;
+    p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 3500);
+  }
+}
+
+function showStreakBanner(text, sub) {
+  document.querySelectorAll('.streak-banner').forEach(b=>b.remove());
+  const b = document.createElement('div');
+  b.className = 'streak-banner';
+  b.innerHTML = text + (sub?`<small>${sub}</small>`:'');
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(), 2000);
+}
+
+function onCorrect(pts) {
+  gameState.score += pts;
+  gameState.streak++;
+  gameState.maxStreak = Math.max(gameState.maxStreak, gameState.streak);
+  updateScorePill();
+  beep('ok');
+  fireConfetti(gameState.streak>=3 ? 50 : 25);
+  // streak celebration milestones
+  if (gameState.streak === 3) showStreakBanner('🔥 רצף 3!', 'אש על אש!');
+  else if (gameState.streak === 5) showStreakBanner('⚡ רצף 5!', 'בלתי ניתן לעצירה!');
+  else if (gameState.streak >= 6 && gameState.streak === currentLevel.game.activeQs.length) {
+    showStreakBanner('🏆 פרפקט!', 'כל התשובות נכונות!');
+  }
+}
+
+function onWrong() {
+  gameState.streak = 0;
+  gameState.mistakes++;
+  updateScorePill();
+  beep('bad');
+}
+
+function renderQ() {
+  const lv = currentLevel;
+  const qs = lv.game.activeQs || lv.game.qs;
+  const qi = gameState.q;
+  const total = qs.length;
+
+  document.getElementById('q-num').textContent = `${qi+1}/${total}`;
+  document.getElementById('prog-fill').style.width = `${(qi/total)*100}%`;
+  updateScorePill();
+  document.getElementById('feedback-area').innerHTML = '';
+  document.getElementById('check-btn').style.display = 'block';
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('next-btn').classList.remove('show');
+  gameState.answered = false;
+  gameState.selected = [];
+
+  const q = qs[qi];
+  const type = lv.game.type;
+  document.getElementById('q-type-lbl').textContent = type==='scramble'?'סדר את המילים':type==='fill'?'השלם את המשפט':'מצא את הטעות';
+
+  if (type==='scramble') {
+    document.getElementById('q-he').textContent = `🔤 ${q.he}`;
+    document.getElementById('q-hint').textContent = 'לחץ על המילים בסדר הנכון';
+    renderScramble(q);
+  } else if (type==='fill') {
+    document.getElementById('q-he').textContent = `📝 ${q.he}`;
+    document.getElementById('q-hint').textContent = q.hint||'בחר את המילה המתאימה';
+    renderFill(q);
+    document.getElementById('check-btn').style.display = 'none';
+  } else if (type==='error') {
+    document.getElementById('q-he').textContent = '🔍 מצא את הטעות במשפט';
+    document.getElementById('q-hint').textContent = 'לחץ על המילה הלא נכונה';
+    renderError(q);
+  }
+}
+
+// --- SCRAMBLE ---
+function renderScramble(q) {
+  const area = document.getElementById('game-area');
+  gameState.poolWords = [...q.words]; // track which are in pool
+  gameState.answerWords = [];
+  area.innerHTML = `
+    <div style="font-size:0.8em;color:var(--muted);text-align:center;margin-bottom:6px">אזור התשובה:</div>
+    <div class="answer-zone" id="ans-zone"></div>
+    <div style="font-size:0.8em;color:var(--muted);text-align:center;margin-bottom:6px">מילים זמינות:</div>
+    <div class="word-pool" id="pool-zone"></div>
+  `;
+  redrawScramble(q);
+}
+
+function redrawScramble(q) {
+  const ansZone = document.getElementById('ans-zone');
+  const poolZone = document.getElementById('pool-zone');
+
+  ansZone.innerHTML = '';
+  poolZone.innerHTML = '';
+  ansZone.className = `answer-zone ${gameState.answerWords.length>0?'filled':''}`;
+
+  gameState.answerWords.forEach((w,i) => {
+    const t = document.createElement('div');
+    t.className = 'wtile placed';
+    t.textContent = w;
+    t.onclick = () => { gameState.answerWords.splice(i,1); gameState.poolWords.push(w); updateScrambleCheck(); redrawScramble(q); };
+    ansZone.appendChild(t);
+  });
+
+  if (gameState.answerWords.length===0) {
+    ansZone.innerHTML = '<span style="color:var(--muted);font-size:0.88em">לחץ על מילה להתחיל...</span>';
+  }
+
+  gameState.poolWords.forEach(w => {
+    const t = document.createElement('div');
+    t.className = 'wtile';
+    t.textContent = w;
+    t.onclick = () => { gameState.poolWords = gameState.poolWords.filter(x=>x!==w); gameState.answerWords.push(w); updateScrambleCheck(); redrawScramble(q); };
+    poolZone.appendChild(t);
+  });
+}
+
+function updateScrambleCheck() {
+  const q = currentLevel.game.activeQs[gameState.q];
+  const full = gameState.answerWords.length === q.correct.length;
+  document.getElementById('check-btn').disabled = !full;
+}
+
+// --- FILL ---
+function renderFill(q) {
+  const area = document.getElementById('game-area');
+  const sentHtml = q.sent.replace('___', '<span class="blank-spot">___</span>');
+  let optsHtml = '<div class="opts-grid">';
+  q.opts.forEach((o,i) => {
+    optsHtml += `<button class="opt-btn" id="opt-${i}" onclick="chooseFill(${i})">${o}</button>`;
+  });
+  optsHtml += '</div>';
+  area.innerHTML = `<div class="fill-sent">${sentHtml}</div>${optsHtml}`;
+}
+
+function chooseFill(idx) {
+  if (gameState.answered) return;
+  gameState.answered = true;
+  const q = currentLevel.game.activeQs[gameState.q];
+  const correct = idx === q.correct;
+  document.querySelectorAll('.opt-btn').forEach((b,i) => {
+    b.disabled = true;
+    if (i===q.correct) b.classList.add('correct-a');
+    else if (i===idx && !correct) b.classList.add('wrong-a');
+  });
+  // update sentence
+  const sentEl = document.querySelector('.fill-sent');
+  if (sentEl) {
+    sentEl.innerHTML = q.sent.replace('___', `<span class="blank-spot" style="color:${correct?'var(--green)':'var(--red)'}">${q.opts[correct?q.correct:idx]}</span>`);
+  }
+  if (correct) {
+    const pts = Math.max(100 - gameState.mistakes*10, 40);
+    onCorrect(pts);
+    showFeedback(`<span class="fb-big">${randomPraise()}</span>+${pts} נקודות 🎯`, 'ok');
+  } else {
+    onWrong();
+    showFeedback(`<span class="fb-big">❌ כמעט!</span>${q.hint?'💡 <b>למה?</b> '+q.hint:''}<span class="fb-why">התשובה הנכונה: <b>${q.opts[q.correct]}</b></span>`, 'bad');
+  }
+  document.getElementById('next-btn').classList.add('show');
+}
+
+// --- ERROR ---
+function renderError(q) {
+  const area = document.getElementById('game-area');
+  const words = q.sent.split(' ');
+  let html = '<div class="err-sent">';
+  words.forEach(w => {
+    const clean = w.replace(/[.,?!]$/,'');
+    const punct = w.slice(clean.length);
+    html += `<span class="wclick" id="ew-${clean}" onclick="clickErrorWord('${clean}')">${w}</span>`;
+  });
+  html += '</div>';
+  area.innerHTML = html;
+  document.getElementById('check-btn').disabled = false;
+}
+
+function clickErrorWord(w) {
+  if (gameState.answered) return;
+  document.querySelectorAll('.wclick').forEach(el => el.classList.remove('selected-w'));
+  gameState.selectedError = w;
+  const el = document.getElementById(`ew-${w}`);
+  if (el) el.classList.add('selected-w');
+  document.getElementById('check-btn').disabled = false;
+}
+
+// --- CHECK ---
+function checkAnswer() {
+  if (gameState.answered) return;
+  const lv = currentLevel;
+  const q = lv.game.activeQs[gameState.q];
+  const type = lv.game.type;
+
+  if (type==='scramble') {
+    const userAns = gameState.answerWords.join(' ');
+    const correctAns = q.correct.join(' ');
+    const correct = userAns === correctAns;
+    gameState.answered = true;
+
+    const ansZone = document.getElementById('ans-zone');
+    ansZone.innerHTML = '';
+    gameState.answerWords.forEach((w,i) => {
+      const t = document.createElement('div');
+      t.className = `wtile ${correct?'correct-t':w===q.correct[i]?'correct-t':'wrong-t'}`;
+      t.textContent = w;
+      ansZone.appendChild(t);
+    });
+
+    if (correct) {
+      const pts = Math.max(100 - gameState.mistakes*15, 40);
+      onCorrect(pts);
+      showFeedback(`<span class="fb-big">${randomPraise()}</span>+${pts} נקודות 🎯`, 'ok');
+    } else {
+      onWrong();
+      const why = q.why ? `<span class="fb-why">💡 <b>למה?</b> ${q.why}</span>` : '';
+      showFeedback(`<span class="fb-big">❌ כמעט!</span>התשובה הנכונה: <b dir="ltr">${correctAns}</b>${why}`, 'bad');
+    }
+    document.getElementById('check-btn').disabled = true;
+    document.getElementById('next-btn').classList.add('show');
+
+  } else if (type==='error') {
+    const selected = gameState.selectedError;
+    if (!selected) { showFeedback('לחץ על המילה הלא נכונה קודם', 'bad'); return; }
+    gameState.answered = true;
+    const correct = selected === q.err;
+
+    document.querySelectorAll('.wclick').forEach(el => el.classList.add('static-w'));
+    const errEl = document.getElementById(`ew-${q.err}`);
+    if (errEl) errEl.classList.add('correct-w');
+
+    if (correct) {
+      const pts = Math.max(100 - gameState.mistakes*15, 40);
+      onCorrect(pts);
+      showFeedback(`<span class="fb-big">${randomPraise()}</span>הטעות: "${q.err}" → צריך "<b>${q.fix}</b>"<span class="fb-why">💡 ${q.expl}</span>+${pts} נקודות`, 'ok');
+    } else {
+      onWrong();
+      showFeedback(`<span class="fb-big">❌ כמעט!</span>הטעות האמיתית: "${q.err}" → "<b>${q.fix}</b>"<span class="fb-why">💡 ${q.expl}</span>`, 'bad');
+    }
+    document.getElementById('check-btn').disabled = true;
+    document.getElementById('next-btn').classList.add('show');
+  }
+}
+
+function showFeedback(msg, type) {
+  document.getElementById('feedback-area').innerHTML = `<div class="fb-box fb-${type}">${msg}</div>`;
+}
+
+function nextQ() {
+  gameState.q++;
+  const total = currentLevel.game.activeQs.length;
+  if (gameState.q >= total) {
+    finishGame();
+  } else {
+    renderQ();
+  }
+}
+
+// ===================== FINISH =====================
+function finishGame() {
+  const lv = currentLevel;
+  const totalQs = lv.game.activeQs.length;
+  const maxPts = totalQs * 100;
+  const pct = gameState.score / maxPts;
+  const stars = gameState.mistakes === 0 ? 3 : gameState.mistakes <= 2 ? 2 : 1;
+
+  addPoints(player, gameState.score);
+  saveStars(player, lv.id, stars);
+  beep('win');
+
+  // mega confetti party!
+  fireConfetti(80);
+  setTimeout(()=>fireConfetti(60), 400);
+  if (stars === 3) setTimeout(()=>fireConfetti(60), 800);
+
+  const emojis = ['🏆','🌟','🎉'];
+  const titles = [`🏆 פרפקט! אלוף/ה!`, '🌟 כל הכבוד, יפה מאוד!', '🎉 עשית את זה!'];
+  const starStr = ['★','★','★'].map((_,i)=>i<stars?'⭐':'☆').join('');
+
+  document.getElementById('res-emoji').textContent = emojis[3-stars]||'✅';
+  document.getElementById('res-title').textContent = titles[3-stars]||'כל הכבוד!';
+  document.getElementById('res-stars').textContent = starStr;
+  const streakLine = gameState.maxStreak >= 3 ? ` | 🔥 רצף שיא: ${gameState.maxStreak}` : '';
+  document.getElementById('res-score').innerHTML = `+${gameState.score} נקודות${streakLine}`;
+
+  showToast(`+${gameState.score} נקודות!`);
+  if (stars === 3) setTimeout(()=>showStreakBanner('🏆 פרפקט!','אלוף/ת האלופים!'), 600);
+
+  // battle display
+  const other = player==='tal'?'elad':'tal';
+  const myInfo = player==='tal'?{name:'טל',emoji:'🦁',color:'#7c3aed'}:{name:'אלעד',emoji:'🐯',color:'#f59e0b'};
+  const theirInfo = other==='tal'?{name:'טל',emoji:'🦁',color:'#7c3aed'}:{name:'אלעד',emoji:'🐯',color:'#f59e0b'};
+  const myPts = getPoints(player), theirPts = getPoints(other);
+  const total = myPts + theirPts || 1;
+  const myW = Math.round(myPts/total*100), theirW = 100-myW;
+  const myStarsT = totalStars(player), theirStarsT = totalStars(other);
+  const leader = myPts>=theirPts ? myInfo : theirInfo;
+
+  document.getElementById('battle-area').innerHTML = `
+    <div class="battle-row">
+      <div class="bp">
+        <div class="bp-emoji">${myInfo.emoji}</div>
+        <div class="bp-name">${myInfo.name}</div>
+        <div class="bp-pts-big" style="color:${myInfo.color}">${myPts.toLocaleString()}</div>
+        <div class="bp-lvls">⭐ ${myStarsT} כוכבים | ${completedCount(player)} שלבים</div>
+      </div>
+      <div class="battle-mid">
+        <div class="bbar">
+          <div class="bbar-l" style="width:${myW}%;background:${myInfo.color}"></div>
+          <div class="bbar-r" style="width:${theirW}%;background:${theirInfo.color}"></div>
+        </div>
+        <div class="bbar-gap">${Math.abs(myPts-theirPts)} נקודות הפרש</div>
+      </div>
+      <div class="bp">
+        <div class="bp-emoji">${theirInfo.emoji}</div>
+        <div class="bp-name">${theirInfo.name}</div>
+        <div class="bp-pts-big" style="color:${theirInfo.color}">${theirPts.toLocaleString()}</div>
+        <div class="bp-lvls">⭐ ${theirStarsT} כוכבים | ${completedCount(other)} שלבים</div>
+      </div>
+    </div>
+    <div class="leader-badge">👑 ${leader.name} ${leader.name===myInfo.name?'מוביל/ת!':'מוביל/ת — אפשר להדביק!'}</div>
+  `;
+
+  const nextLv = CURRICULUM.find(l=>l.id===lv.id+1);
+  const nextBtn = document.getElementById('next-lvl-btn');
+  if (nextLv && isUnlocked(player, nextLv.id)) {
+    nextBtn.style.display = 'block';
+    nextBtn.onclick = () => openLesson(nextLv.id);
+    nextBtn.textContent = `${nextLv.icon} השלב הבא: ${nextLv.title} →`;
+  } else if (nextLv) {
+    nextBtn.style.display = 'block';
+    nextBtn.onclick = () => showScreen('map');
+    nextBtn.textContent = `🔓 השלב הבא יִפָּתַח אחרי ${getStars(player, lv.id)>=1?'לסיים':'לסיים'} שלב זה`;
+  } else {
+    nextBtn.textContent = '🏁 סיימת את כל השלבים! מדהים!';
+    nextBtn.onclick = () => showScreen('map');
+  }
+
+  showScreen('results');
+}
+
+// ===================== UTILS =====================
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'pts-toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 2400);
+}
+
+function beep(type) {
+  try {
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.connect(g); g.connect(ctx.destination);
+    const now = ctx.currentTime;
+    if (type==='ok') { osc.frequency.setValueAtTime(523,now); osc.frequency.setValueAtTime(784,now+0.1); g.gain.setValueAtTime(0.2,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.35); }
+    else if (type==='bad') { osc.frequency.setValueAtTime(220,now); osc.frequency.setValueAtTime(170,now+0.15); g.gain.setValueAtTime(0.2,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.35); }
+    else if (type==='win') { [523,659,784,1047].forEach((f,i)=>{osc.frequency.setValueAtTime(f,now+i*0.12);}); g.gain.setValueAtTime(0.2,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.7); }
+    osc.start(now); osc.stop(now+0.8);
+  } catch(e){}
+}
+
+function confirmReset() {
+  if (confirm('אפס את כל הנתונים של שני השחקנים? (לא ניתן לבטל)')) {
+    ['tal','elad'].forEach(p => { localStorage.removeItem(`eq_${p}_pts`); localStorage.removeItem(`eq_${p}_lvls`); });
+    refreshHome();
+    alert('נאפס! התחלה מחדש 🆕');
+  }
+}
+
+// ===================== STORIES =====================
+const STORIES = [
+  {
+    id: 1,
+    icon: '🏃',
+    image: 'images/story1.png',
+    title: 'The Big Race',
+    titleHe: 'המרוץ הגדול',
+    sub: 'סיפור על חברות ותחרות',
+    level: 1, // grammar level (S+V)
+    sentences: [
+      { en: 'Sam and Ben are friends.', he: 'סם ובן הם חברים.' },
+      { en: 'Today is race day.', he: 'היום הוא יום המרוץ.' },
+      { en: 'Sam runs fast.', he: 'סם רץ מהר.' },
+      { en: 'Ben runs faster.', he: 'בן רץ יותר מהר.' },
+      { en: 'They run together.', he: 'הם רצים ביחד.' },
+      { en: 'They win the race!', he: 'הם מנצחים במרוץ!' },
+    ],
+    questions: [
+      { q: 'מי הם סם ובן?', opts: ['אחים','חברים','שכנים','מורים'], correct: 1, why: '"Sam and Ben are friends" — friends = חברים' },
+      { q: 'מה קורה היום?', opts: ['מסיבה','יום מרוץ','יום הולדת','חופשה'], correct: 1, why: '"Today is race day" — race day = יום המרוץ' },
+      { q: 'מי רץ יותר מהר?', opts: ['סם','בן','שניהם זהים','אף אחד'], correct: 1, why: '"Ben runs faster" — faster = יותר מהר' },
+      { q: 'איך מסתיים הסיפור?', opts: ['הם הפסידו','הם רבים','הם מנצחים ביחד','הם פורשים'], correct: 2, why: '"They win the race!" — win together = ניצחו ביחד' },
+    ],
+  },
+  {
+    id: 2,
+    icon: '🌸',
+    image: 'images/story2.png',
+    title: 'The Secret Flower',
+    titleHe: 'הפרח הסודי',
+    sub: 'סיפור על גילוי מיוחד',
+    level: 2,
+    sentences: [
+      { en: 'Mia walks in the garden.', he: 'מיה הולכת בגן.' },
+      { en: 'She finds a secret flower.', he: 'היא מוצאת פרח סודי.' },
+      { en: 'The flower is very beautiful.', he: 'הפרח מאוד יפה.' },
+      { en: 'She picks the flower.', he: 'היא קוטפת את הפרח.' },
+      { en: 'She gives it to Sam.', he: 'היא נותנת אותו לסם.' },
+      { en: 'Sam is very happy!', he: 'סם מאוד שמח!' },
+    ],
+    questions: [
+      { q: 'איפה מיה הולכת?', opts: ['בכיתה','בגן','בים','ברחוב'], correct: 1, why: '"Mia walks in the garden" — garden = גן' },
+      { q: 'מה היא מוצאת?', opts: ['ספר','עוגה','פרח סודי','שעון'], correct: 2, why: '"She finds a secret flower" — secret flower = פרח סודי' },
+      { q: 'איך הפרח?', opts: ['יבש','קטן','יפה מאוד','אדום'], correct: 2, why: '"The flower is very beautiful" — beautiful = יפה' },
+      { q: 'למי מיה נותנת את הפרח?', opts: ['לאמא','לסם','לחברה','למורה'], correct: 1, why: '"She gives it to Sam" — to Sam = לסם' },
+      { q: 'איך סם מרגיש בסוף?', opts: ['עצוב','כועס','שמח מאוד','עייף'], correct: 2, why: '"Sam is very happy" — happy = שמח' },
+    ],
+  },
+  {
+    id: 3,
+    icon: '🎂',
+    image: 'images/story3.png',
+    title: 'A Special Birthday',
+    titleHe: 'יום הולדת מיוחד',
+    sub: 'סיפור על חגיגה משפחתית',
+    level: 3,
+    sentences: [
+      { en: 'Today is Sam\'s birthday.', he: 'היום יום ההולדת של סם.' },
+      { en: 'He is ten years old.', he: 'הוא בן עשר.' },
+      { en: 'His mother makes a big cake.', he: 'אמא שלו מכינה עוגה גדולה.' },
+      { en: 'Mia brings a special present.', he: 'מיה מביאה מתנה מיוחדת.' },
+      { en: 'They eat the cake together.', he: 'הם אוכלים את העוגה ביחד.' },
+      { en: 'It is a great day!', he: 'זה יום נהדר!' },
+    ],
+    questions: [
+      { q: 'בן כמה סם?', opts: ['שמונה','תשע','עשר','אחת עשרה'], correct: 2, why: '"He is ten years old" — ten = עשר' },
+      { q: 'מה אמא של סם מכינה?', opts: ['ארוחת ערב','עוגה גדולה','שתייה','סלט'], correct: 1, why: '"His mother makes a big cake" — big cake = עוגה גדולה' },
+      { q: 'מה מיה מביאה?', opts: ['פרחים','מתנה מיוחדת','בלון','כרטיס'], correct: 1, why: '"Mia brings a special present" — special present = מתנה מיוחדת' },
+      { q: 'מה הם אוכלים?', opts: ['פיצה','גלידה','עוגה','פירות'], correct: 2, why: '"They eat the cake together" — cake = עוגה' },
+    ],
+  },
+  {
+    id: 4,
+    icon: '🌳',
+    image: 'images/story4.png',
+    title: 'Save the Tree',
+    titleHe: 'תצילו את העץ',
+    sub: 'סיפור על הסביבה',
+    level: 3,
+    sentences: [
+      { en: 'There is an old tree in the park.', he: 'יש עץ ישן בפארק.' },
+      { en: 'A man wants to cut it down.', he: 'איש רוצה לכרות אותו.' },
+      { en: 'Sam and Mia say "Stop!"', he: 'סם ומיה אומרים "תפסיק!"' },
+      { en: 'Trees are important for the air.', he: 'עצים חשובים לאוויר.' },
+      { en: 'The man listens to them.', he: 'האיש מקשיב להם.' },
+      { en: 'They save the tree together!', he: 'הם מצילים את העץ ביחד!' },
+    ],
+    questions: [
+      { q: 'מה יש בפארק?', opts: ['ספסל ישן','עץ ישן','בית קטן','כלב'], correct: 1, why: '"There is an old tree" — old tree = עץ ישן' },
+      { q: 'מה האיש רוצה לעשות?', opts: ['לטפל בעץ','לכרות אותו','לצייר אותו','לטפס עליו'], correct: 1, why: '"A man wants to cut it down" — cut down = לכרות' },
+      { q: 'למה עצים חשובים?', opts: ['לפרחים','לאוויר','למים','לאוכל'], correct: 1, why: '"Trees are important for the air" — air = אוויר' },
+      { q: 'איך הסיפור מסתיים?', opts: ['העץ נכרת','הם בורחים','הם מצילים את העץ','האיש כועס'], correct: 2, why: '"They save the tree together" — save = להציל' },
+    ],
+  },
+];
+
+let currentStory = null;
+let storyState = { q:0, score:0, selected:-1, answered:false };
+
+function storyStars(p, sid) {
+  try { return (JSON.parse(localStorage.getItem(`eq_${p}_stories`)||'{}')[sid]) || 0; } catch(e){ return 0; }
+}
+function saveStoryStars(p, sid, stars) {
+  const k = `eq_${p}_stories`;
+  const m = JSON.parse(localStorage.getItem(k)||'{}');
+  if ((m[sid]||0) < stars) m[sid] = stars;
+  localStorage.setItem(k, JSON.stringify(m));
+}
+
+function renderStories() {
+  if (!player) { showScreen('home'); return; }
+  const list = document.getElementById('stories-list');
+  list.innerHTML = '';
+  STORIES.forEach(s => {
+    const stars = storyStars(player, s.id);
+    const card = document.createElement('div');
+    card.className = 'story-card';
+    const starsHtml = [1,2,3].map(i => `<span class="${i<=stars?'on':'off'}">★</span>`).join('');
+    card.innerHTML = `
+      <div class="story-thumb">${s.image ? `<img src="${s.image}" onerror="this.style.display='none';this.parentNode.innerHTML='${s.icon}'">` : s.icon}</div>
+      <div class="story-info">
+        <div class="story-title">${s.titleHe}</div>
+        <div class="story-sub">${s.title} · ${s.sub}</div>
+        <div class="story-meta">
+          <span class="story-meta-chip">${s.sentences.length} משפטים</span>
+          <span class="story-meta-chip">${s.questions.length} שאלות</span>
+        </div>
+        <div class="story-stars" style="margin-top:6px">${starsHtml}</div>
+      </div>
+      <div class="story-arrow">▶</div>
+    `;
+    card.onclick = () => openStory(s.id);
+    list.appendChild(card);
+  });
+}
+
+function openStory(id) {
+  currentStory = STORIES.find(s => s.id === id);
+  if (!currentStory) return;
+  const s = currentStory;
+
+  const hero = document.getElementById('story-hero-img');
+  if (s.image) {
+    hero.innerHTML = `<img src="${s.image}" onerror="this.parentNode.textContent='${s.icon}'">`;
+  } else {
+    hero.textContent = s.icon;
+  }
+  document.getElementById('story-read-title').textContent = s.titleHe;
+  document.getElementById('story-read-subtitle').textContent = s.title;
+
+  const cont = document.getElementById('story-sentences');
+  cont.innerHTML = '';
+  s.sentences.forEach((sent, i) => {
+    const card = document.createElement('div');
+    card.className = 'sent-card';
+    card.innerHTML = `
+      <div class="sent-en">
+        <button class="sent-speak-btn" data-en="${sent.en.replace(/"/g,'&quot;')}">🔊</button>
+        <span>${sent.en}</span>
+      </div>
+      <button class="sent-toggle">🇮🇱 הצג תרגום</button>
+      <div class="sent-he">${sent.he}</div>
+    `;
+    cont.appendChild(card);
+  });
+  // Bind events
+  cont.querySelectorAll('.sent-speak-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const en = btn.dataset.en;
+      btn.classList.add('speaking');
+      speak(en, () => btn.classList.remove('speaking'));
+    });
+  });
+  cont.querySelectorAll('.sent-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const he = btn.nextElementSibling;
+      const open = he.classList.toggle('show');
+      btn.textContent = open ? '🙈 הסתר תרגום' : '🇮🇱 הצג תרגום';
+    });
+  });
+  showScreen('story-read');
+}
+
+let allHeShown = false;
+function toggleAllHe() {
+  allHeShown = !allHeShown;
+  document.querySelectorAll('#story-sentences .sent-he').forEach(el => el.classList.toggle('show', allHeShown));
+  document.querySelectorAll('#story-sentences .sent-toggle').forEach(el => el.textContent = allHeShown ? '🙈 הסתר תרגום' : '🇮🇱 הצג תרגום');
+  document.getElementById('story-toggle-all-he').textContent = allHeShown ? '🙈 הסתר תרגומים' : '🇮🇱 הצג תרגום';
+}
+
+let storyReadQueue = [];
+let storyReadIdx = 0;
+let storyReading = false;
+function readWholeStory() {
+  if (storyReading) {
+    storyReading = false;
+    window.speechSynthesis.cancel();
+    document.querySelectorAll('.sent-speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
+    document.getElementById('story-read-all').textContent = '🔊 השמע הכל';
+    return;
+  }
+  storyReadQueue = Array.from(document.querySelectorAll('#story-sentences .sent-speak-btn'));
+  storyReadIdx = 0;
+  storyReading = true;
+  document.getElementById('story-read-all').textContent = '⏹ עצור';
+  readNextSent();
+}
+function readNextSent() {
+  if (!storyReading || storyReadIdx >= storyReadQueue.length) {
+    storyReading = false;
+    document.getElementById('story-read-all').textContent = '🔊 השמע הכל';
+    return;
+  }
+  const btn = storyReadQueue[storyReadIdx];
+  btn.scrollIntoView({behavior:'smooth', block:'center'});
+  btn.classList.add('speaking');
+  speak(btn.dataset.en, () => {
+    btn.classList.remove('speaking');
+    storyReadIdx++;
+    setTimeout(readNextSent, 350);
+  });
+}
+
+function startStoryQuiz() {
+  storyState = { q:0, score:0, selected:-1, answered:false };
+  showScreen('story-quiz');
+  renderStoryQ();
+}
+
+function renderStoryQ() {
+  const s = currentStory;
+  const qi = storyState.q;
+  const q = s.questions[qi];
+  document.getElementById('sq-num').textContent = `${qi+1}/${s.questions.length}`;
+  document.getElementById('sq-bar').style.width = `${(qi/s.questions.length)*100}%`;
+  document.getElementById('sq-score').innerHTML = `⭐ ${storyState.score}`;
+  document.getElementById('sq-q').textContent = q.q;
+  const optsEl = document.getElementById('sq-opts');
+  optsEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'sq-opt';
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (storyState.answered) return;
+      storyState.selected = i;
+      optsEl.querySelectorAll('.sq-opt').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('sq-check').disabled = false;
+    };
+    optsEl.appendChild(btn);
+  });
+  document.getElementById('sq-feedback').innerHTML = '';
+  document.getElementById('sq-check').classList.remove('hidden');
+  document.getElementById('sq-check').style.display = 'block';
+  document.getElementById('sq-check').disabled = true;
+  document.getElementById('sq-next').classList.remove('show');
+  storyState.answered = false;
+  storyState.selected = -1;
+}
+
+function checkStoryAnswer() {
+  if (storyState.selected < 0) return;
+  const q = currentStory.questions[storyState.q];
+  const correct = storyState.selected === q.correct;
+  const optsEl = document.getElementById('sq-opts');
+  optsEl.querySelectorAll('.sq-opt').forEach((b, i) => {
+    b.disabled = true;
+    if (i === q.correct) b.classList.add('correct');
+    else if (i === storyState.selected && !correct) b.classList.add('wrong');
+  });
+  if (correct) {
+    storyState.score += 100;
+    document.getElementById('sq-feedback').innerHTML = `<div class="fb-box fb-ok"><span class="fb-big">${randomPraise()}</span>+100 נקודות<span class="fb-why">💡 ${q.why}</span></div>`;
+    fireConfetti(30);
+    beep('ok');
+  } else {
+    document.getElementById('sq-feedback').innerHTML = `<div class="fb-box fb-bad"><span class="fb-big">❌ כמעט!</span>התשובה: <b>${q.opts[q.correct]}</b><span class="fb-why">💡 ${q.why}</span></div>`;
+    beep('bad');
+  }
+  storyState.answered = true;
+  document.getElementById('sq-score').innerHTML = `⭐ ${storyState.score}`;
+  document.getElementById('sq-check').style.display = 'none';
+  document.getElementById('sq-next').classList.add('show');
+}
+
+function nextStoryQ() {
+  storyState.q++;
+  if (storyState.q >= currentStory.questions.length) {
+    finishStory();
+  } else {
+    renderStoryQ();
+  }
+}
+
+function finishStory() {
+  const total = currentStory.questions.length;
+  const max = total * 100;
+  const pct = storyState.score / max;
+  let stars = 1;
+  if (pct >= 0.6) stars = 2;
+  if (pct >= 0.9) stars = 3;
+  addPoints(player, storyState.score);
+  saveStoryStars(player, currentStory.id, stars);
+  beep('win');
+  fireConfetti(80);
+  if (stars === 3) setTimeout(()=>fireConfetti(60), 400);
+  setTimeout(() => {
+    alert(`🏆 סיימת את "${currentStory.titleHe}"!\n\n${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}\n+${storyState.score} נקודות`);
+    showScreen('stories');
+  }, 500);
+}
+
+// ===================== INIT =====================
+refreshHome();
+</script>
+</body>
+</html>

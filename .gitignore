@@ -1,0 +1,6 @@
+.DS_Store
+images/_backup/
+*.bak
+node_modules/
+.idea/
+.vscode/

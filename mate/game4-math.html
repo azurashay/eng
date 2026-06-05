@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>מתמטיקה — אחוזים ונפח</title>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+      color: #222;
+    }
+
+    /* HEADER */
+    .header {
+      background: white;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .header-title { font-size: 1.15rem; font-weight: 700; color: #333; }
+    .btn-back {
+      background: none; border: none; font-size: 0.95rem; color: #666;
+      cursor: pointer; padding: 6px 12px; border-radius: 8px;
+      font-family: 'Heebo', sans-serif; transition: background 0.2s;
+    }
+    .btn-back:hover { background: #f0f0f0; }
+    .score-badge {
+      background: #e8f5e9; color: #2e7d32; font-weight: 700;
+      font-size: 0.9rem; padding: 4px 14px; border-radius: 20px;
+    }
+
+    /* SCREENS */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* HOME */
+    .home-hero { text-align: center; padding: 48px 24px 32px; }
+    .home-hero h1 { font-size: 1.9rem; font-weight: 800; color: #1a1a2e; margin-bottom: 8px; }
+    .home-hero p { color: #777; font-size: 1rem; }
+
+    .topic-cards {
+      display: flex; gap: 20px; padding: 0 24px 60px;
+      justify-content: center; flex-wrap: wrap;
+    }
+    .topic-card {
+      background: white; border-radius: 20px; padding: 36px 28px;
+      width: 220px; text-align: center; cursor: pointer;
+      border: 3px solid transparent;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      transition: all 0.25s;
+    }
+    .topic-card:hover { transform: translateY(-5px); box-shadow: 0 10px 28px rgba(0,0,0,0.13); }
+    .topic-card.percent { border-color: #29b6f6; }
+    .topic-card.volume  { border-color: #ffa726; }
+    .topic-icon { font-size: 3rem; margin-bottom: 14px; display: block; }
+    .topic-card h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
+    .topic-card p { font-size: 0.85rem; color: #888; line-height: 1.5; }
+
+    /* TOPIC CONTAINER */
+    .topic-container { max-width: 660px; margin: 0 auto; padding: 24px 16px 60px; }
+
+    /* TABS */
+    .type-tabs {
+      display: flex; gap: 8px; margin-bottom: 18px;
+      overflow-x: auto; padding-bottom: 4px;
+    }
+    .type-tab {
+      flex-shrink: 0; padding: 8px 16px; border-radius: 20px;
+      border: 2px solid #ddd; background: white;
+      font-family: 'Heebo', sans-serif; font-size: 0.82rem;
+      font-weight: 600; cursor: pointer; transition: all 0.2s; color: #666;
+    }
+    .type-tab.active-percent { background: #29b6f6; border-color: #29b6f6; color: white; }
+    .type-tab.active-volume  { background: #ffa726; border-color: #ffa726; color: white; }
+
+    /* METHOD CARD */
+    .method-card {
+      background: white; border-radius: 16px; padding: 20px;
+      margin-bottom: 18px; border-right: 5px solid #29b6f6;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .method-card.vol { border-right-color: #ffa726; }
+    .method-card h3 { font-size: 1rem; font-weight: 700; color: #222; margin-bottom: 4px; }
+    .method-subtitle { font-size: 0.8rem; color: #999; margin-bottom: 10px; }
+    .method-formula {
+      background: #f0f8ff; border-radius: 10px; padding: 10px 16px;
+      font-size: 1.1rem; font-weight: 800; color: #01579b;
+      text-align: center; margin-bottom: 10px; letter-spacing: 0.5px;
+    }
+    .method-card.vol .method-formula { background: #fff8f0; color: #e65100; }
+    .method-example { font-size: 0.85rem; color: #555; line-height: 1.7; }
+
+    /* EXERCISE CARD */
+    .exercise-card {
+      background: white; border-radius: 16px; padding: 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 14px;
+    }
+    .exercise-label {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.2px; color: #bbb; margin-bottom: 10px;
+    }
+    .exercise-question {
+      font-size: 1.2rem; font-weight: 600; color: #1a1a2e;
+      line-height: 1.6; margin-bottom: 20px;
+    }
+    .answer-row { display: flex; gap: 10px; align-items: center; }
+    .answer-input {
+      flex: 1; padding: 12px 16px; border: 2px solid #ddd;
+      border-radius: 12px; font-size: 1.1rem; font-family: 'Heebo', sans-serif;
+      font-weight: 600; text-align: center; transition: border-color 0.2s; outline: none;
+    }
+    .answer-input:focus { border-color: #29b6f6; }
+    .answer-input.correct { border-color: #4caf50; background: #f1f8e9; }
+    .answer-input.wrong   { border-color: #ef5350; background: #fff5f5; }
+
+    .btn-check {
+      padding: 12px 22px; border-radius: 12px; border: none;
+      font-family: 'Heebo', sans-serif; font-size: 1rem;
+      font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-check.pct { background: #29b6f6; color: white; }
+    .btn-check.vol { background: #ffa726; color: white; }
+    .btn-check:hover:not(:disabled) { filter: brightness(1.08); transform: scale(1.02); }
+    .btn-check:disabled { opacity: 0.45; cursor: default; transform: none; }
+
+    /* FEEDBACK */
+    .feedback {
+      border-radius: 12px; padding: 16px 18px; display: none;
+      margin-bottom: 14px; animation: popIn 0.28s ease;
+    }
+    .feedback.ok  { background: #e8f5e9; border: 2px solid #66bb6a; }
+    .feedback.bad { background: #fff5f5; border: 2px solid #ef9a9a; }
+    .feedback-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .feedback.ok  .feedback-title { color: #2e7d32; }
+    .feedback.bad .feedback-title { color: #c62828; }
+    .steps { display: flex; flex-direction: column; gap: 6px; }
+    .step { display: flex; gap: 10px; align-items: flex-start; font-size: 0.88rem; color: #333; line-height: 1.5; }
+    .step-num {
+      background: #eee; color: #555; border-radius: 50%;
+      width: 22px; height: 22px; font-size: 0.72rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
+    }
+
+    /* ACTION BUTTONS */
+    .action-buttons { display: none; gap: 10px; }
+    .btn-action {
+      flex: 1; padding: 12px; border-radius: 12px; border: none;
+      font-family: 'Heebo', sans-serif; font-size: 0.95rem;
+      font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-retry { background: #ef5350; color: white; }
+    .btn-next  { background: #4caf50; color: white; }
+    .btn-action:hover { filter: brightness(1.08); }
+
+    @keyframes popIn {
+      from { transform: scale(0.94); opacity: 0; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%     { transform: translateX(-8px); }
+      60%     { transform: translateX(8px); }
+    }
+    .shake { animation: shake 0.38s ease; }
+
+    @media (max-width: 480px) {
+      .home-hero h1 { font-size: 1.5rem; }
+      .topic-card { width: 155px; padding: 24px 14px; }
+      .exercise-question { font-size: 1.05rem; }
+      .btn-check { padding: 12px 14px; font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <button class="btn-back" id="btnBack" onclick="goHome()" style="display:none">← חזרה</button>
+  <div class="header-title" id="headerTitle">🧮 מתמטיקה</div>
+  <div class="score-badge" id="scoreBadge" style="display:none">0 / 0</div>
+</div>
+
+<!-- HOME -->
+<div class="screen active" id="screenHome">
+  <div class="home-hero">
+    <h1>בחרי נושא לתרגול 👇</h1>
+    <p>לחצי על הנושא שרוצים ללמוד</p>
+  </div>
+  <div class="topic-cards">
+    <div class="topic-card percent" onclick="startTopic('percent')">
+      <span class="topic-icon">%</span>
+      <h2>אחוזים</h2>
+      <p>3 סוגי תרגילים עם שיטת פתרון לכל סוג</p>
+    </div>
+    <div class="topic-card volume" onclick="startTopic('volume')">
+      <span class="topic-icon">📦</span>
+      <h2>נפח ושטח</h2>
+      <p>קובייה ותיבה — נפח ושטח פנים</p>
+    </div>
+  </div>
+</div>
+
+<!-- PERCENT SCREEN -->
+<div class="screen" id="screenPercent">
+  <div class="topic-container">
+    <div class="type-tabs" id="percentTabs">
+      <button class="type-tab active-percent" onclick="setPercentType(0)">סוג א׳ — מציאת כמות</button>
+      <button class="type-tab" onclick="setPercentType(1)">סוג ב׳ — מציאת אחוז</button>
+      <button class="type-tab" onclick="setPercentType(2)">סוג ג׳ — מציאת השלם</button>
+    </div>
+    <div class="method-card" id="percentMethod"></div>
+    <div class="exercise-card">
+      <div class="exercise-label">תרגיל</div>
+      <div class="exercise-question" id="percentQ"></div>
+      <div class="answer-row">
+        <input class="answer-input" id="percentInput" type="number" placeholder="התשובה שלך"
+          onkeydown="if(event.key==='Enter') checkAnswer('percent')">
+        <button class="btn-check pct" id="percentBtn" onclick="checkAnswer('percent')">בדיקה ✓</button>
+      </div>
+    </div>
+    <div class="feedback" id="percentFeedback"></div>
+    <div class="action-buttons" id="percentActions">
+      <button class="btn-action btn-retry" onclick="retry('percent')">נסי שוב 🔄</button>
+      <button class="btn-action btn-next"  onclick="next('percent')">תרגיל הבא ➜</button>
+    </div>
+  </div>
+</div>
+
+<!-- VOLUME SCREEN -->
+<div class="screen" id="screenVolume">
+  <div class="topic-container">
+    <div class="type-tabs" id="volumeTabs">
+      <button class="type-tab active-volume" onclick="setVolumeType(0)">נפח קובייה</button>
+      <button class="type-tab" onclick="setVolumeType(1)">נפח תיבה</button>
+      <button class="type-tab" onclick="setVolumeType(2)">שטח קובייה</button>
+      <button class="type-tab" onclick="setVolumeType(3)">שטח תיבה</button>
+    </div>
+    <div class="method-card vol" id="volumeMethod"></div>
+    <div class="exercise-card">
+      <div class="exercise-label">תרגיל</div>
+      <div class="exercise-question" id="volumeQ"></div>
+      <div class="answer-row">
+        <input class="answer-input" id="volumeInput" type="number" placeholder="התשובה שלך"
+          onkeydown="if(event.key==='Enter') checkAnswer('volume')">
+        <button class="btn-check vol" id="volumeBtn" onclick="checkAnswer('volume')">בדיקה ✓</button>
+      </div>
+    </div>
+    <div class="feedback" id="volumeFeedback"></div>
+    <div class="action-buttons" id="volumeActions">
+      <button class="btn-action btn-retry" onclick="retry('volume')">נסי שוב 🔄</button>
+      <button class="btn-action btn-next"  onclick="next('volume')">תרגיל הבא ➜</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────
+let topic = null;
+let pType = 0;
+let vType = 0;
+let answer = null;
+let steps  = [];
+let score  = { ok: 0, total: 0 };
+
+// ── METHOD DEFINITIONS ─────────────────────────────────
+const pMethods = [
+  {
+    title: 'סוג א׳ — מציאת כמות מאחוז',
+    sub: 'שאלה: "כמה זה X% מתוך Y?"',
+    formula: 'Y × X ÷ 100',
+    ex: '<strong>דוגמה:</strong> כמה זה 30% מתוך 200?<br>200 × 30 ÷ 100 = <strong>60</strong>'
+  },
+  {
+    title: 'סוג ב׳ — מציאת האחוז',
+    sub: 'שאלה: "X הוא כמה אחוזים מתוך Y?"',
+    formula: 'X ÷ Y × 100',
+    ex: '<strong>דוגמה:</strong> 15 הוא כמה אחוזים מתוך 60?<br>15 ÷ 60 × 100 = <strong>25%</strong>'
+  },
+  {
+    title: 'סוג ג׳ — מציאת השלם',
+    sub: 'שאלה: "X הוא Y% מהכמות. מה הכמות?"',
+    formula: 'X ÷ Y × 100',
+    ex: '<strong>דוגמה:</strong> 24 הם 20% מהכמות. מה הכמות?<br>24 ÷ 20 × 100 = <strong>120</strong>'
+  }
+];
+
+const vMethods = [
+  {
+    title: 'נפח קובייה',
+    sub: 'לקובייה כל הצלעות שוות',
+    formula: 'V = a × a × a',
+    ex: '<strong>דוגמה:</strong> קובייה עם צלע 4 ס"מ<br>4 × 4 × 4 = <strong>64 ס"מ³</strong>'
+  },
+  {
+    title: 'נפח תיבה',
+    sub: 'לתיבה יש אורך, רוחב וגובה',
+    formula: 'V = a × b × c',
+    ex: '<strong>דוגמה:</strong> תיבה 5 × 3 × 2 ס"מ<br>5 × 3 × 2 = <strong>30 ס"מ³</strong>'
+  },
+  {
+    title: 'שטח פנים של קובייה',
+    sub: 'קובייה = 6 פנים שווים, כל פנים הוא ריבוע',
+    formula: 'S = 6 × a × a',
+    ex: '<strong>דוגמה:</strong> קובייה עם צלע 3 ס"מ<br>6 × 3 × 3 = <strong>54 ס"מ²</strong>'
+  },
+  {
+    title: 'שטח פנים של תיבה',
+    sub: 'תיבה = 3 זוגות פנים שונים',
+    formula: 'S = 2 × (a×b + b×c + a×c)',
+    ex: '<strong>דוגמה:</strong> תיבה 4 × 3 × 2 ס"מ<br>2 × (4×3 + 3×2 + 4×2) = 2 × (12+6+8) = 2 × 26 = <strong>52 ס"מ²</strong>'
+  }
+];
+
+const congrats = ['כל הכבוד! 🎉','מצוין! 🌟','נכון מאוד! 💪','אחלה! 🔥','פנטסטי! ✨','יפה מאוד! 👏'];
+const tryAgain = ['כמעט! הנה הפתרון שלב-שלב:','לא מדויק, ככה עושים:','בסדר, הנה השיטה:'];
+
+// ── NAVIGATION ─────────────────────────────────────────
+function goHome() {
+  show('screenHome');
+  document.getElementById('btnBack').style.display = 'none';
+  document.getElementById('scoreBadge').style.display = 'none';
+  document.getElementById('headerTitle').textContent = '🧮 מתמטיקה';
+  score = { ok: 0, total: 0 };
+  topic = null;
+}
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function startTopic(t) {
+  topic = t;
+  score = { ok: 0, total: 0 };
+  document.getElementById('btnBack').style.display = 'block';
+  document.getElementById('scoreBadge').style.display = 'block';
+  updateScore();
+
+  if (t === 'percent') {
+    document.getElementById('headerTitle').textContent = '% אחוזים';
+    show('screenPercent');
+    pType = 0;
+    refreshPercentTabs();
+    renderMethod('percentMethod', pMethods[pType], false);
+    genPercent();
+  } else {
+    document.getElementById('headerTitle').textContent = '📦 נפח ושטח';
+    show('screenVolume');
+    vType = 0;
+    refreshVolumeTabs();
+    renderMethod('volumeMethod', vMethods[vType], true);
+    genVolume();
+  }
+}
+
+function updateScore() {
+  document.getElementById('scoreBadge').textContent = `${score.ok} / ${score.total}`;
+}
+
+// ── PERCENT ────────────────────────────────────────────
+function setPercentType(t) {
+  pType = t;
+  refreshPercentTabs();
+  renderMethod('percentMethod', pMethods[pType], false);
+  resetUI('percent');
+  genPercent();
+}
+
+function refreshPercentTabs() {
+  document.querySelectorAll('#percentTabs .type-tab').forEach((tab, i) => {
+    tab.className = 'type-tab' + (i === pType ? ' active-percent' : '');
+  });
+}
+
+function genPercent() {
+  const niceBases = [20,40,60,80,100,120,150,160,200,240,250,300,400,500];
+  const pctList   = [5,10,15,20,25,30,40,50,75];
+
+  if (pType === 0) {
+    let X, Y, ans;
+    do {
+      X = pctList[rand(pctList.length)];
+      Y = niceBases[rand(niceBases.length)];
+      ans = Y * X / 100;
+    } while (!Number.isInteger(ans) || ans < 1);
+    answer = ans;
+    setQ('percent', `כמה זה ${X}% מתוך ${Y}?`);
+    steps = [
+      `נוסחה: Y × X ÷ 100`,
+      `מציבים: ${Y} × ${X} ÷ 100`,
+      `${Y} × ${X} = ${Y*X}`,
+      `${Y*X} ÷ 100 = ${answer}`
+    ];
+
+  } else if (pType === 1) {
+    let p, Y, X;
+    do {
+      p = pctList[rand(pctList.length)];
+      Y = niceBases[rand(niceBases.length)];
+      X = Y * p / 100;
+    } while (!Number.isInteger(X) || X < 1);
+    answer = p;
+    setQ('percent', `${X} הוא כמה אחוזים מתוך ${Y}?`);
+    steps = [
+      `נוסחה: X ÷ Y × 100`,
+      `מציבים: ${X} ÷ ${Y} × 100`,
+      `${X} ÷ ${Y} = ${X/Y}`,
+      `${X/Y} × 100 = ${answer}%`
+    ];
+
+  } else {
+    let p, whole, X;
+    do {
+      p = pctList[rand(pctList.length)];
+      whole = niceBases[rand(niceBases.length)];
+      X = whole * p / 100;
+    } while (!Number.isInteger(X) || X < 1);
+    answer = whole;
+    setQ('percent', `${X} הוא ${p}% מהכמות. מה הכמות השלמה?`);
+    steps = [
+      `נוסחה: X ÷ אחוז × 100`,
+      `מציבים: ${X} ÷ ${p} × 100`,
+      `${X} ÷ ${p} = ${X/p}`,
+      `${X/p} × 100 = ${answer}`
+    ];
+  }
+  resetUI('percent');
+}
+
+// ── VOLUME ─────────────────────────────────────────────
+function setVolumeType(t) {
+  vType = t;
+  refreshVolumeTabs();
+  renderMethod('volumeMethod', vMethods[vType], true);
+  resetUI('volume');
+  genVolume();
+}
+
+function refreshVolumeTabs() {
+  document.querySelectorAll('#volumeTabs .type-tab').forEach((tab, i) => {
+    tab.className = 'type-tab' + (i === vType ? ' active-volume' : '');
+  });
+}
+
+function genVolume() {
+  if (vType === 0) {
+    // נפח קובייה
+    const a = rand(9) + 2;
+    answer = a * a * a;
+    setQ('volume', `לקובייה צלע באורך ${a} ס"מ. מה הנפח שלה?`);
+    steps = [
+      `נוסחה: V = a × a × a`,
+      `מציבים: ${a} × ${a} × ${a}`,
+      `${a} × ${a} = ${a*a}`,
+      `${a*a} × ${a} = ${answer} ס"מ³`
+    ];
+
+  } else if (vType === 1) {
+    // נפח תיבה
+    const a = rand(8) + 2;
+    const b = rand(8) + 2;
+    const c = rand(8) + 2;
+    answer = a * b * c;
+    setQ('volume', `לתיבה: אורך ${a} ס"מ, רוחב ${b} ס"מ, גובה ${c} ס"מ. מה הנפח שלה?`);
+    steps = [
+      `נוסחה: V = a × b × c`,
+      `מציבים: ${a} × ${b} × ${c}`,
+      `${a} × ${b} = ${a*b}`,
+      `${a*b} × ${c} = ${answer} ס"מ³`
+    ];
+
+  } else if (vType === 2) {
+    // שטח קובייה
+    const a = rand(9) + 2;
+    answer = 6 * a * a;
+    setQ('volume', `לקובייה צלע באורך ${a} ס"מ. מה שטח הפנים שלה?`);
+    steps = [
+      `נוסחה: S = 6 × a × a`,
+      `מציבים: 6 × ${a} × ${a}`,
+      `${a} × ${a} = ${a*a}`,
+      `6 × ${a*a} = ${answer} ס"מ²`
+    ];
+
+  } else {
+    // שטח תיבה
+    const a = rand(7) + 2;
+    const b = rand(7) + 2;
+    const c = rand(7) + 2;
+    const ab = a*b, bc = b*c, ac = a*c;
+    answer = 2 * (ab + bc + ac);
+    setQ('volume', `לתיבה: אורך ${a} ס"מ, רוחב ${b} ס"מ, גובה ${c} ס"מ. מה שטח הפנים שלה?`);
+    steps = [
+      `נוסחה: S = 2 × (a×b + b×c + a×c)`,
+      `מציבים: a=${a}, b=${b}, c=${c}`,
+      `a×b = ${a}×${b} = ${ab}`,
+      `b×c = ${b}×${c} = ${bc}`,
+      `a×c = ${a}×${c} = ${ac}`,
+      `${ab} + ${bc} + ${ac} = ${ab+bc+ac}`,
+      `2 × ${ab+bc+ac} = ${answer} ס"מ²`
+    ];
+  }
+  resetUI('volume');
+}
+
+// ── SHARED UI ──────────────────────────────────────────
+function renderMethod(elId, m) {
+  document.getElementById(elId).innerHTML = `
+    <h3>${m.title}</h3>
+    <div class="method-subtitle">${m.sub}</div>
+    <div class="method-formula">${m.formula}</div>
+    <div class="method-example">${m.ex}</div>
+  `;
+}
+
+function setQ(t, txt) {
+  document.getElementById(t === 'percent' ? 'percentQ' : 'volumeQ').textContent = txt;
+}
+
+function resetUI(t) {
+  const input = document.getElementById(t + 'Input');
+  input.value = '';
+  input.className = 'answer-input';
+  input.disabled = false;
+  document.getElementById(t + 'Btn').disabled = false;
+  document.getElementById(t + 'Feedback').style.display = 'none';
+  document.getElementById(t + 'Actions').style.display = 'none';
+  input.focus();
+}
+
+function checkAnswer(t) {
+  const input = document.getElementById(t + 'Input');
+  const val = parseFloat(input.value);
+  if (input.value.trim() === '' || isNaN(val)) {
+    input.classList.add('shake');
+    setTimeout(() => input.classList.remove('shake'), 400);
+    return;
+  }
+  input.disabled = true;
+  document.getElementById(t + 'Btn').disabled = true;
+  score.total++;
+  const correct = val === answer;
+  if (correct) score.ok++;
+  input.classList.add(correct ? 'correct' : 'wrong');
+  updateScore();
+
+  const fb = document.getElementById(t + 'Feedback');
+  const msg = correct
+    ? congrats[rand(congrats.length)]
+    : tryAgain[rand(tryAgain.length)];
+  const stepsHTML = steps.map((s, i) => `
+    <div class="step"><div class="step-num">${i+1}</div><div>${s}</div></div>
+  `).join('');
+  fb.className = 'feedback ' + (correct ? 'ok' : 'bad');
+  fb.innerHTML = `
+    <div class="feedback-title">${correct ? '✅' : '❌'} ${msg}</div>
+    ${correct ? '' : `<div class="steps">${stepsHTML}</div>`}
+  `;
+  fb.style.display = 'block';
+
+  const actions = document.getElementById(t + 'Actions');
+  actions.style.display = 'flex';
+  actions.querySelector('.btn-retry').style.display = correct ? 'none' : 'flex';
+}
+
+function retry(t) { resetUI(t); }
+function next(t)  { t === 'percent' ? genPercent() : genVolume(); }
+
+function rand(n) { return Math.floor(Math.random() * n); }
+</script>
+</body>
+</html>

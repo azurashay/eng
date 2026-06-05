@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>איש תלוי — מילים באנגלית</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  color: #333;
+}
+
+.game-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24px;
+  padding: 20px;
+  max-width: 520px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.game-container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #ff6b6b);
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.6em;
+  margin: 10px 0 6px;
+  color: #4a2c82;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 0.85em;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+/* Unit Selector */
+.unit-selector {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.unit-btn {
+  padding: 7px 14px;
+  border: 2px solid #ddd;
+  border-radius: 20px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.85em;
+  font-weight: 600;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.unit-btn:hover { border-color: #764ba2; color: #764ba2; }
+.unit-btn.active { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; border-color: transparent; }
+.unit-btn.practice-btn { border-color: #ff6b35; color: #ff6b35; box-shadow: 0 0 8px rgba(255,107,53,0.4); }
+.unit-btn.practice-btn.active { background: linear-gradient(135deg, #ff6b35, #f5576c); color: #fff; border-color: transparent; }
+
+/* Score */
+.score-bar {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 12px;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+.score-bar span { display: flex; align-items: center; gap: 4px; }
+.wins { color: #2ecc71; }
+.losses { color: #e74c3c; }
+.streak { color: #f39c12; }
+
+/* Hangman SVG */
+.hangman-area {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+/* Clue */
+.clue-area {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.clue-label {
+  font-size: 0.8em;
+  color: #999;
+  margin-bottom: 2px;
+}
+
+.clue-word {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: #4a2c82;
+}
+
+/* Word display */
+.word-area {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  direction: ltr;
+  min-height: 50px;
+  align-items: end;
+}
+
+.letter-slot {
+  width: 34px;
+  height: 44px;
+  border-bottom: 3px solid #764ba2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  font-weight: 700;
+  color: #333;
+  text-transform: uppercase;
+  transition: all 0.3s;
+}
+
+.letter-slot.revealed { color: #2ecc71; border-bottom-color: #2ecc71; }
+.letter-slot.hint-revealed { color: #f39c12; border-bottom-color: #f39c12; }
+.letter-slot.space { border-bottom: none; width: 20px; }
+
+/* Keyboard */
+.keyboard {
+  direction: ltr;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.keyboard-row {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.key-btn {
+  width: 34px;
+  height: 42px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #f0f0f0, #ddd);
+  font-size: 1em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  font-family: inherit;
+}
+
+.key-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); background: linear-gradient(180deg, #fff, #eee); }
+.key-btn:active:not(:disabled) { transform: translateY(0); }
+.key-btn:disabled { opacity: 0.3; cursor: default; transform: none; }
+.key-btn.correct { background: linear-gradient(180deg, #6bcb77, #4caf50); color: #fff; }
+.key-btn.wrong { background: linear-gradient(180deg, #ff8a80, #e74c3c); color: #fff; }
+
+/* Action buttons */
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 14px;
+  font-size: 0.95em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.action-btn:hover { transform: translateY(-2px); }
+.action-btn:active { transform: translateY(0); }
+
+.new-word-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+}
+
+.hint-btn {
+  background: linear-gradient(135deg, #ffd93d, #f39c12);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(243,156,18,0.4);
+}
+
+.hint-btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+/* Message overlay */
+.message-overlay {
+  display: none;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255,255,255,0.92);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: 24px;
+  padding: 30px;
+  text-align: center;
+  animation: fadeIn 0.4s;
+}
+
+.message-overlay.show { display: flex; }
+
+.message-emoji { font-size: 4em; margin-bottom: 10px; }
+.message-text { font-size: 1.4em; font-weight: 700; margin-bottom: 6px; color: #333; }
+.message-sub { font-size: 1em; color: #666; margin-bottom: 16px; direction: ltr; }
+
+.message-continue-btn {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  font-size: 1.1em;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+.celebrate .letter-slot { animation: bounce 0.5s ease infinite; }
+.celebrate .letter-slot:nth-child(2n) { animation-delay: 0.1s; }
+.celebrate .letter-slot:nth-child(3n) { animation-delay: 0.2s; }
+
+/* Confetti */
+.confetti-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+  .game-container { padding: 14px; }
+  h1 { font-size: 1.3em; }
+  .key-btn { width: 28px; height: 36px; font-size: 0.85em; }
+  .letter-slot { width: 28px; height: 38px; font-size: 1.2em; }
+  .unit-btn { padding: 5px 10px; font-size: 0.8em; }
+}
+.game-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+  padding: 10px; margin: 0 0 20px 0;
+  border-bottom: 2px solid rgba(255,255,255,0.2);
+}
+.game-nav a {
+  color: #fff; text-decoration: none; padding: 8px 16px;
+  border-radius: 20px; font-weight: bold; font-size: 0.95em;
+  background: rgba(255,255,255,0.15); transition: all 0.2s;
+}
+.game-nav a:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+.game-nav a.active { background: #ffd93d; color: #5a3a00; box-shadow: 0 4px 12px rgba(255,217,61,0.5); }
+@media (max-width: 500px) {
+  .game-nav a { padding: 6px 10px; font-size: 0.85em; }
+}
+</style>
+</head>
+<body>
+
+<nav class="game-nav">
+  <a href="english-quest.html">🎮 English Quest</a>
+  <a href="index.html">🏠 בית</a>
+  <a href="game1-memory.html">🎮 זיכרון</a>
+  <a href="game2-quiz.html">🎯 חידון</a>
+  <a href="game3-hangman.html" class="active">🎪 איש תלוי</a>
+  <a href="learn.html">📖 ללמוד</a>
+</nav>
+
+<div class="game-container" id="gameContainer">
+  <h1>🎯 איש תלוי — מילים באנגלית</h1>
+  <p class="subtitle">נחשו את המילה באנגלית לפי הרמז בעברית!</p>
+
+  <div class="unit-selector" id="unitSelector">
+    <button class="unit-btn active" data-unit="all">כל היחידות 📚</button>
+    <button class="unit-btn" data-unit="unit1">יחידה 1</button>
+    <button class="unit-btn" data-unit="unit2">יחידה 2</button>
+    <button class="unit-btn" data-unit="unit3">יחידה 3</button>
+    <button class="unit-btn practice-btn" data-unit="practice">🔥 לתרגול (<span class="practice-count">0</span>)</button>
+  </div>
+
+  <div class="score-bar">
+    <span class="wins">🏆 ניצחונות: <b id="winsCount">0</b></span>
+    <span class="losses">💔 הפסדים: <b id="lossesCount">0</b></span>
+    <span class="streak">🔥 רצף: <b id="streakCount">0</b></span>
+  </div>
+
+  <div class="hangman-area">
+    <svg id="hangmanSvg" width="180" height="180" viewBox="0 0 200 200">
+      <!-- Gallows -->
+      <line x1="30" y1="190" x2="170" y2="190" stroke="#8B5E3C" stroke-width="6" stroke-linecap="round"/>
+      <line x1="60" y1="190" x2="60" y2="20" stroke="#8B5E3C" stroke-width="5" stroke-linecap="round"/>
+      <line x1="57" y1="20" x2="130" y2="20" stroke="#8B5E3C" stroke-width="5" stroke-linecap="round"/>
+      <line x1="130" y1="20" x2="130" y2="42" stroke="#8B5E3C" stroke-width="3" stroke-linecap="round"/>
+      <!-- Body parts (hidden initially) -->
+      <!-- Head -->
+      <g id="hp1" style="display:none">
+        <circle cx="130" cy="60" r="18" fill="#FFE0B2" stroke="#E8A87C" stroke-width="2.5"/>
+        <circle cx="123" cy="56" r="2.5" fill="#333"/>
+        <circle cx="137" cy="56" r="2.5" fill="#333"/>
+        <path d="M124 68 Q130 74 136 68" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round" id="mouth"/>
+        <circle cx="122" cy="55" r="4" fill="none" stroke="#333" stroke-width="0.7"/>
+        <circle cx="138" cy="55" r="4" fill="none" stroke="#333" stroke-width="0.7"/>
+        <!-- Blush -->
+        <ellipse cx="119" cy="63" rx="5" ry="3" fill="rgba(255,150,150,0.4)"/>
+        <ellipse cx="141" cy="63" rx="5" ry="3" fill="rgba(255,150,150,0.4)"/>
+      </g>
+      <!-- Body -->
+      <line id="hp2" x1="130" y1="78" x2="130" y2="130" stroke="#FFB74D" stroke-width="4" stroke-linecap="round" style="display:none"/>
+      <!-- Left arm -->
+      <line id="hp3" x1="130" y1="90" x2="105" y2="115" stroke="#FFB74D" stroke-width="3.5" stroke-linecap="round" style="display:none"/>
+      <!-- Right arm -->
+      <line id="hp4" x1="130" y1="90" x2="155" y2="115" stroke="#FFB74D" stroke-width="3.5" stroke-linecap="round" style="display:none"/>
+      <!-- Left leg -->
+      <line id="hp5" x1="130" y1="130" x2="108" y2="165" stroke="#FFB74D" stroke-width="3.5" stroke-linecap="round" style="display:none"/>
+      <!-- Right leg -->
+      <line id="hp6" x1="130" y1="130" x2="152" y2="165" stroke="#FFB74D" stroke-width="3.5" stroke-linecap="round" style="display:none"/>
+    </svg>
+  </div>
+
+  <div class="clue-area">
+    <div class="clue-label">🔍 הרמז בעברית:</div>
+    <div class="clue-word" id="clueWord"></div>
+  </div>
+
+  <div class="word-area" id="wordArea"></div>
+
+  <div class="keyboard" id="keyboard"></div>
+
+  <div class="actions">
+    <button class="action-btn hint-btn" id="hintBtn" onclick="useHint()">💡 רמז (<span id="hintCount">2</span>)</button>
+    <button class="action-btn new-word-btn" onclick="newGame()">🔄 מילה חדשה</button>
+  </div>
+
+  <div class="message-overlay" id="messageOverlay">
+    <div class="message-emoji" id="msgEmoji"></div>
+    <div class="message-text" id="msgText"></div>
+    <div class="message-sub" id="msgSub"></div>
+    <button class="message-continue-btn" onclick="dismissMessage()">מילה חדשה ▶</button>
+  </div>
+</div>
+
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+const vocabulary = {
+  unit1: [
+    {en: "age", he: "גיל"},{en: "also", he: "גם"},{en: "begin", he: "להתחיל"},{en: "birthday", he: "יום הולדת"},{en: "different", he: "שונה"},{en: "hobby", he: "תחביב"},{en: "month", he: "חודש"},{en: "pool", he: "בריכה"},{en: "year", he: "שנה"},{en: "chess", he: "שחמט"},{en: "first", he: "ראשון"},{en: "important", he: "חשוב"},{en: "learn", he: "ללמוד"},{en: "ninety", he: "תשעים"},{en: "old", he: "ישן / זקן"},{en: "people", he: "אנשים"},{en: "special", he: "מיוחד"},{en: "together", he: "ביחד"},{en: "win", he: "לנצח"},{en: "young", he: "צעיר"},{en: "best", he: "הכי טוב"},{en: "better", he: "יותר טוב"},{en: "call", he: "לקרוא / להתקשר"},{en: "choose", he: "לבחור"},{en: "information", he: "מידע"},{en: "more", he: "יותר"},{en: "next", he: "הבא"},{en: "wait", he: "לחכות"},{en: "blanket", he: "שמיכה"},{en: "brush", he: "מברשת / לצחצח"},{en: "every", he: "כל"},{en: "give", he: "לתת"},{en: "put", he: "לשים"},{en: "time", he: "זמן"},{en: "toy", he: "צעצוע"},{en: "wash", he: "לשטוף / לרחוץ"},{en: "with", he: "עם"},{en: "always", he: "תמיד"},{en: "but", he: "אבל"},{en: "fast", he: "מהר"},{en: "hard", he: "קשה"},{en: "help", he: "לעזור"},{en: "if", he: "אם"},{en: "kid", he: "ילד"},{en: "like", he: "לאהוב / כמו"},{en: "other", he: "אחר"},{en: "team", he: "קבוצה"},{en: "beautiful", he: "יפה"},{en: "because", he: "כי / בגלל"},{en: "break", he: "לשבור / הפסקה"},{en: "for", he: "בשביל / עבור"},{en: "into", he: "לתוך"},{en: "near", he: "ליד / קרוב"},{en: "race", he: "מרוץ"},{en: "road", he: "כביש / דרך"},{en: "their", he: "שלהם"},{en: "idea", he: "רעיון"},{en: "money", he: "כסף"},{en: "now", he: "עכשיו"},{en: "use", he: "להשתמש"},{en: "closed", he: "סגור"},{en: "find", he: "למצוא"},{en: "flower", he: "פרח"},{en: "nice", he: "נחמד"},{en: "secret", he: "סוד"},{en: "cry", he: "לבכות"},{en: "perhaps", he: "אולי"},{en: "sick", he: "חולה"},{en: "too", he: "גם / יותר מדי"},
+    {en: "the same", he: "אותו דבר"},{en: "a lot of", he: "הרבה"},{en: "at night", he: "בלילה"},{en: "take care of", he: "לטפל ב"},{en: "look for", he: "לחפש"},{en: "tell a story", he: "לספר סיפור"},{en: "I'm sorry", he: "אני מצטער"}
+  ],
+  unit2: [
+    {en: "about", he: "על / בערך"},{en: "after", he: "אחרי"},{en: "afternoon", he: "אחר הצהריים"},{en: "all", he: "כל / הכל"},{en: "another", he: "עוד אחד"},{en: "before", he: "לפני"},{en: "breakfast", he: "ארוחת בוקר"},{en: "call", he: "לקרוא / להתקשר"},{en: "catch", he: "לתפוס"},{en: "clean", he: "נקי / לנקות"},{en: "each", he: "כל אחד"},{en: "evening", he: "ערב"},{en: "everyone", he: "כולם"},{en: "fall", he: "ליפול / סתיו"},{en: "get", he: "לקבל"},{en: "glass", he: "כוס / זכוכית"},{en: "guess", he: "לנחש"},{en: "home", he: "בית"},{en: "late", he: "מאוחר"},{en: "lunch", he: "ארוחת צהריים"},{en: "many", he: "הרבה"},{en: "moon", he: "ירח"},{en: "parents", he: "הורים"},{en: "quiet", he: "שקט"},{en: "rich", he: "עשיר"},{en: "sometimes", he: "לפעמים"},{en: "sport", he: "ספורט"},{en: "supper", he: "ארוחת ערב"},{en: "thanks", he: "תודה"},{en: "thing", he: "דבר"},{en: "think", he: "לחשוב"},{en: "too", he: "גם / יותר מדי"},{en: "town", he: "עיירה"},{en: "until", he: "עד"},{en: "us", he: "אותנו"},{en: "work", he: "עבודה / לעבוד"},{en: "world", he: "עולם"},{en: "wrong", he: "לא נכון"},{en: "around", he: "סביב"},{en: "artist", he: "אמן"},{en: "bridge", he: "גשר"},{en: "castle", he: "טירה"},{en: "celebration", he: "חגיגה"},{en: "clothes", he: "בגדים"},{en: "cousin", he: "בן דוד / בת דודה"},{en: "cupboard", he: "ארון"},{en: "desert", he: "מדבר"},{en: "detective", he: "בלש"},{en: "fire", he: "אש"},{en: "flag", he: "דגל"},{en: "forest", he: "יער"},{en: "mat", he: "מחצלת"},{en: "mirror", he: "מראה"},{en: "outside", he: "בחוץ"},{en: "paint", he: "לצבוע / צבע"},{en: "pull", he: "למשוך"},{en: "refrigerator", he: "מקרר"},{en: "rice", he: "אורז"},{en: "river", he: "נהר"},{en: "roof", he: "גג"},{en: "servant", he: "משרת"},{en: "ship", he: "ספינה"},{en: "shower", he: "מקלחת"},{en: "sink", he: "כיור"},{en: "spoon", he: "כף"},{en: "stove", he: "תנור / כיריים"},{en: "straw", he: "קש"},{en: "tent", he: "אוהל"},{en: "thief", he: "גנב"},{en: "throw", he: "לזרוק"},{en: "toilet", he: "שירותים"},{en: "travel", he: "לטייל / לנסוע"},{en: "trip", he: "טיול"},{en: "visit", he: "לבקר"},{en: "weekend", he: "סוף שבוע"},{en: "wood", he: "עץ / עצים"},
+    {en: "kind of", he: "סוג של"},{en: "look at", he: "להסתכל על"},{en: "pick up", he: "להרים"},{en: "dining room", he: "חדר אוכל"},{en: "you're welcome", he: "בבקשה / על לא דבר"}
+  ],
+  unit3: [
+    {en: "air", he: "אוויר"},{en: "battery", he: "סוללה"},{en: "bee", he: "דבורה"},{en: "brave", he: "אמיץ"},{en: "breath", he: "נשימה"},{en: "butterfly", he: "פרפר"},{en: "charge", he: "לטעון / לחייב"},{en: "cook", he: "לבשל / טבח"},{en: "cucumber", he: "מלפפון"},{en: "cute", he: "חמוד"},{en: "dangerous", he: "מסוכן"},{en: "energy", he: "אנרגיה"},{en: "environment", he: "סביבה"},{en: "everywhere", he: "בכל מקום"},{en: "fix", he: "לתקן"},{en: "grass", he: "דשא"},{en: "honey", he: "דבש"},{en: "hurt", he: "לפגוע / לכאוב"},{en: "ice", he: "קרח"},{en: "invent", he: "להמציא"},{en: "leaves", he: "עלים"},{en: "onion", he: "בצל"},{en: "pepper", he: "פלפל"},{en: "plant", he: "צמח / לשתול"},{en: "said", he: "אמר"},{en: "save", he: "להציל / לחסוך"},{en: "saw", he: "ראה"},{en: "scary", he: "מפחיד"},{en: "sell", he: "למכור"},{en: "stay", he: "להישאר"},{en: "storm", he: "סערה"},{en: "sweet", he: "מתוק"},{en: "taste", he: "טעם / לטעום"},{en: "teeth", he: "שיניים"},{en: "thousand", he: "אלף"},{en: "trash", he: "זבל / אשפה"},{en: "vegetable", he: "ירק"},{en: "wise", he: "חכם"},{en: "ask", he: "לשאול"},{en: "autumn", he: "סתיו"},{en: "bottle", he: "בקבוק"},{en: "build", he: "לבנות"},{en: "careful", he: "זהיר"},{en: "change", he: "לשנות / שינוי"},{en: "drive", he: "לנהוג"},{en: "easy", he: "קל"},{en: "far", he: "רחוק"},{en: "feet", he: "רגליים"},{en: "full", he: "מלא"},{en: "grow", he: "לגדול"},{en: "hear", he: "לשמוע"},{en: "here", he: "פה / כאן"},{en: "hour", he: "שעה"},{en: "interesting", he: "מעניין"},{en: "minute", he: "דקה"},{en: "much", he: "הרבה"},{en: "only", he: "רק"},{en: "place", he: "מקום"},{en: "poor", he: "עני"},{en: "problem", he: "בעיה"},{en: "really", he: "באמת"},{en: "remember", he: "לזכור"},{en: "rule", he: "חוק / כלל"},{en: "show", he: "להראות / תוכנית"},{en: "sky", he: "שמיים"},{en: "start", he: "להתחיל"},{en: "strong", he: "חזק"},{en: "teach", he: "ללמד"},{en: "than", he: "מ- (השוואה)"},{en: "them", he: "אותם"},{en: "then", he: "אז"},{en: "tonight", he: "הלילה"},{en: "was", he: "היה"},{en: "while", he: "בזמן ש"},
+    {en: "cut down", he: "לכרות / לקצץ"},{en: "throw away", he: "לזרוק לפח"},{en: "at least", he: "לפחות"},{en: "come back", he: "לחזור"},{en: "Are you ready?", he: "?אתה מוכן"},{en: "I'm ready", he: "אני מוכן"},{en: "What's the matter?", he: "?מה קרה"}
+  ]
+};
+
+const MISTAKES_KEY = 'engGameMistakes';
+function getMistakes() {
+  try { return JSON.parse(localStorage.getItem(MISTAKES_KEY) || '{}'); }
+  catch(e) { return {}; }
+}
+function saveMistakes(m) { localStorage.setItem(MISTAKES_KEY, JSON.stringify(m)); }
+function addMistake(en) {
+  const m = getMistakes();
+  m[en] = (m[en] || 0) + 1;
+  saveMistakes(m);
+}
+function reduceMistake(en) {
+  const m = getMistakes();
+  if (m[en]) {
+    m[en] = Math.max(0, m[en] - 1);
+    if (m[en] === 0) delete m[en];
+    saveMistakes(m);
+  }
+}
+function getPracticeWords() {
+  const m = getMistakes();
+  const allWords = [...vocabulary.unit1, ...vocabulary.unit2, ...vocabulary.unit3];
+  const seen = new Set();
+  const dedupedAll = allWords.filter(w => {
+    if (seen.has(w.en)) return false;
+    seen.add(w.en);
+    return true;
+  });
+  return Object.keys(m)
+    .filter(k => m[k] > 0)
+    .map(k => dedupedAll.find(w => w.en === k))
+    .filter(Boolean);
+}
+function getPracticeCount() {
+  return Object.values(getMistakes()).filter(c => c > 0).length;
+}
+function updatePracticeBadge() {
+  document.querySelectorAll('.practice-count').forEach(el => {
+    el.textContent = getPracticeCount();
+  });
+}
+
+// State
+let currentUnit = 'all';
+let currentWord = null;
+let guessedLetters = new Set();
+let wrongGuesses = 0;
+let maxWrong = 6;
+let hintsLeft = 2;
+let wins = 0;
+let losses = 0;
+let streak = 0;
+let gameOver = false;
+
+// Get active word list
+function getWordList() {
+  if (currentUnit === 'all') {
+    return [...vocabulary.unit1, ...vocabulary.unit2, ...vocabulary.unit3];
+  }
+  if (currentUnit === 'practice') {
+    let pool = getPracticeWords();
+    if (pool.length < 1) {
+      const all = [...vocabulary.unit1, ...vocabulary.unit2, ...vocabulary.unit3];
+      pool = all;
+    }
+    return pool;
+  }
+  return vocabulary[currentUnit];
+}
+
+// Pick random word
+function pickWord() {
+  const list = getWordList();
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+// Check if a word is a multi-word phrase
+function isPhrase(word) {
+  return word.includes(' ');
+}
+
+// Build keyboard
+function buildKeyboard() {
+  const rows = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
+  const kb = document.getElementById('keyboard');
+  kb.innerHTML = '';
+  rows.forEach(row => {
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'keyboard-row';
+    for (const ch of row) {
+      const btn = document.createElement('button');
+      btn.className = 'key-btn';
+      btn.textContent = ch;
+      btn.id = 'key-' + ch;
+      btn.onclick = () => guessLetter(ch);
+      rowDiv.appendChild(btn);
+    }
+    kb.appendChild(rowDiv);
+  });
+}
+
+// Render word slots
+function renderWord() {
+  const area = document.getElementById('wordArea');
+  area.innerHTML = '';
+  const word = currentWord.en.toLowerCase();
+
+  for (let i = 0; i < word.length; i++) {
+    const ch = word[i];
+    if (ch === ' ') {
+      const slot = document.createElement('div');
+      slot.className = 'letter-slot space';
+      area.appendChild(slot);
+    } else if (ch === "'" || ch === '-' || ch === '?' || ch === '!') {
+      // Show punctuation directly
+      const slot = document.createElement('div');
+      slot.className = 'letter-slot';
+      slot.textContent = ch;
+      slot.style.borderBottom = 'none';
+      area.appendChild(slot);
+    } else if (/[a-z]/.test(ch)) {
+      const slot = document.createElement('div');
+      slot.className = 'letter-slot';
+      slot.id = 'slot-' + i;
+      if (guessedLetters.has(ch)) {
+        slot.textContent = ch;
+        slot.classList.add('revealed');
+      }
+      area.appendChild(slot);
+    }
+  }
+}
+
+// Update hangman SVG
+function updateHangman() {
+  for (let i = 1; i <= 6; i++) {
+    const part = document.getElementById('hp' + i);
+    part.style.display = i <= wrongGuesses ? 'block' : 'none';
+  }
+  // Update mouth expression
+  const mouth = document.getElementById('mouth');
+  if (wrongGuesses === 0) mouth.setAttribute('d', 'M124 68 Q130 74 136 68');
+  else if (wrongGuesses <= 2) mouth.setAttribute('d', 'M124 69 L136 69');
+  else if (wrongGuesses <= 4) mouth.setAttribute('d', 'M124 71 Q130 67 136 71');
+  else mouth.setAttribute('d', 'M122 73 Q130 65 138 73');
+}
+
+// Get unique letters needed
+function getLettersNeeded() {
+  const word = currentWord.en.toLowerCase();
+  const letters = new Set();
+  for (const ch of word) {
+    if (/[a-z]/.test(ch)) letters.add(ch);
+  }
+  return letters;
+}
+
+// Check win
+function checkWin() {
+  const needed = getLettersNeeded();
+  for (const l of needed) {
+    if (!guessedLetters.has(l)) return false;
+  }
+  return true;
+}
+
+// Guess a letter
+function guessLetter(ch) {
+  if (gameOver || guessedLetters.has(ch)) return;
+  guessedLetters.add(ch);
+
+  const btn = document.getElementById('key-' + ch);
+  const word = currentWord.en.toLowerCase();
+  const needed = getLettersNeeded();
+
+  if (needed.has(ch)) {
+    btn.classList.add('correct');
+    btn.disabled = true;
+    renderWord();
+    if (checkWin()) {
+      gameOver = true;
+      wins++;
+      streak++;
+      reduceMistake(currentWord.en);
+      updatePracticeBadge();
+      updateScore();
+      setTimeout(() => showWin(), 400);
+    }
+  } else {
+    btn.classList.add('wrong');
+    btn.disabled = true;
+    wrongGuesses++;
+    updateHangman();
+    if (wrongGuesses >= maxWrong) {
+      gameOver = true;
+      losses++;
+      streak = 0;
+      addMistake(currentWord.en);
+      updatePracticeBadge();
+      updateScore();
+      setTimeout(() => showLose(), 400);
+    }
+  }
+}
+
+// Hint
+function useHint() {
+  if (gameOver || hintsLeft <= 0) return;
+  const needed = getLettersNeeded();
+  const unrevealed = [];
+  for (const l of needed) {
+    if (!guessedLetters.has(l)) unrevealed.push(l);
+  }
+  if (unrevealed.length === 0) return;
+
+  const hintLetter = unrevealed[Math.floor(Math.random() * unrevealed.length)];
+  guessedLetters.add(hintLetter);
+  hintsLeft--;
+
+  const btn = document.getElementById('key-' + hintLetter);
+  if (btn) { btn.classList.add('correct'); btn.disabled = true; }
+
+  document.getElementById('hintCount').textContent = hintsLeft;
+  document.getElementById('hintBtn').disabled = hintsLeft <= 0;
+
+  // Mark hint slots with special color
+  const word = currentWord.en.toLowerCase();
+  for (let i = 0; i < word.length; i++) {
+    if (word[i] === hintLetter) {
+      const slot = document.getElementById('slot-' + i);
+      if (slot) { slot.textContent = hintLetter; slot.classList.add('hint-revealed'); }
+    }
+  }
+
+  if (checkWin()) {
+    gameOver = true;
+    wins++;
+    streak++;
+    reduceMistake(currentWord.en);
+    updatePracticeBadge();
+    updateScore();
+    setTimeout(() => showWin(), 400);
+  }
+}
+
+function updateScore() {
+  document.getElementById('winsCount').textContent = wins;
+  document.getElementById('lossesCount').textContent = losses;
+  document.getElementById('streakCount').textContent = streak;
+}
+
+function showWin() {
+  document.getElementById('wordArea').classList.add('celebrate');
+  launchConfetti();
+  const overlay = document.getElementById('messageOverlay');
+  document.getElementById('msgEmoji').textContent = ['🎉', '🌟', '👏', '🏆', '💪'][Math.floor(Math.random() * 5)];
+  document.getElementById('msgText').textContent = '!כל הכבוד';
+  document.getElementById('msgSub').textContent = currentWord.en;
+  overlay.classList.add('show');
+}
+
+function showLose() {
+  const overlay = document.getElementById('messageOverlay');
+  document.getElementById('msgEmoji').textContent = ['😊', '💪', '🌈', '📚'][Math.floor(Math.random() * 4)];
+  document.getElementById('msgText').textContent = 'לא נורא! בפעם הבאה תצליחו';
+  document.getElementById('msgSub').textContent = currentWord.en + ' = ' + currentWord.he;
+  overlay.classList.add('show');
+  // Reveal the word
+  const word = currentWord.en.toLowerCase();
+  for (let i = 0; i < word.length; i++) {
+    const slot = document.getElementById('slot-' + i);
+    if (slot && !slot.textContent) {
+      slot.textContent = word[i];
+      slot.style.color = '#e74c3c';
+    }
+  }
+}
+
+function dismissMessage() {
+  document.getElementById('messageOverlay').classList.remove('show');
+  newGame();
+}
+
+function launchConfetti() {
+  const container = document.getElementById('confettiContainer');
+  container.innerHTML = '';
+  const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff9ff3', '#f368e0', '#ff9f43'];
+  for (let i = 0; i < 50; i++) {
+    const conf = document.createElement('div');
+    conf.className = 'confetti';
+    conf.style.left = Math.random() * 100 + '%';
+    conf.style.background = colors[Math.floor(Math.random() * colors.length)];
+    conf.style.width = (6 + Math.random() * 8) + 'px';
+    conf.style.height = (6 + Math.random() * 8) + 'px';
+    conf.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    conf.style.animationDuration = (2 + Math.random() * 2) + 's';
+    conf.style.animationDelay = (Math.random() * 0.8) + 's';
+    container.appendChild(conf);
+  }
+  setTimeout(() => container.innerHTML = '', 5000);
+}
+
+// Unit selector
+document.getElementById('unitSelector').addEventListener('click', (e) => {
+  const btn = e.target.closest('.unit-btn');
+  if (btn) {
+    if (btn.dataset.unit === 'practice' && getPracticeWords().length === 0) {
+      alert('אין מספיק מילים לתרגול עדיין. שחק קצת ואני אזכור איפה טעית!');
+      return;
+    }
+    document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentUnit = btn.dataset.unit;
+    newGame();
+  }
+});
+
+// Physical keyboard support
+document.addEventListener('keydown', (e) => {
+  const key = e.key.toLowerCase();
+  if (/^[a-z]$/.test(key) && !gameOver) {
+    guessLetter(key);
+  }
+});
+
+// New game
+function newGame() {
+  currentWord = pickWord();
+  guessedLetters = new Set();
+  wrongGuesses = 0;
+  hintsLeft = 2;
+  gameOver = false;
+
+  document.getElementById('hintCount').textContent = 2;
+  document.getElementById('hintBtn').disabled = false;
+  document.getElementById('clueWord').textContent = currentWord.he;
+  document.getElementById('wordArea').classList.remove('celebrate');
+  document.getElementById('messageOverlay').classList.remove('show');
+
+  buildKeyboard();
+  renderWord();
+  updateHangman();
+}
+
+// Init
+updatePracticeBadge();
+newGame();
+</script>
+</body>
+</html>

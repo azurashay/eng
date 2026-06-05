@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ללמוד אוצר מילים - Hey</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #f5f0ff 0%, #ffe4f1 100%);
+    min-height: 100vh;
+    color: #2d1b4e;
+    padding-bottom: 40px;
+  }
+  /* Sticky nav */
+  nav.topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.25);
+    padding: 12px 16px;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+  }
+  nav.topbar a {
+    color: white; text-decoration: none;
+    padding: 8px 14px; border-radius: 999px;
+    font-weight: 600; font-size: 15px;
+    transition: all 0.2s;
+    background: rgba(255,255,255,0.1);
+  }
+  nav.topbar a:hover { background: rgba(255,255,255,0.25); }
+  nav.topbar a.active {
+    background: white; color: #7c3aed;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  header {
+    text-align: center;
+    padding: 30px 20px 20px;
+  }
+  header h1 {
+    font-size: 36px;
+    background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  header p { color: #6b46a8; font-size: 16px; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+
+  .controls {
+    background: white;
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.1);
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tab {
+    flex: 1; min-width: 80px;
+    padding: 10px 16px;
+    border: 2px solid #e9d5ff;
+    background: white;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    color: #6b46a8;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .tab:hover { border-color: #c084fc; }
+  .tab.active {
+    background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+    color: white; border-color: transparent;
+  }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .search-box {
+    flex: 1; min-width: 200px;
+    padding: 12px 16px;
+    border: 2px solid #e9d5ff;
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: inherit;
+    direction: rtl;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-box:focus { border-color: #c084fc; }
+  .play-all-btn {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 15px;
+    font-family: inherit;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    transition: transform 0.1s;
+  }
+  .play-all-btn:hover { transform: translateY(-1px); }
+  .play-all-btn.playing { background: linear-gradient(135deg, #ef4444 0%, #f59e0b 100%); }
+
+  .tip {
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #92400e;
+    text-align: center;
+  }
+
+  .stats { text-align: center; color: #6b46a8; margin-bottom: 16px; font-weight: 600; }
+
+  .unit-section { margin-bottom: 32px; }
+  .unit-title {
+    font-size: 22px;
+    color: #7c3aed;
+    margin-bottom: 14px;
+    padding: 8px 14px;
+    background: white;
+    border-radius: 12px;
+    border-right: 5px solid #ec4899;
+    display: inline-block;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    background: white;
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.08);
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+  }
+  .card:hover, .card.highlight {
+    transform: translateY(-2px);
+    border-color: #c084fc;
+    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.18);
+  }
+  .card-left { flex: 1; min-width: 0; }
+  .english {
+    font-size: 24px;
+    font-weight: 800;
+    color: #2d1b4e;
+    direction: ltr;
+    text-align: left;
+    margin-bottom: 4px;
+    word-break: break-word;
+  }
+  .translit {
+    font-size: 14px;
+    color: #9333ea;
+    direction: rtl;
+    text-align: right;
+    font-weight: 500;
+  }
+  .hebrew {
+    font-size: 17px;
+    color: #1f2937;
+    font-weight: 600;
+    text-align: right;
+    flex-shrink: 0;
+    max-width: 45%;
+  }
+  .speaker-btn {
+    width: 44px; height: 44px;
+    border: none;
+    background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 3px 10px rgba(124, 58, 237, 0.3);
+    transition: transform 0.1s;
+  }
+  .speaker-btn:hover { transform: scale(1.1); }
+  .speaker-btn:active { transform: scale(0.95); }
+  .speaker-btn.speaking {
+    animation: pulse 0.8s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 3px 10px rgba(124, 58, 237, 0.3); }
+    50% { transform: scale(1.15); box-shadow: 0 5px 18px rgba(236, 72, 153, 0.6); }
+  }
+
+  .empty {
+    text-align: center;
+    padding: 40px;
+    color: #9333ea;
+    font-size: 18px;
+  }
+  .warn {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 480px) {
+    header h1 { font-size: 26px; }
+    .english { font-size: 20px; }
+    .hebrew { font-size: 15px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<nav class="topbar">
+  <a href="english-quest.html">🎮 English Quest</a>
+  <a href="index.html">🏠 בית</a>
+  <a href="game1-memory.html">🎮 זיכרון</a>
+  <a href="game2-quiz.html">🎯 חידון</a>
+  <a href="game3-hangman.html">🎪 איש תלוי</a>
+  <a href="learn.html" class="active">📖 ללמוד</a>
+</nav>
+
+<header>
+  <h1>📖 אוצר מילים</h1>
+  <p>ספר Hey - יחידות 1-3</p>
+</header>
+
+<div class="container">
+  <div id="ttsWarn" class="warn" style="display:none;">⚠️ הדפדפן שלך לא תומך בהשמעת קול. נסה דפדפן אחר.</div>
+
+  <div class="controls">
+    <div class="tabs">
+      <button class="tab active" data-unit="all">כל היחידות</button>
+      <button class="tab" data-unit="1">יחידה 1</button>
+      <button class="tab" data-unit="2">יחידה 2</button>
+      <button class="tab" data-unit="3">יחידה 3</button>
+    </div>
+    <div class="row">
+      <input type="text" id="search" class="search-box" placeholder="🔍 חפש מילה (אנגלית, עברית או תעתיק)...">
+      <button id="playAll" class="play-all-btn">🔊 השמע הכל</button>
+    </div>
+    <div class="tip">💡 לחץ על הכפתור הסגול 🔊 ליד כל מילה כדי לשמוע איך הוגים אותה באנגלית</div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+  <div id="content"></div>
+</div>
+
+<script>
+const VOCAB = {
+  1: [
+    {en:"age", he:"גיל", tr:"אֵייג'"},
+    {en:"also", he:"גם", tr:"אוֹלְסוֹ"},
+    {en:"begin", he:"להתחיל", tr:"בִּיגִין"},
+    {en:"birthday", he:"יום הולדת", tr:"בֵּ׳רְתְדֵיי"},
+    {en:"different", he:"שונה", tr:"דִיפְרֶנְט"},
+    {en:"hobby", he:"תחביב", tr:"הוֹבִּי"},
+    {en:"month", he:"חודש", tr:"מַאנְת'"},
+    {en:"pool", he:"בריכה", tr:"פּוּל"},
+    {en:"the same", he:"אותו דבר", tr:"דֶ׳ה סֵיים"},
+    {en:"year", he:"שנה", tr:"יִיר"},
+    {en:"a lot of", he:"הרבה", tr:"אֶה לוֹט אוֹף"},
+    {en:"chess", he:"שחמט", tr:"צֶ'ס"},
+    {en:"first", he:"ראשון", tr:"פֶ׳רְסְט"},
+    {en:"important", he:"חשוב", tr:"אִימְפּוֹרְטֶנְט"},
+    {en:"learn", he:"ללמוד", tr:"לֶרְן"},
+    {en:"ninety", he:"תשעים", tr:"נַיְינְטִי"},
+    {en:"old", he:"ישן/זקן", tr:"אוֹלְד"},
+    {en:"people", he:"אנשים", tr:"פִּיפֵּל"},
+    {en:"special", he:"מיוחד", tr:"סְפֵּשֶׁל"},
+    {en:"together", he:"ביחד", tr:"טוּגֶ׳דֶ׳ר"},
+    {en:"win", he:"לנצח", tr:"וִוין"},
+    {en:"young", he:"צעיר", tr:"יַאנְג"},
+    {en:"best", he:"הכי טוב", tr:"בֶּסְט"},
+    {en:"better", he:"יותר טוב", tr:"בֵּטֶר"},
+    {en:"call", he:"לקרוא/להתקשר", tr:"קוֹל"},
+    {en:"choose", he:"לבחור", tr:"צ'וּז"},
+    {en:"information", he:"מידע", tr:"אִינְפוֹרְמֵיישֶׁן"},
+    {en:"more", he:"יותר", tr:"מוֹר"},
+    {en:"next", he:"הבא", tr:"נֶקְסְט"},
+    {en:"wait", he:"לחכות", tr:"וֵוייט"},
+    {en:"at night", he:"בלילה", tr:"אֶט נַייט"},
+    {en:"blanket", he:"שמיכה", tr:"בְּלֶנְקֶט"},
+    {en:"brush", he:"מברשת/לצחצח", tr:"בְּרַאשׁ"},
+    {en:"every", he:"כל", tr:"אֶבְרִי"},
+    {en:"give", he:"לתת", tr:"גִיב"},
+    {en:"put", he:"לשים", tr:"פּוּט"},
+    {en:"take care of", he:"לטפל ב", tr:"טֵייק קֵייר אוֹף"},
+    {en:"time", he:"זמן", tr:"טַיים"},
+    {en:"toy", he:"צעצוע", tr:"טוֹי"},
+    {en:"wash", he:"לשטוף", tr:"וווֹשׁ"},
+    {en:"with", he:"עם", tr:"וִוית'"},
+    {en:"always", he:"תמיד", tr:"אוֹלְוֵויז"},
+    {en:"but", he:"אבל", tr:"בַּאט"},
+    {en:"fast", he:"מהר", tr:"פֶסְט"},
+    {en:"hard", he:"קשה", tr:"הַארְד"},
+    {en:"help", he:"לעזור", tr:"הֶלְפּ"},
+    {en:"if", he:"אם", tr:"אִיף"},
+    {en:"kid", he:"ילד", tr:"קִיד"},
+    {en:"like", he:"לאהוב/כמו", tr:"לַייק"},
+    {en:"other", he:"אחר", tr:"אַדֶ׳ר"},
+    {en:"team", he:"קבוצה", tr:"טִים"},
+    {en:"beautiful", he:"יפה", tr:"בְּיוּטִיפוּל"},
+    {en:"because", he:"כי/בגלל", tr:"בִּיקוֹז"},
+    {en:"break", he:"לשבור/הפסקה", tr:"בְּרֵייק"},
+    {en:"for", he:"בשביל", tr:"פוֹר"},
+    {en:"into", he:"לתוך", tr:"אִינְטוּ"},
+    {en:"near", he:"ליד/קרוב", tr:"נִיר"},
+    {en:"race", he:"מרוץ", tr:"רֵייס"},
+    {en:"road", he:"כביש", tr:"רוֹאוּד"},
+    {en:"their", he:"שלהם", tr:"דֶ׳יר"},
+    {en:"idea", he:"רעיון", tr:"אַיְדִיאָה"},
+    {en:"money", he:"כסף", tr:"מַאנִי"},
+    {en:"now", he:"עכשיו", tr:"נַאוּ"},
+    {en:"use", he:"להשתמש", tr:"יוּז"},
+    {en:"closed", he:"סגור", tr:"קְלוֹאוּזְד"},
+    {en:"find", he:"למצוא", tr:"פַיינְד"},
+    {en:"flower", he:"פרח", tr:"פְלַאוּאֶר"},
+    {en:"look for", he:"לחפש", tr:"לוּק פוֹר"},
+    {en:"nice", he:"נחמד", tr:"נַייס"},
+    {en:"secret", he:"סוד", tr:"סִיקְרֶט"},
+    {en:"tell a story", he:"לספר סיפור", tr:"טֶל אֶה סְטוֹרִי"},
+    {en:"cry", he:"לבכות", tr:"קְרַיי"},
+    {en:"I'm sorry", he:"אני מצטער", tr:"אַיים סוֹרִי"},
+    {en:"perhaps", he:"אולי", tr:"פֶּרְהֶפְּס"},
+    {en:"sick", he:"חולה", tr:"סִיק"},
+    {en:"too", he:"גם/יותר מדי", tr:"טוּ"}
+  ],
+  2: [
+    {en:"about", he:"על/בערך", tr:"אֶבַּאוּט"},
+    {en:"after", he:"אחרי", tr:"אַפְטֶר"},
+    {en:"afternoon", he:"אחר הצהריים", tr:"אַפְטֶרְנוּן"},
+    {en:"all", he:"כל/הכל", tr:"אוֹל"},
+    {en:"another", he:"עוד אחד", tr:"אֶנַאדֶ׳ר"},
+    {en:"before", he:"לפני", tr:"בִּיפוֹר"},
+    {en:"breakfast", he:"ארוחת בוקר", tr:"בְּרֶקְפֶסְט"},
+    {en:"call", he:"לקרוא/להתקשר", tr:"קוֹל"},
+    {en:"catch", he:"לתפוס", tr:"קֶץ'"},
+    {en:"clean", he:"נקי/לנקות", tr:"קְלִין"},
+    {en:"each", he:"כל אחד", tr:"אִיץ'"},
+    {en:"evening", he:"ערב", tr:"אִיבְנִינְג"},
+    {en:"everyone", he:"כולם", tr:"אֶבְרִיוַואן"},
+    {en:"fall", he:"ליפול/סתיו", tr:"פוֹל"},
+    {en:"get", he:"לקבל", tr:"גֶט"},
+    {en:"glass", he:"כוס/זכוכית", tr:"גְלֶס"},
+    {en:"guess", he:"לנחש", tr:"גֶס"},
+    {en:"home", he:"בית", tr:"הוֹאוּם"},
+    {en:"kind of", he:"סוג של", tr:"קַיינְד אוֹף"},
+    {en:"late", he:"מאוחר", tr:"לֵייט"},
+    {en:"look at", he:"להסתכל על", tr:"לוּק אֶט"},
+    {en:"lunch", he:"ארוחת צהריים", tr:"לַאנְץ'"},
+    {en:"many", he:"הרבה", tr:"מֶנִי"},
+    {en:"moon", he:"ירח", tr:"מוּן"},
+    {en:"parents", he:"הורים", tr:"פֶּרֶנְטְס"},
+    {en:"pick up", he:"להרים", tr:"פִּיק אַפּ"},
+    {en:"quiet", he:"שקט", tr:"קְוַויאֶט"},
+    {en:"rich", he:"עשיר", tr:"רִיץ'"},
+    {en:"sometimes", he:"לפעמים", tr:"סַאמְטַיימְז"},
+    {en:"sport", he:"ספורט", tr:"סְפּוֹרְט"},
+    {en:"supper", he:"ארוחת ערב", tr:"סַאפֶּר"},
+    {en:"thanks", he:"תודה", tr:"תֶ'נְקְס"},
+    {en:"thing", he:"דבר", tr:"תִ'ינְג"},
+    {en:"think", he:"לחשוב", tr:"תִ'ינְק"},
+    {en:"too", he:"גם/יותר מדי", tr:"טוּ"},
+    {en:"town", he:"עיירה", tr:"טַאוּן"},
+    {en:"until", he:"עד", tr:"אַנְטִיל"},
+    {en:"us", he:"אותנו", tr:"אַס"},
+    {en:"work", he:"עבודה/לעבוד", tr:"וְוֶרְק"},
+    {en:"world", he:"עולם", tr:"וְוֶרְלְד"},
+    {en:"wrong", he:"לא נכון", tr:"רוֹנְג"},
+    {en:"you're welcome", he:"בבקשה/על לא דבר", tr:"יוֹר וֶולְקֶם"},
+    {en:"around", he:"סביב", tr:"אֶרַאוּנְד"},
+    {en:"artist", he:"אמן", tr:"אַרְטִיסְט"},
+    {en:"bridge", he:"גשר", tr:"בְּרִידְג'"},
+    {en:"castle", he:"טירה", tr:"קֶסֶל"},
+    {en:"celebration", he:"חגיגה", tr:"סֶלֶבְּרֵיישֶׁן"},
+    {en:"clothes", he:"בגדים", tr:"קְלוֹאוּדְ׳ז"},
+    {en:"cousin", he:"בן דוד/בת דודה", tr:"קַאזִן"},
+    {en:"cupboard", he:"ארון", tr:"קַאבֶּרְד"},
+    {en:"desert", he:"מדבר", tr:"דֶזֶרְט"},
+    {en:"detective", he:"בלש", tr:"דִיטֶקְטִיב"},
+    {en:"dining room", he:"חדר אוכל", tr:"דַיינִינְג רוּם"},
+    {en:"fire", he:"אש", tr:"פַייאֶר"},
+    {en:"flag", he:"דגל", tr:"פְלֶג"},
+    {en:"forest", he:"יער", tr:"פוֹרֶסְט"},
+    {en:"mat", he:"מחצלת", tr:"מֶט"},
+    {en:"mirror", he:"מראה", tr:"מִירוֹר"},
+    {en:"outside", he:"בחוץ", tr:"אַאוּטְסַיד"},
+    {en:"paint", he:"לצבוע/צבע", tr:"פֵּיינְט"},
+    {en:"pull", he:"למשוך", tr:"פּוּל"},
+    {en:"refrigerator", he:"מקרר", tr:"רִיפְרִיגִ׳רֵיטוֹר"},
+    {en:"rice", he:"אורז", tr:"רַייס"},
+    {en:"river", he:"נהר", tr:"רִיבֶר"},
+    {en:"roof", he:"גג", tr:"רוּף"},
+    {en:"servant", he:"משרת", tr:"סֶרְבֶנְט"},
+    {en:"ship", he:"ספינה", tr:"שִׁיפּ"},
+    {en:"shower", he:"מקלחת", tr:"שַׁאוּאֶר"},
+    {en:"sink", he:"כיור", tr:"סִינְק"},
+    {en:"spoon", he:"כף", tr:"סְפּוּן"},
+    {en:"stove", he:"תנור/כיריים", tr:"סְטוֹאוּב"},
+    {en:"straw", he:"קש", tr:"סְטְרוֹ"},
+    {en:"tent", he:"אוהל", tr:"טֶנְט"},
+    {en:"thief", he:"גנב", tr:"תִ'יף"},
+    {en:"throw", he:"לזרוק", tr:"תְ'רוֹאוּ"},
+    {en:"toilet", he:"שירותים", tr:"טוֹילֶט"},
+    {en:"travel", he:"לטייל/לנסוע", tr:"טְרֶבֶל"},
+    {en:"trip", he:"טיול", tr:"טְרִיפּ"},
+    {en:"visit", he:"לבקר", tr:"וִויזִיט"},
+    {en:"weekend", he:"סוף שבוע", tr:"וִויקֶנְד"},
+    {en:"wood", he:"עץ/עצים", tr:"ווּד"}
+  ],
+  3: [
+    {en:"air", he:"אוויר", tr:"אֵייר"},
+    {en:"battery", he:"סוללה", tr:"בֶּטֶרִי"},
+    {en:"bee", he:"דבורה", tr:"בִּי"},
+    {en:"brave", he:"אמיץ", tr:"בְּרֵייב"},
+    {en:"breath", he:"נשימה", tr:"בְּרֶת'"},
+    {en:"butterfly", he:"פרפר", tr:"בַּאטֶרְפְלַיי"},
+    {en:"charge", he:"לטעון/לחייב", tr:"צ'ארְג'"},
+    {en:"cook", he:"לבשל/טבח", tr:"קוּק"},
+    {en:"cucumber", he:"מלפפון", tr:"קְיוּקַמְבֶּר"},
+    {en:"cut down", he:"לכרות/לקצץ", tr:"קַאט דַאוּן"},
+    {en:"cute", he:"חמוד", tr:"קְיוּט"},
+    {en:"dangerous", he:"מסוכן", tr:"דֵיינְגֶ'רֶס"},
+    {en:"energy", he:"אנרגיה", tr:"אֶנֶרְגִ'י"},
+    {en:"environment", he:"סביבה", tr:"אִינְוַיְרוֹנְמֵנְט"},
+    {en:"everywhere", he:"בכל מקום", tr:"אֶבְרִיוֵוייר"},
+    {en:"fix", he:"לתקן", tr:"פִיקְס"},
+    {en:"grass", he:"דשא", tr:"גְרֶס"},
+    {en:"honey", he:"דבש", tr:"הַאנִי"},
+    {en:"hurt", he:"לפגוע/לכאוב", tr:"הֶרְט"},
+    {en:"ice", he:"קרח", tr:"אַייס"},
+    {en:"invent", he:"להמציא", tr:"אִינְוֶונְט"},
+    {en:"leaves", he:"עלים", tr:"לִיבְז"},
+    {en:"onion", he:"בצל", tr:"אַנְיוֹן"},
+    {en:"pepper", he:"פלפל", tr:"פֶּפֶּר"},
+    {en:"plant", he:"צמח/לשתול", tr:"פְּלֶנְט"},
+    {en:"said", he:"אמר", tr:"סֶד"},
+    {en:"save", he:"להציל/לחסוך", tr:"סֵייב"},
+    {en:"saw", he:"ראה", tr:"סוֹ"},
+    {en:"scary", he:"מפחיד", tr:"סְקֶרִי"},
+    {en:"sell", he:"למכור", tr:"סֶל"},
+    {en:"stay", he:"להישאר", tr:"סְטֵיי"},
+    {en:"storm", he:"סערה", tr:"סְטוֹרְם"},
+    {en:"sweet", he:"מתוק", tr:"סְוִויט"},
+    {en:"taste", he:"טעם/לטעום", tr:"טֵייסְט"},
+    {en:"teeth", he:"שיניים", tr:"תִ'ית'"},
+    {en:"thousand", he:"אלף", tr:"תַ'אוּזֶנְד"},
+    {en:"throw away", he:"לזרוק לפח", tr:"תְ'רוֹאוּ אֶוֵוויי"},
+    {en:"trash", he:"זבל/אשפה", tr:"טְרֶשׁ"},
+    {en:"vegetable", he:"ירק", tr:"וֶוגְ'טֶבֶּל"},
+    {en:"wise", he:"חכם", tr:"וַויז"},
+    {en:"Are you ready?", he:"אתה מוכן?", tr:"אַר יוּ רֶדִי?"},
+    {en:"ask", he:"לשאול", tr:"אַסְק"},
+    {en:"at least", he:"לפחות", tr:"אֶט לִיסְט"},
+    {en:"autumn", he:"סתיו", tr:"אוֹטֶם"},
+    {en:"bottle", he:"בקבוק", tr:"בּוֹטֶל"},
+    {en:"build", he:"לבנות", tr:"בִּילְד"},
+    {en:"careful", he:"זהיר", tr:"קֶרְפוּל"},
+    {en:"change", he:"לשנות/שינוי", tr:"צֵ'יינְג'"},
+    {en:"come back", he:"לחזור", tr:"קַאם בֶּק"},
+    {en:"drive", he:"לנהוג", tr:"דְרַייב"},
+    {en:"easy", he:"קל", tr:"אִיזִי"},
+    {en:"far", he:"רחוק", tr:"פַאר"},
+    {en:"feet", he:"רגליים", tr:"פִיט"},
+    {en:"full", he:"מלא", tr:"פוּל"},
+    {en:"grow", he:"לגדול", tr:"גְרוֹאוּ"},
+    {en:"hear", he:"לשמוע", tr:"הִיר"},
+    {en:"here", he:"פה/כאן", tr:"הִיר"},
+    {en:"hour", he:"שעה", tr:"אַאוּאֶר"},
+    {en:"I'm ready", he:"אני מוכן", tr:"אַיים רֶדִי"},
+    {en:"interesting", he:"מעניין", tr:"אִינְטְרֶסְטִינְג"},
+    {en:"minute", he:"דקה", tr:"מִינִיט"},
+    {en:"much", he:"הרבה", tr:"מַאץ'"},
+    {en:"only", he:"רק", tr:"אוֹנְלִי"},
+    {en:"place", he:"מקום", tr:"פְּלֵייס"},
+    {en:"poor", he:"עני", tr:"פּוּר"},
+    {en:"problem", he:"בעיה", tr:"פְּרוֹבְּלֶם"},
+    {en:"really", he:"באמת", tr:"רִילִי"},
+    {en:"remember", he:"לזכור", tr:"רִימֶמְבֶּר"},
+    {en:"rule", he:"חוק/כלל", tr:"רוּל"},
+    {en:"show", he:"להראות/תוכנית", tr:"שׁוֹאוּ"},
+    {en:"sky", he:"שמיים", tr:"סְקַיי"},
+    {en:"start", he:"להתחיל", tr:"סְטַארְט"},
+    {en:"strong", he:"חזק", tr:"סְטְרוֹנְג"},
+    {en:"teach", he:"ללמד", tr:"טִיץ'"},
+    {en:"than", he:"מ-", tr:"דֶ׳ן"},
+    {en:"them", he:"אותם", tr:"דֶ׳ם"},
+    {en:"then", he:"אז", tr:"דֶ׳ן"},
+    {en:"tonight", he:"הלילה", tr:"טוּנַייט"},
+    {en:"was", he:"היה", tr:"וְוֹאָז"},
+    {en:"while", he:"בזמן ש", tr:"וַויל"},
+    {en:"What's the matter?", he:"מה קרה?", tr:"וַוטְס דֶ׳ה מֶטֶר?"}
+  ]
+};
+
+let currentUnit = 'all';
+let currentSearch = '';
+let englishVoice = null;
+let isPlayingAll = false;
+let playAllQueue = [];
+let playAllIndex = 0;
+
+const ttsSupported = 'speechSynthesis' in window;
+if (!ttsSupported) document.getElementById('ttsWarn').style.display = 'block';
+
+function loadVoices() {
+  if (!ttsSupported) return;
+  const voices = window.speechSynthesis.getVoices();
+  englishVoice = voices.find(v => v.lang === 'en-US' && /female|samantha|karen|google/i.test(v.name))
+              || voices.find(v => v.lang === 'en-US')
+              || voices.find(v => v.lang.startsWith('en'));
+}
+if (ttsSupported) {
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function speak(text, onEnd) {
+  if (!ttsSupported) { if (onEnd) onEnd(); return; }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 0.85;
+  u.pitch = 1.0;
+  if (englishVoice) u.voice = englishVoice;
+  if (onEnd) u.onend = onEnd;
+  window.speechSynthesis.speak(u);
+}
+
+function getFiltered() {
+  const result = {};
+  const units = currentUnit === 'all' ? [1,2,3] : [parseInt(currentUnit)];
+  const q = currentSearch.toLowerCase().trim();
+  units.forEach(u => {
+    const filtered = VOCAB[u].filter(w => {
+      if (!q) return true;
+      return w.en.toLowerCase().includes(q) || w.he.includes(q) || w.tr.includes(q);
+    });
+    if (filtered.length) result[u] = filtered;
+  });
+  return result;
+}
+
+function render() {
+  const data = getFiltered();
+  const content = document.getElementById('content');
+  const stats = document.getElementById('stats');
+  let total = 0;
+  Object.values(data).forEach(arr => total += arr.length);
+  stats.textContent = total ? `${total} מילים` : '';
+
+  if (total === 0) {
+    content.innerHTML = '<div class="empty">😕 לא נמצאו מילים</div>';
+    return;
+  }
+
+  let html = '';
+  Object.keys(data).forEach(unit => {
+    html += `<div class="unit-section"><div class="unit-title">📚 יחידה ${unit}</div><div class="grid">`;
+    data[unit].forEach((w, i) => {
+      html += `<div class="card" data-en="${escapeAttr(w.en)}" data-key="${unit}-${i}">
+        <button class="speaker-btn" aria-label="השמע">🔊</button>
+        <div class="card-left">
+          <div class="english">${escapeHtml(w.en)}</div>
+          <div class="translit">${escapeHtml(w.tr)}</div>
+        </div>
+        <div class="hebrew">${escapeHtml(w.he)}</div>
+      </div>`;
+    });
+    html += '</div></div>';
+  });
+  content.innerHTML = html;
+
+  document.querySelectorAll('.card').forEach(card => {
+    const btn = card.querySelector('.speaker-btn');
+    const en = card.dataset.en;
+    const handler = (e) => {
+      e.stopPropagation();
+      if (isPlayingAll) stopPlayAll();
+      btn.classList.add('speaking');
+      speak(en, () => btn.classList.remove('speaking'));
+    };
+    btn.addEventListener('click', handler);
+    card.addEventListener('click', handler);
+  });
+}
+
+function escapeHtml(s) { return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escapeAttr(s) { return s.replace(/"/g, '&quot;'); }
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentUnit = tab.dataset.unit;
+    render();
+  });
+});
+
+document.getElementById('search').addEventListener('input', e => {
+  currentSearch = e.target.value;
+  render();
+});
+
+const playAllBtn = document.getElementById('playAll');
+playAllBtn.addEventListener('click', () => {
+  if (isPlayingAll) { stopPlayAll(); return; }
+  startPlayAll();
+});
+
+function startPlayAll() {
+  if (!ttsSupported) return;
+  const cards = Array.from(document.querySelectorAll('.card'));
+  if (!cards.length) return;
+  playAllQueue = cards;
+  playAllIndex = 0;
+  isPlayingAll = true;
+  playAllBtn.textContent = '⏹ עצור';
+  playAllBtn.classList.add('playing');
+  playNext();
+}
+
+function stopPlayAll() {
+  isPlayingAll = false;
+  window.speechSynthesis.cancel();
+  document.querySelectorAll('.speaker-btn.speaking').forEach(b => b.classList.remove('speaking'));
+  document.querySelectorAll('.card.highlight').forEach(c => c.classList.remove('highlight'));
+  playAllBtn.textContent = '🔊 השמע הכל';
+  playAllBtn.classList.remove('playing');
+}
+
+function playNext() {
+  if (!isPlayingAll || playAllIndex >= playAllQueue.length) {
+    stopPlayAll();
+    return;
+  }
+  const card = playAllQueue[playAllIndex];
+  const btn = card.querySelector('.speaker-btn');
+  document.querySelectorAll('.card.highlight').forEach(c => c.classList.remove('highlight'));
+  card.classList.add('highlight');
+  btn.classList.add('speaking');
+  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  speak(card.dataset.en, () => {
+    btn.classList.remove('speaking');
+    playAllIndex++;
+    setTimeout(playNext, 300);
+  });
+}
+
+render();
+</script>
+</body>
+</html>

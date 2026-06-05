@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>חידון מילים באנגלית</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+  }
+
+  @keyframes correctGlow {
+    0% { box-shadow: 0 0 5px #4CAF50; }
+    50% { box-shadow: 0 0 25px #4CAF50, 0 0 50px rgba(76,175,80,0.3); }
+    100% { box-shadow: 0 0 10px #4CAF50; }
+  }
+
+  @keyframes popIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes confetti {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-200px) rotate(720deg); opacity: 0; }
+  }
+
+  @keyframes streakFire {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes celebrateBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  @keyframes rainbowBg {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 16px 16px;
+  }
+  .container { margin-top: auto; margin-bottom: auto; }
+  .game-nav { width: calc(100% + 32px); }
+
+  .container {
+    background: rgba(255,255,255,0.95);
+    border-radius: 24px;
+    padding: 32px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: fadeIn 0.5s ease;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    background: linear-gradient(135deg, #667eea, #f093fb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #888;
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+  }
+
+  /* Unit Selector */
+  .unit-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  .unit-btn {
+    padding: 12px 22px;
+    border: 3px solid #667eea;
+    border-radius: 16px;
+    background: white;
+    color: #667eea;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .unit-btn:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+  }
+
+  .unit-btn.selected {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(102,126,234,0.5);
+  }
+
+  .unit-btn.practice-btn {
+    border-color: #ff6b35;
+    color: #ff6b35;
+    box-shadow: 0 0 12px rgba(255,107,53,0.4);
+  }
+  .unit-btn.practice-btn:hover { background: #ff6b35; color: white; }
+  .unit-btn.practice-btn.selected {
+    background: linear-gradient(135deg, #ff6b35, #f5576c);
+    color: white;
+    border-color: transparent;
+  }
+
+  .start-btn {
+    display: block;
+    margin: 0 auto;
+    padding: 16px 48px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .start-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(240,147,251,0.5);
+  }
+
+  .start-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Game Header */
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .stat-badge {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .streak-badge {
+    background: linear-gradient(135deg, #f5576c, #ff6b35);
+  }
+
+  .streak-badge.on-fire {
+    animation: streakFire 0.5s ease infinite;
+  }
+
+  /* Progress Bar */
+  .progress-container {
+    background: #e8e8e8;
+    border-radius: 12px;
+    height: 14px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .progress-bar {
+    height: 100%;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #667eea, #f093fb);
+    transition: width 0.4s ease;
+  }
+
+  .progress-text {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  /* Question */
+  .question-area {
+    text-align: center;
+    margin-bottom: 28px;
+    animation: slideDown 0.4s ease;
+  }
+
+  .question-label {
+    font-size: 0.95rem;
+    color: #999;
+    margin-bottom: 8px;
+  }
+
+  .question-word {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #333;
+    direction: ltr;
+    unicode-bidi: bidi-override;
+    letter-spacing: 1px;
+  }
+
+  /* Answer Buttons */
+  .answers-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .answer-btn {
+    padding: 18px 12px;
+    border: 3px solid #e0e0e0;
+    border-radius: 16px;
+    background: white;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #444;
+    cursor: pointer;
+    transition: all 0.15s;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .answer-btn:hover:not(.disabled) {
+    border-color: #667eea;
+    background: #f0f2ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102,126,234,0.2);
+  }
+
+  .answer-btn:active:not(.disabled) {
+    transform: scale(0.97);
+  }
+
+  .answer-btn.correct {
+    border-color: #4CAF50;
+    background: #e8f5e9;
+    color: #2e7d32;
+    animation: correctGlow 0.6s ease;
+  }
+
+  .answer-btn.wrong {
+    border-color: #f44336;
+    background: #ffebee;
+    color: #c62828;
+    animation: shake 0.4s ease;
+  }
+
+  .answer-btn.reveal-correct {
+    border-color: #4CAF50;
+    background: #e8f5e9;
+    color: #2e7d32;
+    animation: correctGlow 0.8s ease;
+  }
+
+  .answer-btn.disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  /* Feedback */
+  .feedback {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: popIn 0.3s ease;
+  }
+
+  .feedback.correct-feedback { color: #4CAF50; }
+  .feedback.wrong-feedback { color: #f44336; }
+
+  /* End Screen */
+  .end-screen {
+    text-align: center;
+    animation: fadeIn 0.6s ease;
+  }
+
+  .end-screen .score-circle {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: 800;
+    color: white;
+    animation: popIn 0.6s ease;
+  }
+
+  .score-circle.excellent {
+    background: linear-gradient(135deg, #4CAF50, #81C784);
+    box-shadow: 0 8px 30px rgba(76,175,80,0.4);
+  }
+
+  .score-circle.good {
+    background: linear-gradient(135deg, #FF9800, #FFB74D);
+    box-shadow: 0 8px 30px rgba(255,152,0,0.4);
+  }
+
+  .score-circle.ok {
+    background: linear-gradient(135deg, #2196F3, #64B5F6);
+    box-shadow: 0 8px 30px rgba(33,150,243,0.4);
+  }
+
+  .score-circle .score-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+
+  .end-message {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 8px;
+  }
+
+  .end-details {
+    font-size: 1rem;
+    color: #777;
+    margin-bottom: 24px;
+    line-height: 1.8;
+  }
+
+  .play-again-btn {
+    padding: 16px 40px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 8px;
+  }
+
+  .play-again-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102,126,234,0.5);
+  }
+
+  /* Confetti */
+  .confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+    overflow: hidden;
+  }
+
+  .confetti-piece {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    animation: confettiFall linear forwards;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Celebrate emojis */
+  .celebrate-emoji {
+    position: fixed;
+    font-size: 2rem;
+    pointer-events: none;
+    z-index: 1000;
+    animation: celebrateBounce 1s ease forwards, fadeOut 1.5s ease forwards;
+  }
+
+  @keyframes fadeOut {
+    0%, 70% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* Next button */
+  .next-btn {
+    display: block;
+    margin: 16px auto 0;
+    padding: 12px 36px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    animation: popIn 0.3s ease;
+  }
+
+  .next-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+  }
+
+  .hidden { display: none !important; }
+
+  /* Mobile */
+  @media (max-width: 500px) {
+    .container { padding: 20px 16px; border-radius: 20px; }
+    h1 { font-size: 1.5rem; }
+    .question-word { font-size: 2rem; }
+    .answers-grid { grid-template-columns: 1fr; gap: 10px; }
+    .answer-btn { padding: 16px; font-size: 1.05rem; min-height: 56px; }
+    .game-header { justify-content: center; }
+    .stat-badge { font-size: 0.85rem; padding: 6px 12px; }
+    .unit-btn { padding: 10px 16px; font-size: 0.9rem; }
+  }
+.game-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+  padding: 10px; margin: 0 0 20px 0;
+  border-bottom: 2px solid rgba(255,255,255,0.2);
+}
+.game-nav a {
+  color: #fff; text-decoration: none; padding: 8px 16px;
+  border-radius: 20px; font-weight: bold; font-size: 0.95em;
+  background: rgba(255,255,255,0.15); transition: all 0.2s;
+}
+.game-nav a:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+.game-nav a.active { background: #ffd93d; color: #5a3a00; box-shadow: 0 4px 12px rgba(255,217,61,0.5); }
+@media (max-width: 500px) {
+  .game-nav a { padding: 6px 10px; font-size: 0.85em; }
+}
+</style>
+</head>
+<body>
+
+<nav class="game-nav">
+  <a href="english-quest.html">🎮 English Quest</a>
+  <a href="index.html">🏠 בית</a>
+  <a href="game1-memory.html">🎮 זיכרון</a>
+  <a href="game2-quiz.html" class="active">🎯 חידון</a>
+  <a href="game3-hangman.html">🎪 איש תלוי</a>
+  <a href="learn.html">📖 ללמוד</a>
+</nav>
+
+<div class="container" id="app">
+  <!-- Menu Screen -->
+  <div id="menu-screen">
+    <h1>🎯 חידון מילים באנגלית</h1>
+    <p class="subtitle">בחרו יחידה והתחילו לשחק!</p>
+
+    <div class="unit-selector">
+      <button class="unit-btn" data-unit="unit1" onclick="selectUnit('unit1')">יחידה 1</button>
+      <button class="unit-btn" data-unit="unit2" onclick="selectUnit('unit2')">יחידה 2</button>
+      <button class="unit-btn" data-unit="unit3" onclick="selectUnit('unit3')">יחידה 3</button>
+      <button class="unit-btn" data-unit="all" onclick="selectUnit('all')">כל היחידות</button>
+      <button class="unit-btn practice-btn" data-unit="practice" onclick="selectUnit('practice')">🔥 לתרגול (<span class="practice-count">0</span>)</button>
+    </div>
+
+    <button class="start-btn" id="start-btn" onclick="startGame()" disabled>🚀 !יאללה</button>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="game-screen" class="hidden">
+    <div class="game-header">
+      <div class="stat-badge">⭐ ניקוד: <span id="score">0</span></div>
+      <div class="stat-badge streak-badge" id="streak-badge">🔥 רצף: <span id="streak">0</span></div>
+    </div>
+
+    <p class="progress-text" id="progress-text">שאלה 1 מתוך 15</p>
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+    </div>
+
+    <div class="question-area" id="question-area">
+      <p class="question-label">מה התרגום של המילה:</p>
+      <p class="question-word" id="question-word"></p>
+    </div>
+
+    <div class="answers-grid" id="answers-grid"></div>
+
+    <div class="feedback hidden" id="feedback"></div>
+    <button class="next-btn hidden" id="next-btn" onclick="nextQuestion()">השאלה הבאה ➜</button>
+  </div>
+
+  <!-- End Screen -->
+  <div id="end-screen" class="hidden"></div>
+</div>
+
+<div class="confetti-container" id="confetti-container"></div>
+
+<script>
+const vocabulary = {
+  unit1: [
+    {en: "age", he: "גיל"},{en: "also", he: "גם"},{en: "begin", he: "להתחיל"},{en: "birthday", he: "יום הולדת"},{en: "different", he: "שונה"},{en: "hobby", he: "תחביב"},{en: "month", he: "חודש"},{en: "pool", he: "בריכה"},{en: "the same", he: "אותו דבר"},{en: "year", he: "שנה"},{en: "a lot of", he: "הרבה"},{en: "chess", he: "שחמט"},{en: "first", he: "ראשון"},{en: "important", he: "חשוב"},{en: "learn", he: "ללמוד"},{en: "ninety", he: "תשעים"},{en: "old", he: "ישן / זקן"},{en: "people", he: "אנשים"},{en: "special", he: "מיוחד"},{en: "together", he: "ביחד"},{en: "win", he: "לנצח"},{en: "young", he: "צעיר"},{en: "best", he: "הכי טוב"},{en: "better", he: "יותר טוב"},{en: "call", he: "לקרוא / להתקשר"},{en: "choose", he: "לבחור"},{en: "information", he: "מידע"},{en: "more", he: "יותר"},{en: "next", he: "הבא"},{en: "wait", he: "לחכות"},{en: "at night", he: "בלילה"},{en: "blanket", he: "שמיכה"},{en: "brush", he: "מברשת / לצחצח"},{en: "every", he: "כל"},{en: "give", he: "לתת"},{en: "put", he: "לשים"},{en: "take care of", he: "לטפל ב"},{en: "time", he: "זמן"},{en: "toy", he: "צעצוע"},{en: "wash", he: "לשטוף / לרחוץ"},{en: "with", he: "עם"},{en: "always", he: "תמיד"},{en: "but", he: "אבל"},{en: "fast", he: "מהר"},{en: "hard", he: "קשה"},{en: "help", he: "לעזור"},{en: "if", he: "אם"},{en: "kid", he: "ילד"},{en: "like", he: "לאהוב / כמו"},{en: "other", he: "אחר"},{en: "team", he: "קבוצה"},{en: "beautiful", he: "יפה"},{en: "because", he: "כי / בגלל"},{en: "break", he: "לשבור / הפסקה"},{en: "for", he: "בשביל / עבור"},{en: "into", he: "לתוך"},{en: "near", he: "ליד / קרוב"},{en: "race", he: "מרוץ"},{en: "road", he: "כביש / דרך"},{en: "their", he: "שלהם"},{en: "idea", he: "רעיון"},{en: "money", he: "כסף"},{en: "now", he: "עכשיו"},{en: "use", he: "להשתמש"},{en: "closed", he: "סגור"},{en: "find", he: "למצוא"},{en: "flower", he: "פרח"},{en: "look for", he: "לחפש"},{en: "nice", he: "נחמד"},{en: "secret", he: "סוד"},{en: "tell a story", he: "לספר סיפור"},{en: "cry", he: "לבכות"},{en: "I'm sorry", he: "אני מצטער"},{en: "perhaps", he: "אולי"},{en: "sick", he: "חולה"},{en: "too", he: "גם / יותר מדי"}
+  ],
+  unit2: [
+    {en: "about", he: "על / בערך"},{en: "after", he: "אחרי"},{en: "afternoon", he: "אחר הצהריים"},{en: "all", he: "כל / הכל"},{en: "another", he: "עוד אחד"},{en: "before", he: "לפני"},{en: "breakfast", he: "ארוחת בוקר"},{en: "call", he: "לקרוא / להתקשר"},{en: "catch", he: "לתפוס"},{en: "clean", he: "נקי / לנקות"},{en: "each", he: "כל אחד"},{en: "evening", he: "ערב"},{en: "everyone", he: "כולם"},{en: "fall", he: "ליפול / סתיו"},{en: "get", he: "לקבל"},{en: "glass", he: "כוס / זכוכית"},{en: "guess", he: "לנחש"},{en: "home", he: "בית"},{en: "kind of", he: "סוג של"},{en: "late", he: "מאוחר"},{en: "look at", he: "להסתכל על"},{en: "lunch", he: "ארוחת צהריים"},{en: "many", he: "הרבה"},{en: "moon", he: "ירח"},{en: "parents", he: "הורים"},{en: "pick up", he: "להרים"},{en: "quiet", he: "שקט"},{en: "rich", he: "עשיר"},{en: "sometimes", he: "לפעמים"},{en: "sport", he: "ספורט"},{en: "supper", he: "ארוחת ערב"},{en: "thanks", he: "תודה"},{en: "thing", he: "דבר"},{en: "think", he: "לחשוב"},{en: "too", he: "גם / יותר מדי"},{en: "town", he: "עיירה"},{en: "until", he: "עד"},{en: "us", he: "אותנו"},{en: "work", he: "עבודה / לעבוד"},{en: "world", he: "עולם"},{en: "wrong", he: "לא נכון"},{en: "you're welcome", he: "בבקשה / על לא דבר"},{en: "around", he: "סביב"},{en: "artist", he: "אמן"},{en: "bridge", he: "גשר"},{en: "castle", he: "טירה"},{en: "celebration", he: "חגיגה"},{en: "clothes", he: "בגדים"},{en: "cousin", he: "בן דוד / בת דודה"},{en: "cupboard", he: "ארון"},{en: "desert", he: "מדבר"},{en: "detective", he: "בלש"},{en: "dining room", he: "חדר אוכל"},{en: "fire", he: "אש"},{en: "flag", he: "דגל"},{en: "forest", he: "יער"},{en: "mat", he: "מחצלת"},{en: "mirror", he: "מראה"},{en: "outside", he: "בחוץ"},{en: "paint", he: "לצבוע / צבע"},{en: "pull", he: "למשוך"},{en: "refrigerator", he: "מקרר"},{en: "rice", he: "אורז"},{en: "river", he: "נהר"},{en: "roof", he: "גג"},{en: "servant", he: "משרת"},{en: "ship", he: "ספינה"},{en: "shower", he: "מקלחת"},{en: "sink", he: "כיור"},{en: "spoon", he: "כף"},{en: "stove", he: "תנור / כיריים"},{en: "straw", he: "קש"},{en: "tent", he: "אוהל"},{en: "thief", he: "גנב"},{en: "throw", he: "לזרוק"},{en: "toilet", he: "שירותים"},{en: "travel", he: "לטייל / לנסוע"},{en: "trip", he: "טיול"},{en: "visit", he: "לבקר"},{en: "weekend", he: "סוף שבוע"},{en: "wood", he: "עץ / עצים"}
+  ],
+  unit3: [
+    {en: "air", he: "אוויר"},{en: "battery", he: "סוללה"},{en: "bee", he: "דבורה"},{en: "brave", he: "אמיץ"},{en: "breath", he: "נשימה"},{en: "butterfly", he: "פרפר"},{en: "charge", he: "לטעון / לחייב"},{en: "cook", he: "לבשל / טבח"},{en: "cucumber", he: "מלפפון"},{en: "cut down", he: "לכרות / לקצץ"},{en: "cute", he: "חמוד"},{en: "dangerous", he: "מסוכן"},{en: "energy", he: "אנרגיה"},{en: "environment", he: "סביבה"},{en: "everywhere", he: "בכל מקום"},{en: "fix", he: "לתקן"},{en: "grass", he: "דשא"},{en: "honey", he: "דבש"},{en: "hurt", he: "לפגוע / לכאוב"},{en: "ice", he: "קרח"},{en: "invent", he: "להמציא"},{en: "leaves", he: "עלים"},{en: "onion", he: "בצל"},{en: "pepper", he: "פלפל"},{en: "plant", he: "צמח / לשתול"},{en: "said", he: "אמר"},{en: "save", he: "להציל / לחסוך"},{en: "saw", he: "ראה"},{en: "scary", he: "מפחיד"},{en: "sell", he: "למכור"},{en: "stay", he: "להישאר"},{en: "storm", he: "סערה"},{en: "sweet", he: "מתוק"},{en: "taste", he: "טעם / לטעום"},{en: "teeth", he: "שיניים"},{en: "thousand", he: "אלף"},{en: "throw away", he: "לזרוק לפח"},{en: "trash", he: "זבל / אשפה"},{en: "vegetable", he: "ירק"},{en: "wise", he: "חכם"},{en: "Are you ready?", he: "?אתה מוכן"},{en: "ask", he: "לשאול"},{en: "at least", he: "לפחות"},{en: "autumn", he: "סתיו"},{en: "bottle", he: "בקבוק"},{en: "build", he: "לבנות"},{en: "careful", he: "זהיר"},{en: "change", he: "לשנות / שינוי"},{en: "come back", he: "לחזור"},{en: "drive", he: "לנהוג"},{en: "easy", he: "קל"},{en: "far", he: "רחוק"},{en: "feet", he: "רגליים"},{en: "full", he: "מלא"},{en: "grow", he: "לגדול"},{en: "hear", he: "לשמוע"},{en: "here", he: "פה / כאן"},{en: "hour", he: "שעה"},{en: "I'm ready", he: "אני מוכן"},{en: "interesting", he: "מעניין"},{en: "minute", he: "דקה"},{en: "much", he: "הרבה"},{en: "only", he: "רק"},{en: "place", he: "מקום"},{en: "poor", he: "עני"},{en: "problem", he: "בעיה"},{en: "really", he: "באמת"},{en: "remember", he: "לזכור"},{en: "rule", he: "חוק / כלל"},{en: "show", he: "להראות / תוכנית"},{en: "sky", he: "שמיים"},{en: "start", he: "להתחיל"},{en: "strong", he: "חזק"},{en: "teach", he: "ללמד"},{en: "than", he: "מ- (השוואה)"},{en: "them", he: "אותם"},{en: "then", he: "אז"},{en: "tonight", he: "הלילה"},{en: "was", he: "היה"},{en: "while", he: "בזמן ש"},{en: "What's the matter?", he: "?מה קרה"}
+  ]
+};
+
+const MISTAKES_KEY = 'engGameMistakes';
+function getMistakes() {
+  try { return JSON.parse(localStorage.getItem(MISTAKES_KEY) || '{}'); }
+  catch(e) { return {}; }
+}
+function saveMistakes(m) { localStorage.setItem(MISTAKES_KEY, JSON.stringify(m)); }
+function addMistake(en) {
+  const m = getMistakes();
+  m[en] = (m[en] || 0) + 1;
+  saveMistakes(m);
+}
+function reduceMistake(en) {
+  const m = getMistakes();
+  if (m[en]) {
+    m[en] = Math.max(0, m[en] - 1);
+    if (m[en] === 0) delete m[en];
+    saveMistakes(m);
+  }
+}
+function getPracticeWords() {
+  const m = getMistakes();
+  const allWords = [...vocabulary.unit1, ...vocabulary.unit2, ...vocabulary.unit3];
+  const seen = new Set();
+  const dedupedAll = allWords.filter(w => {
+    if (seen.has(w.en)) return false;
+    seen.add(w.en);
+    return true;
+  });
+  return Object.keys(m)
+    .filter(k => m[k] > 0)
+    .map(k => dedupedAll.find(w => w.en === k))
+    .filter(Boolean);
+}
+function getPracticeCount() {
+  return Object.values(getMistakes()).filter(c => c > 0).length;
+}
+function updatePracticeBadge() {
+  document.querySelectorAll('.practice-count').forEach(el => {
+    el.textContent = getPracticeCount();
+  });
+}
+
+const TOTAL_QUESTIONS = 15;
+const correctMessages = ["🎉 מעולה!", "⭐ נכון!", "💪 יופי!", "🌟 כל הכבוד!", "✨ מדהים!", "🏆 אלוף/ה!"];
+const wrongMessages = ["😅 לא נורא, בפעם הבאה!", "🤔 כמעט!", "💡 שווה לזכור!"];
+
+let selectedUnit = null;
+let questions = [];
+let currentQ = 0;
+let score = 0;
+let streak = 0;
+let maxStreak = 0;
+let answered = false;
+
+function selectUnit(unit) {
+  if (unit === 'practice' && getPracticeWords().length < 4) {
+    alert('אין מספיק מילים לתרגול עדיין. שחק קצת ואני אזכור איפה טעית!');
+    return;
+  }
+  selectedUnit = unit;
+  document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelector(`[data-unit="${unit}"]`).classList.add('selected');
+  document.getElementById('start-btn').disabled = false;
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getPool() {
+  if (selectedUnit === 'all') {
+    return [...vocabulary.unit1, ...vocabulary.unit2, ...vocabulary.unit3];
+  }
+  if (selectedUnit === 'practice') {
+    let pool = getPracticeWords();
+    if (pool.length < 4) {
+      const all = [...vocabulary.unit1, ...vocabulary.unit2, ...vocabulary.unit3];
+      const have = new Set(pool.map(w => w.en));
+      const filler = all.filter(w => !have.has(w.en));
+      pool = pool.concat(shuffle(filler).slice(0, 4 - pool.length));
+    }
+    return pool;
+  }
+  return [...vocabulary[selectedUnit]];
+}
+
+function startGame() {
+  if (!selectedUnit) return;
+  let pool = getPool();
+  // If practice pool is smaller than TOTAL_QUESTIONS, repeat words to fill
+  while (pool.length < TOTAL_QUESTIONS) {
+    pool = pool.concat(getPool());
+  }
+  questions = shuffle(pool).slice(0, TOTAL_QUESTIONS);
+  currentQ = 0;
+  score = 0;
+  streak = 0;
+  maxStreak = 0;
+  answered = false;
+
+  document.getElementById('menu-screen').classList.add('hidden');
+  document.getElementById('end-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.remove('hidden');
+
+  updateStats();
+  showQuestion();
+}
+
+function showQuestion() {
+  answered = false;
+  const q = questions[currentQ];
+
+  document.getElementById('question-word').textContent = q.en;
+  document.getElementById('progress-text').textContent = `שאלה ${currentQ + 1} מתוך ${TOTAL_QUESTIONS}`;
+  document.getElementById('progress-bar').style.width = `${((currentQ) / TOTAL_QUESTIONS) * 100}%`;
+  document.getElementById('feedback').classList.add('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+
+  // Re-trigger question animation
+  const qa = document.getElementById('question-area');
+  qa.style.animation = 'none';
+  qa.offsetHeight;
+  qa.style.animation = 'slideDown 0.4s ease';
+
+  // Generate wrong answers — always pull from full vocabulary to ensure 3 distractors
+  const fullPool = [...vocabulary.unit1, ...vocabulary.unit2, ...vocabulary.unit3].filter(w => w.he !== q.he);
+  const wrongs = shuffle(fullPool).slice(0, 3);
+  const options = shuffle([q, ...wrongs.map(w => ({...w, isWrong: true}))]);
+
+  const grid = document.getElementById('answers-grid');
+  grid.innerHTML = '';
+  options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = opt.he;
+    btn.onclick = () => handleAnswer(btn, opt.he === q.he, q.he);
+    grid.appendChild(btn);
+  });
+}
+
+function handleAnswer(btn, isCorrect, correctHe) {
+  if (answered) return;
+  answered = true;
+
+  const allBtns = document.querySelectorAll('.answer-btn');
+  allBtns.forEach(b => b.classList.add('disabled'));
+
+  const feedback = document.getElementById('feedback');
+  feedback.classList.remove('hidden', 'correct-feedback', 'wrong-feedback');
+
+  const q = questions[currentQ];
+  if (isCorrect) {
+    reduceMistake(q.en);
+    updatePracticeBadge();
+    btn.classList.add('correct');
+    score++;
+    streak++;
+    if (streak > maxStreak) maxStreak = streak;
+
+    feedback.classList.add('correct-feedback');
+    feedback.textContent = correctMessages[Math.floor(Math.random() * correctMessages.length)];
+
+    if (streak >= 3) {
+      document.getElementById('streak-badge').classList.add('on-fire');
+      spawnEmoji('🔥');
+    }
+    if (streak === 5) spawnEmoji('⚡');
+    if (streak === 10) spawnEmoji('👑');
+  } else {
+    addMistake(q.en);
+    updatePracticeBadge();
+    btn.classList.add('wrong');
+    streak = 0;
+    document.getElementById('streak-badge').classList.remove('on-fire');
+
+    // Reveal correct answer
+    allBtns.forEach(b => {
+      if (b.textContent === correctHe) {
+        b.classList.add('reveal-correct');
+      }
+    });
+
+    feedback.classList.add('wrong-feedback');
+    feedback.textContent = wrongMessages[Math.floor(Math.random() * wrongMessages.length)];
+  }
+
+  // Re-trigger feedback animation
+  feedback.style.animation = 'none';
+  feedback.offsetHeight;
+  feedback.style.animation = 'popIn 0.3s ease';
+
+  updateStats();
+
+  if (currentQ < TOTAL_QUESTIONS - 1) {
+    document.getElementById('next-btn').classList.remove('hidden');
+  } else {
+    setTimeout(showEndScreen, 1200);
+  }
+}
+
+function nextQuestion() {
+  currentQ++;
+  showQuestion();
+}
+
+function updateStats() {
+  document.getElementById('score').textContent = score;
+  document.getElementById('streak').textContent = streak;
+}
+
+function showEndScreen() {
+  document.getElementById('game-screen').classList.add('hidden');
+  const end = document.getElementById('end-screen');
+  end.classList.remove('hidden');
+
+  const pct = Math.round((score / TOTAL_QUESTIONS) * 100);
+  let grade, emoji, message, circleClass;
+
+  if (pct >= 90) {
+    grade = 'excellent'; emoji = '🏆';
+    message = '!מדהים! אתה/את אלוף/ה באנגלית';
+    launchConfetti();
+  } else if (pct >= 70) {
+    grade = 'good'; emoji = '🌟';
+    message = '!כל הכבוד! עבודה יפה מאוד';
+  } else if (pct >= 50) {
+    grade = 'ok'; emoji = '💪';
+    message = '!לא רע! עוד קצת תרגול ותהיו מושלמים';
+  } else {
+    grade = 'ok'; emoji = '📚';
+    message = '!שווה לתרגל עוד קצת, אתם יכולים';
+  }
+
+  let streakText = maxStreak >= 3 ? `<br>🔥 רצף מקסימלי: ${maxStreak}` : '';
+
+  end.innerHTML = `
+    <h1 style="margin-bottom: 24px;">🎯 סיכום המשחק</h1>
+    <div class="score-circle ${grade}">
+      <span>${score}/${TOTAL_QUESTIONS}</span>
+      <span class="score-label">${pct}%</span>
+    </div>
+    <p class="end-message">${emoji} ${message}</p>
+    <p class="end-details">
+      ענית נכון על ${score} מתוך ${TOTAL_QUESTIONS} שאלות
+      ${streakText}
+    </p>
+    <button class="play-again-btn" onclick="backToMenu()">🔄 שחק/י שוב</button>
+    <button class="play-again-btn" onclick="replayUnit()" style="background: linear-gradient(135deg, #f093fb, #f5576c);">🔁 שחק/י שוב באותה יחידה</button>
+  `;
+}
+
+function backToMenu() {
+  document.getElementById('end-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.add('hidden');
+  document.getElementById('menu-screen').classList.remove('hidden');
+  updatePracticeBadge();
+}
+
+updatePracticeBadge();
+
+function replayUnit() {
+  startGame();
+}
+
+function spawnEmoji(emoji) {
+  const el = document.createElement('div');
+  el.className = 'celebrate-emoji';
+  el.textContent = emoji;
+  el.style.left = (Math.random() * 60 + 20) + '%';
+  el.style.top = (Math.random() * 30 + 30) + '%';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1500);
+}
+
+function launchConfetti() {
+  const container = document.getElementById('confetti-container');
+  const colors = ['#f44336','#e91e63','#9c27b0','#673ab7','#3f51b5','#2196f3','#00bcd4','#4caf50','#ffeb3b','#ff9800','#ff5722'];
+
+  for (let i = 0; i < 80; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.top = '-10px';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.width = (Math.random() * 10 + 6) + 'px';
+    piece.style.height = (Math.random() * 10 + 6) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    piece.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+    piece.style.animationDelay = (Math.random() * 1) + 's';
+    container.appendChild(piece);
+  }
+  setTimeout(() => { container.innerHTML = ''; }, 4000);
+}
+</script>
+</body>
+</html>

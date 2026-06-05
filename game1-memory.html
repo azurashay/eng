@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>משחק זיכרון — מילים באנגלית</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  direction: rtl;
+}
+
+h1 {
+  color: #fff;
+  font-size: 2.2rem;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: #ffd700;
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.unit-btn {
+  padding: 10px 20px;
+  border: 3px solid #fff;
+  border-radius: 25px;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  backdrop-filter: blur(4px);
+}
+
+.unit-btn:hover { background: rgba(255,255,255,0.35); transform: scale(1.05); }
+.unit-btn.active { background: #ffd700; color: #333; border-color: #ffd700; }
+.unit-btn.practice-btn {
+  border-color: #ff6b35;
+  background: rgba(255,107,53,0.25);
+  box-shadow: 0 0 12px rgba(255,107,53,0.6);
+}
+.unit-btn.practice-btn.active { background: #ff6b35; color: #fff; border-color: #ff6b35; }
+
+.stats {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.stat {
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(6px);
+  padding: 8px 18px;
+  border-radius: 16px;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+.stat span { color: #ffd700; }
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  max-width: 600px;
+  width: 100%;
+  perspective: 1000px;
+  margin-bottom: 20px;
+}
+
+.card {
+  aspect-ratio: 1 / 1.15;
+  cursor: pointer;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+}
+
+.card.flipped { transform: rotateY(180deg); }
+.card.matched { pointer-events: none; }
+.card.matched .card-front {
+  background: linear-gradient(135deg, #00c853, #69f0ae) !important;
+  box-shadow: 0 0 20px rgba(0,200,83,0.5);
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  text-align: center;
+  padding: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.card-back {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  font-size: 2.5rem;
+  user-select: none;
+}
+
+.card-back::after { content: '?'; color: rgba(255,255,255,0.6); font-size: 2.8rem; font-weight: bold; }
+
+.card-front {
+  background: linear-gradient(135deg, #fff, #f0f0ff);
+  transform: rotateY(180deg);
+  color: #333;
+  font-weight: bold;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.card-front.en { font-size: 1.3rem; font-family: 'Segoe UI', Tahoma, sans-serif; color: #4a00e0; }
+.card-front.he { font-size: 1.25rem; color: #e91e63; }
+
+.play-again {
+  padding: 14px 36px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #ffd700, #ff9800);
+  color: #333;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(255,152,0,0.4);
+  display: none;
+}
+
+.play-again:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(255,152,0,0.6); }
+
+/* Celebration overlay */
+.celebration {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.celebration.show { display: flex; }
+
+.celebration-box {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 24px;
+  padding: 40px 50px;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  animation: popIn 0.6s ease;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.celebration-box h2 { font-size: 2.2rem; margin-bottom: 10px; }
+.celebration-box .emoji-row { font-size: 3rem; margin-bottom: 12px; }
+.celebration-box p { font-size: 1.1rem; margin-bottom: 20px; opacity: 0.9; }
+
+.celebration-box button {
+  padding: 12px 32px;
+  border: none;
+  border-radius: 25px;
+  background: #ffd700;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.celebration-box button:hover { transform: scale(1.08); }
+
+/* Confetti */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  z-index: 101;
+  animation: confettiFall linear forwards;
+  pointer-events: none;
+}
+
+@keyframes confettiFall {
+  0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+}
+
+/* Mobile */
+@media (max-width: 500px) {
+  h1 { font-size: 1.5rem; }
+  .subtitle { font-size: 0.9rem; }
+  .board { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .card-front.en { font-size: 1rem; }
+  .card-front.he { font-size: 1rem; }
+  .card-back::after { font-size: 2rem; }
+  .stat { font-size: 0.85rem; padding: 6px 12px; }
+  .unit-btn { padding: 8px 14px; font-size: 0.85rem; }
+  .stats { gap: 10px; }
+}
+
+@media (min-width: 501px) and (max-width: 768px) {
+  .board { grid-template-columns: repeat(4, 1fr); max-width: 500px; }
+}
+.game-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+  padding: 10px; margin: -20px -20px 20px -20px;
+  border-bottom: 2px solid rgba(255,255,255,0.2);
+}
+.game-nav a {
+  color: #fff; text-decoration: none; padding: 8px 16px;
+  border-radius: 20px; font-weight: bold; font-size: 0.95em;
+  background: rgba(255,255,255,0.1); transition: all 0.2s;
+}
+.game-nav a:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
+.game-nav a.active { background: #ffd93d; color: #5a3a00; box-shadow: 0 4px 12px rgba(255,217,61,0.5); }
+@media (max-width: 500px) {
+  .game-nav a { padding: 6px 10px; font-size: 0.85em; }
+}
+</style>
+</head>
+<body>
+
+<nav class="game-nav">
+  <a href="english-quest.html">🎮 English Quest</a>
+  <a href="index.html">🏠 בית</a>
+  <a href="game1-memory.html" class="active">🎮 זיכרון</a>
+  <a href="game2-quiz.html">🎯 חידון</a>
+  <a href="game3-hangman.html">🎪 איש תלוי</a>
+  <a href="learn.html">📖 ללמוד</a>
+</nav>
+
+<h1>🎮 משחק זיכרון — מילים באנגלית</h1>
+<div class="subtitle" id="subtitle">⭐ בחרו יחידה כדי להתחיל!</div>
+
+<div class="controls">
+  <button class="unit-btn active" data-unit="unit1">יחידה 1</button>
+  <button class="unit-btn" data-unit="unit2">יחידה 2</button>
+  <button class="unit-btn" data-unit="unit3">יחידה 3</button>
+  <button class="unit-btn" data-unit="all">כל היחידות</button>
+  <button class="unit-btn practice-btn" data-unit="practice">🔥 לתרגול (<span class="practice-count">0</span>)</button>
+</div>
+
+<div class="stats">
+  <div class="stat">🎯 התאמות: <span id="matches">0</span> / 6</div>
+  <div class="stat">🔄 ניסיונות: <span id="attempts">0</span></div>
+  <div class="stat">⏱️ זמן: <span id="timer">0:00</span></div>
+</div>
+
+<div class="board" id="board"></div>
+
+<button class="play-again" id="playAgain" onclick="startGame()">🔄 שחק שוב</button>
+
+<div class="celebration" id="celebration">
+  <div class="celebration-box">
+    <div class="emoji-row">🎉🏆⭐</div>
+    <h2>!כל הכבוד</h2>
+    <p id="celebrationText"></p>
+    <button onclick="closeCelebration()">🔄 שחק שוב</button>
+  </div>
+</div>
+
+<script>
+const vocabulary = {
+  unit1: [
+    {en: "age", he: "גיל"},
+    {en: "also", he: "גם"},
+    {en: "begin", he: "להתחיל"},
+    {en: "birthday", he: "יום הולדת"},
+    {en: "different", he: "שונה"},
+    {en: "hobby", he: "תחביב"},
+    {en: "month", he: "חודש"},
+    {en: "pool", he: "בריכה"},
+    {en: "the same", he: "אותו דבר"},
+    {en: "year", he: "שנה"},
+    {en: "a lot of", he: "הרבה"},
+    {en: "chess", he: "שחמט"},
+    {en: "first", he: "ראשון"},
+    {en: "important", he: "חשוב"},
+    {en: "learn", he: "ללמוד"},
+    {en: "ninety", he: "תשעים"},
+    {en: "old", he: "ישן / זקן"},
+    {en: "people", he: "אנשים"},
+    {en: "special", he: "מיוחד"},
+    {en: "together", he: "ביחד"},
+    {en: "win", he: "לנצח"},
+    {en: "young", he: "צעיר"},
+    {en: "best", he: "הכי טוב"},
+    {en: "better", he: "יותר טוב"},
+    {en: "call", he: "לקרוא / להתקשר"},
+    {en: "choose", he: "לבחור"},
+    {en: "information", he: "מידע"},
+    {en: "more", he: "יותר"},
+    {en: "next", he: "הבא"},
+    {en: "wait", he: "לחכות"},
+    {en: "at night", he: "בלילה"},
+    {en: "blanket", he: "שמיכה"},
+    {en: "brush", he: "מברשת / לצחצח"},
+    {en: "every", he: "כל"},
+    {en: "give", he: "לתת"},
+    {en: "put", he: "לשים"},
+    {en: "take care of", he: "לטפל ב"},
+    {en: "time", he: "זמן"},
+    {en: "toy", he: "צעצוע"},
+    {en: "wash", he: "לשטוף / לרחוץ"},
+    {en: "with", he: "עם"},
+    {en: "always", he: "תמיד"},
+    {en: "but", he: "אבל"},
+    {en: "fast", he: "מהר"},
+    {en: "hard", he: "קשה"},
+    {en: "help", he: "לעזור"},
+    {en: "if", he: "אם"},
+    {en: "kid", he: "ילד"},
+    {en: "like", he: "לאהוב / כמו"},
+    {en: "other", he: "אחר"},
+    {en: "team", he: "קבוצה"},
+    {en: "beautiful", he: "יפה"},
+    {en: "because", he: "כי / בגלל"},
+    {en: "break", he: "לשבור / הפסקה"},
+    {en: "for", he: "בשביל / עבור"},
+    {en: "into", he: "לתוך"},
+    {en: "near", he: "ליד / קרוב"},
+    {en: "race", he: "מרוץ"},
+    {en: "road", he: "כביש / דרך"},
+    {en: "their", he: "שלהם"},
+    {en: "idea", he: "רעיון"},
+    {en: "money", he: "כסף"},
+    {en: "now", he: "עכשיו"},
+    {en: "use", he: "להשתמש"},
+    {en: "closed", he: "סגור"},
+    {en: "find", he: "למצוא"},
+    {en: "flower", he: "פרח"},
+    {en: "look for", he: "לחפש"},
+    {en: "nice", he: "נחמד"},
+    {en: "secret", he: "סוד"},
+    {en: "tell a story", he: "לספר סיפור"},
+    {en: "cry", he: "לבכות"},
+    {en: "I'm sorry", he: "אני מצטער"},
+    {en: "perhaps", he: "אולי"},
+    {en: "sick", he: "חולה"},
+    {en: "too", he: "גם / יותר מדי"}
+  ],
+  unit2: [
+    {en: "about", he: "על / בערך"},
+    {en: "after", he: "אחרי"},
+    {en: "afternoon", he: "אחר הצהריים"},
+    {en: "all", he: "כל / הכל"},
+    {en: "another", he: "עוד אחד"},
+    {en: "before", he: "לפני"},
+    {en: "breakfast", he: "ארוחת בוקר"},
+    {en: "call", he: "לקרוא / להתקשר"},
+    {en: "catch", he: "לתפוס"},
+    {en: "clean", he: "נקי / לנקות"},
+    {en: "each", he: "כל אחד"},
+    {en: "evening", he: "ערב"},
+    {en: "everyone", he: "כולם"},
+    {en: "fall", he: "ליפול / סתיו"},
+    {en: "get", he: "לקבל"},
+    {en: "glass", he: "כוס / זכוכית"},
+    {en: "guess", he: "לנחש"},
+    {en: "home", he: "בית"},
+    {en: "kind of", he: "סוג של"},
+    {en: "late", he: "מאוחר"},
+    {en: "look at", he: "להסתכל על"},
+    {en: "lunch", he: "ארוחת צהריים"},
+    {en: "many", he: "הרבה"},
+    {en: "moon", he: "ירח"},
+    {en: "parents", he: "הורים"},
+    {en: "pick up", he: "להרים"},
+    {en: "quiet", he: "שקט"},
+    {en: "rich", he: "עשיר"},
+    {en: "sometimes", he: "לפעמים"},
+    {en: "sport", he: "ספורט"},
+    {en: "supper", he: "ארוחת ערב"},
+    {en: "thanks", he: "תודה"},
+    {en: "thing", he: "דבר"},
+    {en: "think", he: "לחשוב"},
+    {en: "too", he: "גם / יותר מדי"},
+    {en: "town", he: "עיירה"},
+    {en: "until", he: "עד"},
+    {en: "us", he: "אותנו"},
+    {en: "work", he: "עבודה / לעבוד"},
+    {en: "world", he: "עולם"},
+    {en: "wrong", he: "לא נכון"},
+    {en: "you're welcome", he: "בבקשה / על לא דבר"},
+    {en: "around", he: "סביב"},
+    {en: "artist", he: "אמן"},
+    {en: "bridge", he: "גשר"},
+    {en: "castle", he: "טירה"},
+    {en: "celebration", he: "חגיגה"},
+    {en: "clothes", he: "בגדים"},
+    {en: "cousin", he: "בן דוד / בת דודה"},
+    {en: "cupboard", he: "ארון"},
+    {en: "desert", he: "מדבר"},
+    {en: "detective", he: "בלש"},
+    {en: "dining room", he: "חדר אוכל"},
+    {en: "fire", he: "אש"},
+    {en: "flag", he: "דגל"},
+    {en: "forest", he: "יער"},
+    {en: "mat", he: "מחצלת"},
+    {en: "mirror", he: "מראה"},
+    {en: "outside", he: "בחוץ"},
+    {en: "paint", he: "לצבוע / צבע"},
+    {en: "pull", he: "למשוך"},
+    {en: "refrigerator", he: "מקרר"},
+    {en: "rice", he: "אורז"},
+    {en: "river", he: "נהר"},
+    {en: "roof", he: "גג"},
+    {en: "servant", he: "משרת"},
+    {en: "ship", he: "ספינה"},
+    {en: "shower", he: "מקלחת"},
+    {en: "sink", he: "כיור"},
+    {en: "spoon", he: "כף"},
+    {en: "stove", he: "תנור / כיריים"},
+    {en: "straw", he: "קש"},
+    {en: "tent", he: "אוהל"},
+    {en: "thief", he: "גנב"},
+    {en: "throw", he: "לזרוק"},
+    {en: "toilet", he: "שירותים"},
+    {en: "travel", he: "לטייל / לנסוע"},
+    {en: "trip", he: "טיול"},
+    {en: "visit", he: "לבקר"},
+    {en: "weekend", he: "סוף שבוע"},
+    {en: "wood", he: "עץ / עצים"}
+  ],
+  unit3: [
+    {en: "air", he: "אוויר"},
+    {en: "battery", he: "סוללה"},
+    {en: "bee", he: "דבורה"},
+    {en: "brave", he: "אמיץ"},
+    {en: "breath", he: "נשימה"},
+    {en: "butterfly", he: "פרפר"},
+    {en: "charge", he: "לטעון / לחייב"},
+    {en: "cook", he: "לבשל / טבח"},
+    {en: "cucumber", he: "מלפפון"},
+    {en: "cut down", he: "לכרות / לקצץ"},
+    {en: "cute", he: "חמוד"},
+    {en: "dangerous", he: "מסוכן"},
+    {en: "energy", he: "אנרגיה"},
+    {en: "environment", he: "סביבה"},
+    {en: "everywhere", he: "בכל מקום"},
+    {en: "fix", he: "לתקן"},
+    {en: "grass", he: "דשא"},
+    {en: "honey", he: "דבש"},
+    {en: "hurt", he: "לפגוע / לכאוב"},
+    {en: "ice", he: "קרח"},
+    {en: "invent", he: "להמציא"},
+    {en: "leaves", he: "עלים"},
+    {en: "onion", he: "בצל"},
+    {en: "pepper", he: "פלפל"},
+    {en: "plant", he: "צמח / לשתול"},
+    {en: "said", he: "אמר"},
+    {en: "save", he: "להציל / לחסוך"},
+    {en: "saw", he: "ראה"},
+    {en: "scary", he: "מפחיד"},
+    {en: "sell", he: "למכור"},
+    {en: "stay", he: "להישאר"},
+    {en: "storm", he: "סערה"},
+    {en: "sweet", he: "מתוק"},
+    {en: "taste", he: "טעם / לטעום"},
+    {en: "teeth", he: "שיניים"},
+    {en: "thousand", he: "אלף"},
+    {en: "throw away", he: "לזרוק לפח"},
+    {en: "trash", he: "זבל / אשפה"},
+    {en: "vegetable", he: "ירק"},
+    {en: "wise", he: "חכם"},
+    {en: "Are you ready?", he: "?אתה מוכן"},
+    {en: "ask", he: "לשאול"},
+    {en: "at least", he: "לפחות"},
+    {en: "autumn", he: "סתיו"},
+    {en: "bottle", he: "בקבוק"},
+    {en: "build", he: "לבנות"},
+    {en: "careful", he: "זהיר"},
+    {en: "change", he: "לשנות / שינוי"},
+    {en: "come back", he: "לחזור"},
+    {en: "drive", he: "לנהוג"},
+    {en: "easy", he: "קל"},
+    {en: "far", he: "רחוק"},
+    {en: "feet", he: "רגליים"},
+    {en: "full", he: "מלא"},
+    {en: "grow", he: "לגדול"},
+    {en: "hear", he: "לשמוע"},
+    {en: "here", he: "פה / כאן"},
+    {en: "hour", he: "שעה"},
+    {en: "I'm ready", he: "אני מוכן"},
+    {en: "interesting", he: "מעניין"},
+    {en: "minute", he: "דקה"},
+    {en: "much", he: "הרבה"},
+    {en: "only", he: "רק"},
+    {en: "place", he: "מקום"},
+    {en: "poor", he: "עני"},
+    {en: "problem", he: "בעיה"},
+    {en: "really", he: "באמת"},
+    {en: "remember", he: "לזכור"},
+    {en: "rule", he: "חוק / כלל"},
+    {en: "show", he: "להראות / תוכנית"},
+    {en: "sky", he: "שמיים"},
+    {en: "start", he: "להתחיל"},
+    {en: "strong", he: "חזק"},
+    {en: "teach", he: "ללמד"},
+    {en: "than", he: "מ- (השוואה)"},
+    {en: "them", he: "אותם"},
+    {en: "then", he: "אז"},
+    {en: "tonight", he: "הלילה"},
+    {en: "was", he: "היה"},
+    {en: "while", he: "בזמן ש"},
+    {en: "What's the matter?", he: "?מה קרה"}
+  ]
+};
+
+const unitNames = {
+  unit1: "יחידה 1",
+  unit2: "יחידה 2",
+  unit3: "יחידה 3",
+  all: "כל היחידות",
+  practice: "🔥 תרגול טעויות"
+};
+
+const MISTAKES_KEY = 'engGameMistakes';
+function getMistakes() {
+  try { return JSON.parse(localStorage.getItem(MISTAKES_KEY) || '{}'); }
+  catch(e) { return {}; }
+}
+function saveMistakes(m) { localStorage.setItem(MISTAKES_KEY, JSON.stringify(m)); }
+function addMistake(en) {
+  const m = getMistakes();
+  m[en] = (m[en] || 0) + 1;
+  saveMistakes(m);
+}
+function reduceMistake(en) {
+  const m = getMistakes();
+  if (m[en]) {
+    m[en] = Math.max(0, m[en] - 1);
+    if (m[en] === 0) delete m[en];
+    saveMistakes(m);
+  }
+}
+function getPracticeWords() {
+  const m = getMistakes();
+  const allWords = [...vocabulary.unit1, ...vocabulary.unit2, ...vocabulary.unit3];
+  const seen = new Set();
+  const dedupedAll = allWords.filter(w => {
+    if (seen.has(w.en)) return false;
+    seen.add(w.en);
+    return true;
+  });
+  return Object.keys(m)
+    .filter(k => m[k] > 0)
+    .map(k => dedupedAll.find(w => w.en === k))
+    .filter(Boolean);
+}
+function getPracticeCount() {
+  return Object.values(getMistakes()).filter(c => c > 0).length;
+}
+function updatePracticeBadge() {
+  document.querySelectorAll('.practice-count').forEach(el => {
+    el.textContent = getPracticeCount();
+  });
+}
+
+let currentUnit = "unit1";
+let cards = [];
+let flippedCards = [];
+let matchesFound = 0;
+let attempts = 0;
+let timerInterval = null;
+let seconds = 0;
+let locked = false;
+
+// Unit buttons
+document.querySelectorAll('.unit-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.dataset.unit === 'practice' && getPracticeWords().length === 0) {
+      alert('אין מספיק מילים לתרגול עדיין. שחק קצת ואני אזכור איפה טעית!');
+      return;
+    }
+    document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentUnit = btn.dataset.unit;
+    startGame();
+  });
+});
+
+function getWords() {
+  let pool;
+  if (currentUnit === 'all') {
+    pool = [...vocabulary.unit1, ...vocabulary.unit2, ...vocabulary.unit3];
+  } else if (currentUnit === 'practice') {
+    pool = getPracticeWords();
+    if (pool.length < 6) {
+      // Fill up with random words from all units
+      const all = [...vocabulary.unit1, ...vocabulary.unit2, ...vocabulary.unit3];
+      const have = new Set(pool.map(w => w.en));
+      const filler = all.filter(w => !have.has(w.en));
+      for (let i = filler.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [filler[i], filler[j]] = [filler[j], filler[i]];
+      }
+      pool = pool.concat(filler.slice(0, 6 - pool.length));
+    }
+  } else {
+    pool = [...vocabulary[currentUnit]];
+  }
+  // Shuffle and pick 6
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, 6);
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function startGame() {
+  clearInterval(timerInterval);
+  seconds = 0;
+  matchesFound = 0;
+  attempts = 0;
+  flippedCards = [];
+  locked = false;
+
+  document.getElementById('matches').textContent = '0';
+  document.getElementById('attempts').textContent = '0';
+  document.getElementById('timer').textContent = '0:00';
+  document.getElementById('playAgain').style.display = 'none';
+  document.getElementById('subtitle').textContent = '⭐ ' + unitNames[currentUnit];
+
+  const words = getWords();
+  cards = [];
+
+  words.forEach((w, i) => {
+    cards.push({ id: i, type: 'en', text: w.en, pairId: i });
+    cards.push({ id: i, type: 'he', text: w.he, pairId: i });
+  });
+
+  cards = shuffle(cards);
+
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+
+  cards.forEach((card, idx) => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.dataset.index = idx;
+    el.innerHTML = `
+      <div class="card-face card-back"></div>
+      <div class="card-face card-front ${card.type}">${card.text}</div>
+    `;
+    el.addEventListener('click', () => flipCard(idx, el));
+    board.appendChild(el);
+  });
+
+  // Start timer
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    document.getElementById('timer').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+  }, 1000);
+}
+
+function flipCard(idx, el) {
+  if (locked) return;
+  if (el.classList.contains('flipped') || el.classList.contains('matched')) return;
+  if (flippedCards.length >= 2) return;
+
+  el.classList.add('flipped');
+  flippedCards.push({ idx, el, card: cards[idx] });
+
+  if (flippedCards.length === 2) {
+    attempts++;
+    document.getElementById('attempts').textContent = attempts;
+    checkMatch();
+  }
+}
+
+function checkMatch() {
+  const [a, b] = flippedCards;
+  if (a.card.pairId === b.card.pairId && a.card.type !== b.card.type) {
+    // Match!
+    const enWord = a.card.type === 'en' ? a.card.text : b.card.text;
+    reduceMistake(enWord);
+    updatePracticeBadge();
+    setTimeout(() => {
+      a.el.classList.add('matched');
+      b.el.classList.add('matched');
+      matchesFound++;
+      document.getElementById('matches').textContent = matchesFound;
+      flippedCards = [];
+
+      if (matchesFound === 6) {
+        clearInterval(timerInterval);
+        setTimeout(celebrate, 400);
+      }
+    }, 500);
+  } else {
+    // No match
+    const getEn = (c) => {
+      if (c.type === 'en') return c.text;
+      // find pair en
+      const pair = cards.find(x => x.pairId === c.pairId && x.type === 'en');
+      return pair ? pair.text : null;
+    };
+    const enA = getEn(a.card);
+    const enB = getEn(b.card);
+    if (enA) addMistake(enA);
+    if (enB && enB !== enA) addMistake(enB);
+    updatePracticeBadge();
+    locked = true;
+    setTimeout(() => {
+      a.el.classList.remove('flipped');
+      b.el.classList.remove('flipped');
+      flippedCards = [];
+      locked = false;
+    }, 900);
+  }
+}
+
+function celebrate() {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  const timeStr = m + ':' + (s < 10 ? '0' : '') + s;
+  document.getElementById('celebrationText').textContent =
+    'מצאתם את כל 6 הזוגות ב-' + attempts + ' ניסיונות ובזמן של ' + timeStr + '!';
+  document.getElementById('celebration').classList.add('show');
+  spawnConfetti();
+  document.getElementById('playAgain').style.display = 'inline-block';
+}
+
+function closeCelebration() {
+  document.getElementById('celebration').classList.remove('show');
+  startGame();
+}
+
+function spawnConfetti() {
+  const colors = ['#ffd700', '#ff6b6b', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#00d2d3', '#ff9f43'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.top = '-10px';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.width = (6 + Math.random() * 8) + 'px';
+    c.style.height = (6 + Math.random() * 8) + 'px';
+    c.style.animationDuration = (2 + Math.random() * 3) + 's';
+    c.style.animationDelay = Math.random() * 1.5 + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 5000);
+  }
+}
+
+// Start the game on load
+updatePracticeBadge();
+startGame();
+</script>
+</body>
+</html>
