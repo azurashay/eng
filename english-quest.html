@@ -412,6 +412,20 @@ body { font-family:'Heebo',sans-serif; background:var(--dark); color:var(--text)
 }
 .listen-big-btn.speaking .listen-icon { animation:pulse 0.8s infinite; }
 
+/* Listen & Type input */
+.lt-input-wrap { display:flex; flex-direction:column; gap:8px; }
+.lt-input {
+  width:100%; padding:18px 20px;
+  background:rgba(43,31,92,0.55);
+  border:2px solid rgba(168,85,247,0.35);
+  border-radius:16px; color:#fff;
+  font-family:'Heebo',sans-serif; font-size:1.2em; font-weight:700;
+  outline:none; transition:border-color 0.2s;
+}
+.lt-input:focus { border-color:#a855f7; box-shadow:0 0 0 4px rgba(168,85,247,0.15); }
+.lt-input::placeholder { color:rgba(216,180,254,0.5); font-weight:500; }
+.lt-helper { font-size:0.78em; color:#b8a8e0; text-align:center; }
+
 /* ===== STORIES ===== */
 #stories, #story-read, #story-quiz {
   padding:0; min-height:100vh; padding-bottom:90px;
@@ -1291,6 +1305,208 @@ const CURRICULUM = [
         { en: 'They play with friends.', words: ['play','with','They','friends'], correct: ['They','play','with','friends'], he: 'הם משחקים עם חברים.', why: 'They + play + with + friends. with = עם.' },
       ]
     }
+  },
+  {
+    id: 10,
+    icon: '🕰️',
+    title: 'זמן עבר — Past Simple',
+    titleEn: 'Past Simple',
+    color: '#0891b2',
+    gradient: 'linear-gradient(135deg, #22d3ee 0%, #0c4a6e 100%)',
+    formula: 'Yesterday I + Verb-ed/saw/said',
+    formulaHe: 'אתמול / לפני זמן',
+    expl: 'באנגלית, כשמדברים על דברים ש<b>קרו אתמול</b> או <b>בעבר</b>, הפועל משתנה. רוב הפעלים מקבלים <b>-ed</b> בסוף (play→played, learn→learned). יש פעלים מיוחדים: <b>see→saw</b>, <b>say→said</b>, <b>come→came</b>, <b>find→found</b>. אותו הפועל לכל הגופים — אין צורך ב-s!',
+    examples: [
+      { en: 'I played in the park yesterday.', he: 'אני שיחקתי בפארק אתמול.', tokens: [{w:'I',t:'s'},{w:'played',t:'v'},{w:'yesterday',t:'o'}] },
+      { en: 'She saw a beautiful flower.', he: 'היא ראתה פרח יפה.', tokens: [{w:'She',t:'s'},{w:'saw',t:'v'},{w:'a flower',t:'o'}] },
+      { en: 'They said hello to us.', he: 'הם אמרו שלום אלינו.', tokens: [{w:'They',t:'s'},{w:'said',t:'v'},{w:'hello',t:'o'}] },
+      { en: 'He came back home late.', he: 'הוא חזר הביתה מאוחר.', tokens: [{w:'He',t:'s'},{w:'came back',t:'v'},{w:'late',t:'o'}] },
+    ],
+    rule: '💡 פעלים מיוחדים בעבר: see→saw, say→said, come→came, find→found, have→had, run→ran, eat→ate, go→went. השאר: פשוט מוסיפים -ed!',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: 'Yesterday I ___ a dog in the park. (see)', opts: ['see','saw','seen','sees'], correct: 1, he: 'אתמול ראיתי כלב בפארק.', hint: 'see → saw בעבר' },
+        { sent: 'She ___ "hello" to me. (say)', opts: ['say','says','said','saying'], correct: 2, he: 'היא אמרה לי "שלום".', hint: 'say → said בעבר' },
+        { sent: 'We ___ in the garden yesterday. (play)', opts: ['play','plays','played','playing'], correct: 2, he: 'אנחנו שיחקנו בגן אתמול.', hint: 'play → played (+ed)' },
+        { sent: 'He ___ back home late. (come)', opts: ['come','comes','came','coming'], correct: 2, he: 'הוא חזר הביתה מאוחר.', hint: 'come → came בעבר' },
+        { sent: 'They ___ a secret garden. (find)', opts: ['find','finds','found','finding'], correct: 2, he: 'הם מצאו גן סודי.', hint: 'find → found בעבר' },
+        { sent: 'I ___ a big cake yesterday. (eat)', opts: ['eat','eats','ate','eating'], correct: 2, he: 'אכלתי עוגה גדולה אתמול.', hint: 'eat → ate בעבר' },
+        { sent: 'She ___ to school by bus. (go)', opts: ['go','goes','went','going'], correct: 2, he: 'היא הלכה לבית הספר באוטובוס.', hint: 'go → went בעבר' },
+        { sent: 'We ___ English last week. (learn)', opts: ['learn','learns','learned','learning'], correct: 2, he: 'אנחנו למדנו אנגלית בשבוע שעבר.', hint: 'learn → learned (+ed)' },
+        { sent: 'He ___ the race yesterday. (win)', opts: ['win','wins','won','winning'], correct: 2, he: 'הוא ניצח במרוץ אתמול.', hint: 'win → won בעבר (חריג!)' },
+        { sent: 'They ___ a flower for mom. (give)', opts: ['give','gives','gave','giving'], correct: 2, he: 'הם נתנו פרח לאמא.', hint: 'give → gave בעבר' },
+        { sent: 'I ___ fast in the morning. (run)', opts: ['run','runs','ran','running'], correct: 2, he: 'רצתי מהר בבוקר.', hint: 'run → ran בעבר' },
+        { sent: 'She ___ a new book. (have)', opts: ['have','has','had','having'], correct: 2, he: 'היה לה ספר חדש.', hint: 'have → had בעבר' },
+      ]
+    }
+  },
+  {
+    id: 11,
+    icon: '🟰',
+    title: 'am / is / are',
+    titleEn: 'The verb "be"',
+    color: '#16a34a',
+    gradient: 'linear-gradient(135deg, #4ade80 0%, #14532d 100%)',
+    formula: 'I am | He/She/It is | You/We/They are',
+    formulaHe: 'הפועל "להיות"',
+    expl: 'הפועל <b>be</b> באנגלית הוא הכי חשוב! הוא משמש לתאר <b>מי אנחנו</b>, <b>איפה אנחנו</b>, <b>מה אנחנו מרגישים</b>. הוא משתנה לפי הגוף: <b>I am</b> (אני), <b>He/She/It is</b> (הוא/היא/זה), <b>You/We/They are</b> (אתה/אנחנו/הם).',
+    examples: [
+      { en: 'I am a student.', he: 'אני תלמיד.', tokens: [{w:'I',t:'s'},{w:'am',t:'v'},{w:'a student',t:'o'}] },
+      { en: 'She is happy today.', he: 'היא שמחה היום.', tokens: [{w:'She',t:'s'},{w:'is',t:'v'},{w:'happy',t:'o'}] },
+      { en: 'We are friends.', he: 'אנחנו חברים.', tokens: [{w:'We',t:'s'},{w:'are',t:'v'},{w:'friends',t:'o'}] },
+      { en: 'They are at home.', he: 'הם בבית.', tokens: [{w:'They',t:'s'},{w:'are',t:'v'},{w:'at home',t:'o'}] },
+    ],
+    rule: '💡 הזיכרון הקל: <b>I am</b> (תמיד am אחרי I), <b>He/She/It is</b>, <b>You/We/They are</b>. בכתיב מקוצר: I\'m, he\'s, we\'re.',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: 'I ___ a student.', opts: ['am','is','are','be'], correct: 0, he: 'אני תלמיד/ה.', hint: 'I → תמיד am' },
+        { sent: 'She ___ happy.', opts: ['am','is','are','be'], correct: 1, he: 'היא שמחה.', hint: 'She (יחיד) → is' },
+        { sent: 'We ___ friends.', opts: ['am','is','are','be'], correct: 2, he: 'אנחנו חברים.', hint: 'We (רבים) → are' },
+        { sent: 'He ___ at home.', opts: ['am','is','are','be'], correct: 1, he: 'הוא בבית.', hint: 'He → is' },
+        { sent: 'You ___ very nice.', opts: ['am','is','are','be'], correct: 2, he: 'אתה/את מאוד נחמד/ה.', hint: 'You → are (גם יחיד וגם רבים!)' },
+        { sent: 'They ___ in the park.', opts: ['am','is','are','be'], correct: 2, he: 'הם בפארק.', hint: 'They (רבים) → are' },
+        { sent: 'It ___ a beautiful day.', opts: ['am','is','are','be'], correct: 1, he: 'זה יום יפה.', hint: 'It → is' },
+        { sent: 'Sam and Mia ___ friends.', opts: ['am','is','are','be'], correct: 2, he: 'סם ומיה חברים.', hint: 'שני אנשים = they → are' },
+        { sent: 'My mother ___ a teacher.', opts: ['am','is','are','be'], correct: 1, he: 'אמא שלי מורה.', hint: 'mother = she → is' },
+        { sent: 'The dogs ___ in the garden.', opts: ['am','is','are','be'], correct: 2, he: 'הכלבים בגן.', hint: 'dogs (רבים) → are' },
+        { sent: 'I ___ ready for the test.', opts: ['am','is','are','be'], correct: 0, he: 'אני מוכן/ה למבחן.', hint: 'I → am' },
+        { sent: 'The cake ___ very sweet.', opts: ['am','is','are','be'], correct: 1, he: 'העוגה מאוד מתוקה.', hint: 'the cake = it → is' },
+      ]
+    }
+  },
+  {
+    id: 12,
+    icon: '📍',
+    title: 'there is / there are',
+    titleEn: 'There is / There are',
+    color: '#eab308',
+    gradient: 'linear-gradient(135deg, #facc15 0%, #854d0e 100%)',
+    formula: 'There is + יחיד | There are + רבים',
+    formulaHe: 'יש',
+    expl: 'איך אומרים "<b>יש</b>" באנגלית? אם זה <b>דבר אחד</b> → <b>there is</b>. אם זה <b>הרבה דברים</b> → <b>there are</b>. דוגמה: "<b>יש</b> חתול בחדר" = There is a cat. "<b>יש</b> חתולים בחדר" = There are cats.',
+    examples: [
+      { en: 'There is a cat on the chair.', he: 'יש חתול על הכיסא.', tokens: [{w:'There is',t:'s'},{w:'a cat',t:'o'}] },
+      { en: 'There are many books here.', he: 'יש כאן הרבה ספרים.', tokens: [{w:'There are',t:'s'},{w:'books',t:'o'}] },
+      { en: 'There is a flower in the garden.', he: 'יש פרח בגן.', tokens: [{w:'There is',t:'s'},{w:'a flower',t:'o'}] },
+      { en: 'There are three children outside.', he: 'יש שלושה ילדים בחוץ.', tokens: [{w:'There are',t:'s'},{w:'children',t:'o'}] },
+    ],
+    rule: '💡 כלל זהב: יחיד = There is. רבים (s בסוף, או many/some/numbers) = There are. אם המספר 1 = is. אם 2+ = are.',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: 'There ___ a cat on the chair.', opts: ['is','are','am','be'], correct: 0, he: 'יש חתול על הכיסא.', hint: 'a cat = יחיד → is' },
+        { sent: 'There ___ many books here.', opts: ['is','are','am','be'], correct: 1, he: 'יש הרבה ספרים כאן.', hint: 'many books = רבים → are' },
+        { sent: 'There ___ a flower in the garden.', opts: ['is','are','am','be'], correct: 0, he: 'יש פרח בגן.', hint: 'a flower = יחיד → is' },
+        { sent: 'There ___ three children outside.', opts: ['is','are','am','be'], correct: 1, he: 'יש שלושה ילדים בחוץ.', hint: 'three children = רבים → are' },
+        { sent: 'There ___ a big cake on the table.', opts: ['is','are','am','be'], correct: 0, he: 'יש עוגה גדולה על השולחן.', hint: 'a cake = יחיד → is' },
+        { sent: 'There ___ two dogs in the park.', opts: ['is','are','am','be'], correct: 1, he: 'יש שני כלבים בפארק.', hint: 'two dogs = רבים → are' },
+        { sent: 'There ___ a new student in our class.', opts: ['is','are','am','be'], correct: 0, he: 'יש תלמיד חדש בכיתה שלנו.', hint: 'a student = יחיד → is' },
+        { sent: 'There ___ many flowers in the garden.', opts: ['is','are','am','be'], correct: 1, he: 'יש הרבה פרחים בגן.', hint: 'many flowers = רבים → are' },
+        { sent: 'There ___ a book on the shelf.', opts: ['is','are','am','be'], correct: 0, he: 'יש ספר על המדף.', hint: 'a book = יחיד → is' },
+        { sent: 'There ___ some friends at the party.', opts: ['is','are','am','be'], correct: 1, he: 'יש כמה חברים במסיבה.', hint: 'some friends = רבים → are' },
+      ]
+    }
+  },
+  {
+    id: 13,
+    icon: '📦',
+    title: 'מילות יחס — Prepositions',
+    titleEn: 'Prepositions',
+    color: '#7c3aed',
+    gradient: 'linear-gradient(135deg, #a78bfa 0%, #5b21b6 100%)',
+    formula: 'in / on / under / at / to / with',
+    formulaHe: 'איפה? אל מי? עם מה?',
+    expl: 'מילות יחס באנגלית קצת שונות מעברית! <b>in</b> = בתוך (in the box). <b>on</b> = על (on the table). <b>under</b> = מתחת (under the bed). <b>at</b> = במקום מסוים (at school, at home). <b>to</b> = אל (give to him, go to school). <b>with</b> = עם (with my friend).',
+    examples: [
+      { en: 'The cat is in the box.', he: 'החתול בתוך הקופסה.', tokens: [{w:'The cat',t:'s'},{w:'is in',t:'v'},{w:'the box',t:'o'}] },
+      { en: 'The book is on the table.', he: 'הספר על השולחן.', tokens: [{w:'The book',t:'s'},{w:'is on',t:'v'},{w:'the table',t:'o'}] },
+      { en: 'I am at school.', he: 'אני בבית הספר.', tokens: [{w:'I',t:'s'},{w:'am at',t:'v'},{w:'school',t:'o'}] },
+      { en: 'Give it to me.', he: 'תן את זה לי.', tokens: [{w:'Give',t:'v'},{w:'to me',t:'o'}] },
+    ],
+    rule: '💡 הקלות הקל: in = בפנים, on = על, at = במקום, to = אל, with = עם. כשמדברים על בית ספר/בית: <b>at school, at home</b> (לא in!).',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: 'The cat is ___ the box.', opts: ['in','on','to','at'], correct: 0, he: 'החתול בתוך הקופסה.', hint: 'בתוך = in' },
+        { sent: 'The book is ___ the table.', opts: ['in','on','to','at'], correct: 1, he: 'הספר על השולחן.', hint: 'על משטח = on' },
+        { sent: 'I am ___ school today.', opts: ['in','on','to','at'], correct: 3, he: 'אני בבית הספר היום.', hint: 'במוסד = at school' },
+        { sent: 'Give the ball ___ me.', opts: ['in','on','to','at'], correct: 2, he: 'תן את הכדור אלי.', hint: 'אל מישהו = to' },
+        { sent: 'I play ___ my friend.', opts: ['in','on','with','at'], correct: 2, he: 'אני משחק עם חבר שלי.', hint: 'עם מישהו = with' },
+        { sent: 'There is a flower ___ the garden.', opts: ['in','on','to','at'], correct: 0, he: 'יש פרח בגן.', hint: 'בתוך מקום = in the garden' },
+        { sent: 'We meet ___ the park.', opts: ['in','on','to','at'], correct: 0, he: 'אנחנו נפגשים בפארק.', hint: 'בתוך פארק = in the park' },
+        { sent: 'She goes ___ school by bus.', opts: ['in','on','to','at'], correct: 2, he: 'היא הולכת לבית הספר באוטובוס.', hint: 'אל = to school' },
+        { sent: 'The cat sleeps ___ the bed.', opts: ['in','on','to','at'], correct: 1, he: 'החתול ישן על המיטה.', hint: 'על משטח = on' },
+        { sent: 'I have a book ___ my bag.', opts: ['in','on','to','at'], correct: 0, he: 'יש לי ספר בתיק שלי.', hint: 'בתוך תיק = in' },
+        { sent: 'He lives ___ a big city.', opts: ['in','on','to','at'], correct: 0, he: 'הוא גר בעיר גדולה.', hint: 'בעיר = in a city' },
+        { sent: 'I am happy ___ my friends.', opts: ['in','on','to','with'], correct: 3, he: 'אני שמח עם החברים שלי.', hint: 'עם = with' },
+      ]
+    }
+  },
+  {
+    id: 14,
+    icon: '🆚',
+    title: 'השוואה — Comparatives',
+    titleEn: 'Comparatives',
+    color: '#dc2626',
+    gradient: 'linear-gradient(135deg, #fca5a5 0%, #7f1d1d 100%)',
+    formula: 'Adjective + -er + than',
+    formulaHe: 'יותר... מ-',
+    expl: 'איך אומרים "יותר גדול / יותר מהיר"? לתואר קצר מוסיפים <b>-er</b> ואחריו <b>than</b>: big → <b>bigger than</b>, fast → <b>faster than</b>. לתואר ארוך מוסיפים <b>more</b>: beautiful → <b>more beautiful than</b>. יש חריגים: good → <b>better than</b>, bad → <b>worse than</b>.',
+    examples: [
+      { en: 'Sam is faster than Mia.', he: 'סם מהיר יותר ממיה.', tokens: [{w:'Sam',t:'s'},{w:'is',t:'v'},{w:'faster than',t:'o'}] },
+      { en: 'The book is bigger than the pen.', he: 'הספר יותר גדול מהעט.', tokens: [{w:'The book',t:'s'},{w:'is',t:'v'},{w:'bigger than',t:'o'}] },
+      { en: 'This flower is more beautiful.', he: 'הפרח הזה יותר יפה.', tokens: [{w:'This flower',t:'s'},{w:'is',t:'v'},{w:'more beautiful',t:'o'}] },
+      { en: 'Today is better than yesterday.', he: 'היום יותר טוב מאתמול.', tokens: [{w:'Today',t:'s'},{w:'is',t:'v'},{w:'better than',t:'o'}] },
+    ],
+    rule: '💡 קצר (1-2 הברות) → +er. ארוך → more + תואר. חריגים: good → better, bad → worse, far → farther.',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: 'Sam is ___ than Mia. (fast)', opts: ['fast','faster','fastest','more fast'], correct: 1, he: 'סם יותר מהיר ממיה.', hint: 'fast קצר → fast+er = faster' },
+        { sent: 'The book is ___ than the pen. (big)', opts: ['big','bigger','more big','biggest'], correct: 1, he: 'הספר יותר גדול מהעט.', hint: 'big → bigger (כפילות g!)' },
+        { sent: 'My house is ___ than yours. (small)', opts: ['small','smaller','more small','smallest'], correct: 1, he: 'הבית שלי יותר קטן משלך.', hint: 'small → smaller (+er)' },
+        { sent: 'This story is ___ than that one. (good)', opts: ['gooder','more good','better','best'], correct: 2, he: 'הסיפור הזה יותר טוב מההוא.', hint: 'good → better (חריג!)' },
+        { sent: 'She is ___ than her sister. (tall)', opts: ['tall','taller','more tall','tallest'], correct: 1, he: 'היא יותר גבוהה מאחותה.', hint: 'tall → taller (+er)' },
+        { sent: 'This flower is ___ than that one. (beautiful)', opts: ['beautifuler','more beautiful','beautifulest','beautiful'], correct: 1, he: 'הפרח הזה יותר יפה מההוא.', hint: 'beautiful ארוך → more beautiful' },
+        { sent: 'Today is ___ than yesterday. (hot)', opts: ['hot','hotter','more hot','hottest'], correct: 1, he: 'היום יותר חם מאתמול.', hint: 'hot → hotter (כפילות t!)' },
+        { sent: 'The new game is ___ than the old one. (interesting)', opts: ['interestinger','more interesting','interestingest','interesting'], correct: 1, he: 'המשחק החדש יותר מעניין מהישן.', hint: 'interesting ארוך → more interesting' },
+        { sent: 'My brother is ___ than me. (old)', opts: ['old','older','more old','oldest'], correct: 1, he: 'אחי יותר מבוגר ממני.', hint: 'old → older (+er)' },
+        { sent: 'This test is ___ than the last one. (easy)', opts: ['easy','more easy','easier','easiest'], correct: 2, he: 'המבחן הזה יותר קל מהקודם.', hint: 'easy → easier (y הופך ל-ier)' },
+      ]
+    }
+  },
+  {
+    id: 15,
+    icon: '⌨️',
+    title: 'תכתיב — Listen & Type',
+    titleEn: 'Dictation',
+    color: '#9333ea',
+    gradient: 'linear-gradient(135deg, #d8b4fe 0%, #581c87 100%)',
+    formula: '🔊 Listen → ⌨️ Type',
+    formulaHe: 'הקשב והקלד',
+    expl: 'תרגיל אלוף! <b>תקשיב/י למשפט באנגלית</b> ותקליד/י אותו בעצמך. זה התרגיל הכי טוב — מחבר בין <b>הקשבה, איות, ודקדוק</b>. אפשר לשמוע שוב כמה פעמים שצריך. לא צריך פיסוק, הקלד/י רק את המילים.',
+    examples: [
+      { en: 'I have a dog.', he: 'יש לי כלב.', tokens: [{w:'I',t:'s'},{w:'have',t:'v'},{w:'a dog',t:'o'}] },
+      { en: 'She runs fast.', he: 'היא רצה מהר.', tokens: [{w:'She',t:'s'},{w:'runs',t:'v'},{w:'fast',t:'o'}] },
+    ],
+    rule: '💡 טיפ: אל תפחד/י לטעות באיות בהתחלה. שמע/י שוב, חשב/י על איך כל מילה נכתבת, ואז הקלד/י.',
+    game: {
+      type: 'listen-type',
+      qs: [
+        { en: 'I have a dog.', he: 'יש לי כלב.' },
+        { en: 'She is happy.', he: 'היא שמחה.' },
+        { en: 'We play in the park.', he: 'אנחנו משחקים בפארק.' },
+        { en: 'He runs fast.', he: 'הוא רץ מהר.' },
+        { en: 'They are friends.', he: 'הם חברים.' },
+        { en: 'I see a flower.', he: 'אני רואה פרח.' },
+        { en: 'She has a book.', he: 'יש לה ספר.' },
+        { en: 'We learn English.', he: 'אנחנו לומדים אנגלית.' },
+        { en: 'I am a student.', he: 'אני תלמיד.' },
+        { en: 'There is a cat.', he: 'יש חתול.' },
+      ]
+    }
   }
 ];
 
@@ -1447,6 +1663,7 @@ function checkPassword() {
 
 function selectPlayer(p) {
   player = p;
+  recordPlayDay(p);
   showScreen('map');
 }
 
@@ -1540,9 +1757,36 @@ function refreshMap() {
 }
 
 // New helpers for redesigned UI
+// Daily streak — counts consecutive days the player played
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function daysBetween(a, b) {
+  const ad = new Date(a+'T00:00:00'), bd = new Date(b+'T00:00:00');
+  return Math.round((bd - ad) / 86400000);
+}
+function recordPlayDay(p) {
+  const k = `eq_${p}_streak`;
+  const data = JSON.parse(localStorage.getItem(k) || 'null') || {count:0, last:null};
+  const today = todayKey();
+  if (data.last === today) return data.count; // already played today
+  if (data.last && daysBetween(data.last, today) === 1) {
+    data.count = (data.count || 0) + 1; // consecutive day
+  } else {
+    data.count = 1; // start over (or first ever)
+  }
+  data.last = today;
+  localStorage.setItem(k, JSON.stringify(data));
+  return data.count;
+}
 function getStreak(p) {
-  // simple session streak — return their best max streak if any saved, or count of completed levels
-  return completedCount(p);
+  const data = JSON.parse(localStorage.getItem(`eq_${p}_streak`) || 'null');
+  if (!data) return 0;
+  const today = todayKey();
+  if (data.last === today) return data.count;
+  if (data.last && daysBetween(data.last, today) <= 1) return data.count;
+  return 0; // streak broken
 }
 function toggleDrawer() {
   document.getElementById('drawer').classList.toggle('open');
@@ -1684,7 +1928,8 @@ function renderQ() {
     'fill':'השלם את המשפט',
     'error':'מצא את הטעות',
     'listen-translate':'🎧 האזן ובחר תרגום',
-    'listen-scramble':'🎧 האזן וסדר את המילים'
+    'listen-scramble':'🎧 האזן וסדר את המילים',
+    'listen-type':'🎧 האזן והקלד'
   };
   document.getElementById('q-type-lbl').textContent = typeLbl[type] || '';
 
@@ -1713,7 +1958,41 @@ function renderQ() {
     document.getElementById('q-hint').textContent = '';
     renderListenScramble(q);
     setTimeout(() => playListenAudio(q.en), 400);
+  } else if (type==='listen-type') {
+    document.getElementById('q-he').innerHTML = '🎧 <b>הקשב/י והקלד/י את המשפט באנגלית</b><br><span style="font-size:0.8em;color:var(--muted);font-weight:600">פיסוק (.,!) לא חובה — רק המילים</span>';
+    document.getElementById('q-hint').textContent = q.he ? `💡 רמז בעברית: ${q.he}` : '';
+    renderListenType(q);
+    setTimeout(() => playListenAudio(q.en), 400);
   }
+}
+
+// === LISTEN-TYPE ===
+function renderListenType(q) {
+  const area = document.getElementById('game-area');
+  area.innerHTML = `
+    <button id="listen-play-btn" class="listen-big-btn" onclick="replayListen()">
+      <span class="listen-icon">🔊</span>
+      <span class="listen-label">לחץ/י לשמיעה</span>
+    </button>
+    <div class="lt-input-wrap">
+      <input id="lt-input" class="lt-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="הקלד/י את המשפט שאת/ה שומע/ת..." dir="ltr">
+      <div class="lt-helper">⌨️ הקלד באנגלית, ולא צריך פיסוק</div>
+    </div>
+  `;
+  const input = document.getElementById('lt-input');
+  input.addEventListener('input', () => {
+    document.getElementById('check-btn').disabled = !input.value.trim();
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && input.value.trim() && !gameState.answered) {
+      checkAnswer();
+    }
+  });
+  setTimeout(()=>input.focus(), 600);
+}
+
+function normalizeForCompare(s) {
+  return (s||'').toLowerCase().replace(/[.,!?'"]/g,'').replace(/\s+/g,' ').trim();
 }
 
 // === LISTENING HELPERS ===
@@ -1907,6 +2186,27 @@ function checkAnswer() {
   const lv = currentLevel;
   const q = lv.game.activeQs[gameState.q];
   const type = lv.game.type;
+
+  if (type==='listen-type') {
+    const input = document.getElementById('lt-input');
+    const userAns = normalizeForCompare(input.value);
+    const correctAns = normalizeForCompare(q.en);
+    const correct = userAns === correctAns;
+    gameState.answered = true;
+    input.disabled = true;
+    input.style.borderColor = correct ? 'var(--green)' : 'var(--red)';
+    if (correct) {
+      const pts = Math.max(100 - gameState.mistakes*15, 40);
+      onCorrect(pts);
+      showFeedback(`<span class="fb-big">${randomPraise()}</span>+${pts} נקודות 🎯<br><span style="font-size:0.85em;direction:ltr;display:block;text-align:left">${q.en}</span>`, 'ok');
+    } else {
+      onWrong();
+      showFeedback(`<span class="fb-big">❌ כמעט!</span>התשובה הנכונה:<br><b style="direction:ltr;display:block;text-align:left;font-size:1.1em;margin-top:4px">${q.en}</b><span class="fb-why">💡 השווה למה שהקלדת: "${input.value}"</span>`, 'bad');
+    }
+    document.getElementById('check-btn').style.display = 'none';
+    document.getElementById('next-btn').classList.add('show');
+    return;
+  }
 
   if (type==='scramble' || type==='listen-scramble') {
     const userAns = gameState.answerWords.join(' ');
