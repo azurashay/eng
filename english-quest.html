@@ -612,6 +612,127 @@ body { font-family:'Heebo',sans-serif; background:var(--dark); color:var(--text)
 .lb-summary-title { color:#fff; font-weight:900; font-size:1em; margin-bottom:4px; }
 .lb-summary-sub { color:#b8a8e0; font-size:0.85em; }
 
+/* ===== PARENT DASHBOARD ===== */
+#parent-dashboard {
+  padding:0; min-height:100vh; padding-bottom:30px;
+  background:
+    radial-gradient(circle at 15% 8%, rgba(168,85,247,0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at center 50%, #1f1448 0%, #0d0820 70%);
+}
+.dash-inner { padding:14px 16px; max-width:900px; margin:0 auto; }
+.dash-hero {
+  text-align:center; margin-bottom:18px;
+}
+.dash-hero h1 { color:#fff; font-size:1.7em; font-weight:900; margin-bottom:4px; }
+.dash-hero p { color:#b8a8e0; font-size:0.92em; }
+
+.dash-kids-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:14px;
+  margin-bottom:22px;
+}
+@media (max-width:640px) { .dash-kids-grid { grid-template-columns:1fr; } }
+.dash-kid {
+  background:linear-gradient(135deg, rgba(43,31,92,0.7) 0%, rgba(31,21,69,0.85) 100%);
+  border:1px solid rgba(168,85,247,0.25);
+  border-radius:20px; padding:16px;
+  box-shadow:0 10px 28px rgba(0,0,0,0.35);
+}
+.dash-kid-head {
+  display:flex; align-items:center; gap:12px; margin-bottom:12px;
+}
+.dash-kid-avatar {
+  width:60px; height:60px; border-radius:50%;
+  background:radial-gradient(circle, #7c3aed 0%, #4c1d95 100%);
+  padding:4px; flex-shrink:0;
+}
+.dash-kid-avatar img { width:100%; height:100%; object-fit:contain; border-radius:50%; }
+.dash-kid-info { flex:1; min-width:0; }
+.dash-kid-name { color:#fff; font-size:1.2em; font-weight:900; }
+.dash-kid-sub { color:#b8a8e0; font-size:0.78em; }
+.dash-kid-stats-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:8px;
+  margin-bottom:10px;
+}
+.dash-stat-box {
+  background:rgba(0,0,0,0.3); border:1px solid rgba(168,85,247,0.18);
+  border-radius:12px; padding:10px;
+  text-align:center;
+}
+.dash-stat-box b { display:block; color:#fff; font-size:1.4em; font-weight:900; line-height:1.1; }
+.dash-stat-box small { color:#b8a8e0; font-size:0.72em; font-weight:700; }
+
+.dash-section {
+  background:rgba(43,31,92,0.5); border:1px solid rgba(168,85,247,0.2);
+  border-radius:18px; padding:14px; margin-bottom:14px;
+}
+.dash-section-title {
+  display:flex; align-items:center; gap:8px;
+  color:#fff; font-size:1.05em; font-weight:900; margin-bottom:12px;
+}
+
+/* Daily bar chart */
+.dash-chart {
+  display:flex; align-items:flex-end; gap:6px; height:140px;
+  padding:8px; background:rgba(0,0,0,0.25); border-radius:12px;
+}
+.dash-bar-col {
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+  min-width:0; height:100%; justify-content:flex-end;
+}
+.dash-bar-pair { display:flex; gap:2px; align-items:flex-end; width:100%; height:100%; }
+.dash-bar {
+  flex:1; min-width:6px; border-radius:4px 4px 0 0;
+  position:relative;
+  transition:height 0.3s;
+}
+.dash-bar.elad { background:linear-gradient(to top, #f59e0b, #fbbf24); }
+.dash-bar.tal { background:linear-gradient(to top, #ec4899, #f472b6); }
+.dash-bar-label { color:#9d8fc7; font-size:0.7em; font-weight:700; }
+.dash-chart-legend {
+  display:flex; justify-content:center; gap:14px; margin-top:8px;
+  font-size:0.78em; color:#b8a8e0;
+}
+.dash-chart-legend span { display:flex; align-items:center; gap:4px; font-weight:700; }
+.dash-chart-legend .dash-dot { width:10px; height:10px; border-radius:50%; }
+.dash-chart-legend .dash-dot.elad { background:#fbbf24; }
+.dash-chart-legend .dash-dot.tal { background:#f472b6; }
+
+/* Activity feed */
+.dash-activity-item {
+  display:flex; gap:10px; padding:8px 10px;
+  background:rgba(0,0,0,0.2); border-radius:10px;
+  margin-bottom:6px;
+}
+.dash-activity-emoji { font-size:1.1em; flex-shrink:0; }
+.dash-activity-text { flex:1; color:#d1c4f0; font-size:0.85em; line-height:1.3; }
+.dash-activity-text b { color:#fff; }
+.dash-activity-time { color:#7d6da8; font-size:0.72em; flex-shrink:0; }
+.dash-activity-empty { text-align:center; color:#7d6da8; padding:14px; font-size:0.85em; }
+
+/* Level performance grid */
+.dash-perf-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(110px,1fr)); gap:8px;
+}
+.dash-perf-cell {
+  background:rgba(0,0,0,0.25); border:1px solid rgba(168,85,247,0.15);
+  border-radius:10px; padding:8px; text-align:center;
+}
+.dash-perf-cell.struggling { border-color:rgba(239,68,68,0.4); background:rgba(127,29,29,0.25); }
+.dash-perf-cell.strong { border-color:rgba(16,185,129,0.4); background:rgba(6,78,59,0.25); }
+.dash-perf-num { color:#fff; font-size:0.9em; font-weight:900; }
+.dash-perf-acc { color:#b8a8e0; font-size:0.72em; margin-top:2px; }
+.dash-perf-cell.struggling .dash-perf-acc { color:#fca5a5; }
+.dash-perf-cell.strong .dash-perf-acc { color:#6ee7b7; }
+
+.dash-back-btn {
+  position:fixed; top:14px; right:14px;
+  background:rgba(124,58,237,0.3); border:1px solid rgba(168,85,247,0.4);
+  border-radius:50%; width:44px; height:44px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.1em; cursor:pointer; color:#fff;
+  z-index:50;
+}
+
 /* ===== VISUAL EXPLANATION CARDS ===== */
 .expl-grid {
   display:flex; flex-direction:column; gap:10px;
@@ -1118,7 +1239,10 @@ body { font-family:'Heebo',sans-serif; background:var(--dark); color:var(--text)
       <div id="pc-elad-badge"></div>
     </div>
   </div>
-  <button class="reset-btn" onclick="confirmReset()">אפס נתונים</button>
+  <div style="display:flex; gap:10px; margin-top:10px; justify-content:center; flex-wrap:wrap">
+    <button class="reset-btn" onclick="openDashboardAuth()">📊 דשבורד הורים</button>
+    <button class="reset-btn" onclick="confirmReset()">🗑️ אפס נתונים</button>
+  </div>
 </div>
 
 <!-- Password modal -->
@@ -1145,6 +1269,50 @@ body { font-family:'Heebo',sans-serif; background:var(--dark); color:var(--text)
     </div>
     <div class="pw-actions">
       <button class="pw-btn pw-btn-cancel" onclick="closePwModal()">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<!-- PARENT DASHBOARD -->
+<div id="parent-dashboard" class="screen">
+  <button class="dash-back-btn" onclick="showScreen('home')">✕</button>
+  <div class="dash-inner">
+    <div class="dash-hero">
+      <h1>📊 דשבורד הורים</h1>
+      <p>מעקב התקדמות, זמן ופעילות של הילדים</p>
+    </div>
+
+    <!-- Kid cards -->
+    <div class="dash-kids-grid" id="dash-kids"></div>
+
+    <!-- Weekly chart -->
+    <div class="dash-section">
+      <div class="dash-section-title">📅 פעילות בשבוע האחרון</div>
+      <div class="dash-chart" id="dash-chart"></div>
+      <div class="dash-chart-legend">
+        <span><span class="dash-dot elad"></span>אלעד</span>
+        <span><span class="dash-dot tal"></span>טל</span>
+      </div>
+    </div>
+
+    <!-- Per-level performance -->
+    <div class="dash-section">
+      <div class="dash-section-title">🎯 ביצועים לפי שלב</div>
+      <div style="display:flex; gap:8px; margin-bottom:10px; font-size:0.78em">
+        <button class="pw-btn pw-btn-cancel" style="flex:1; padding:6px" onclick="dashPerfPlayer='elad';renderDashboard()" id="dash-perf-elad-btn">🐯 אלעד</button>
+        <button class="pw-btn pw-btn-cancel" style="flex:1; padding:6px" onclick="dashPerfPlayer='tal';renderDashboard()" id="dash-perf-tal-btn">🐼 טל</button>
+      </div>
+      <div class="dash-perf-grid" id="dash-perf"></div>
+      <div style="display:flex; gap:14px; justify-content:center; margin-top:10px; font-size:0.72em; color:#b8a8e0">
+        <span>🟢 מעל 80% נכון</span>
+        <span>🔴 מתחת 60% נכון</span>
+      </div>
+    </div>
+
+    <!-- Recent activity feed -->
+    <div class="dash-section">
+      <div class="dash-section-title">⏰ פעילות אחרונה</div>
+      <div id="dash-activity"></div>
     </div>
   </div>
 </div>
@@ -2734,10 +2902,12 @@ function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
+  trackScreen(id);
   if (id==='home') refreshHome();
   if (id==='map') refreshMap();
   if (id==='stories') renderStories();
   if (id==='leaderboard') renderLeaderboard();
+  if (id==='parent-dashboard') renderDashboard();
 }
 
 function refreshHome() {
@@ -2838,14 +3008,101 @@ function checkPassword() {
   }
 }
 
+// ===================== ACTIVITY TRACKING (Parent Dashboard) =====================
+let trackSessionStart = null;
+let trackPlayer = null;
+let trackInterval = null;
+let trackLastScreen = null;
+
+function trackStart(p) {
+  trackSessionStart = Date.now();
+  trackPlayer = p;
+  trackLogEvent(p, 'login');
+  if (trackInterval) clearInterval(trackInterval);
+  trackInterval = setInterval(trackHeartbeat, 20000); // every 20s
+}
+function trackStop() {
+  trackHeartbeat();
+  if (trackInterval) { clearInterval(trackInterval); trackInterval = null; }
+  trackPlayer = null;
+  trackSessionStart = null;
+}
+function trackHeartbeat() {
+  if (!trackSessionStart || !trackPlayer) return;
+  const delta = Math.floor((Date.now() - trackSessionStart) / 1000);
+  if (delta > 0) trackAddSeconds(trackPlayer, delta);
+  trackSessionStart = Date.now();
+}
+function trackAddSeconds(p, seconds) {
+  if (seconds <= 0 || seconds > 300) return; // sanity guard
+  const stats = trackStats(p);
+  stats.totalSeconds = (stats.totalSeconds || 0) + seconds;
+  stats.dailyMinutes = stats.dailyMinutes || {};
+  const today = todayKey();
+  stats.dailyMinutes[today] = (stats.dailyMinutes[today] || 0) + seconds;
+  trackSave(p, stats);
+}
+function trackStats(p) {
+  return JSON.parse(localStorage.getItem(`eq_${p}_stats`) || '{}');
+}
+function trackSave(p, stats) {
+  localStorage.setItem(`eq_${p}_stats`, JSON.stringify(stats));
+}
+function trackLogEvent(p, type, data) {
+  const stats = trackStats(p);
+  stats.recentActivity = stats.recentActivity || [];
+  stats.recentActivity.unshift(Object.assign({ type, ts: Date.now() }, data || {}));
+  stats.recentActivity = stats.recentActivity.slice(0, 50);
+  trackSave(p, stats);
+}
+function trackScreen(screenId) {
+  if (!trackPlayer || screenId === trackLastScreen) return;
+  trackLastScreen = screenId;
+  trackLogEvent(trackPlayer, 'screen', { screen: screenId });
+}
+function trackLevelComplete(p, levelId, correctCount, wrongCount, stars) {
+  const stats = trackStats(p);
+  stats.levelStats = stats.levelStats || {};
+  const ls = stats.levelStats[levelId] || { plays: 0, correct: 0, wrong: 0, bestStars: 0 };
+  ls.plays++;
+  ls.correct += correctCount;
+  ls.wrong += wrongCount;
+  ls.bestStars = Math.max(ls.bestStars, stars);
+  ls.lastPlayed = Date.now();
+  stats.levelStats[levelId] = ls;
+  trackSave(p, stats);
+  trackLogEvent(p, 'level-done', { levelId, stars, correct: correctCount, wrong: wrongCount });
+}
+function trackStoryComplete(p, storyId, stars) {
+  const stats = trackStats(p);
+  stats.storyStats = stats.storyStats || {};
+  const ss = stats.storyStats[storyId] || { plays: 0, bestStars: 0 };
+  ss.plays++;
+  ss.bestStars = Math.max(ss.bestStars, stars);
+  ss.lastPlayed = Date.now();
+  stats.storyStats[storyId] = ss;
+  trackSave(p, stats);
+  trackLogEvent(p, 'story-done', { storyId, stars });
+}
+// Pause tracking when page hidden, resume when visible
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) trackHeartbeat();
+  else if (trackPlayer) trackSessionStart = Date.now();
+});
+window.addEventListener('beforeunload', trackHeartbeat);
+
 function selectPlayer(p) {
   player = p;
   recordPlayDay(p);
+  trackStart(p);
   showScreen('map');
 }
 
 function logout() {
-  if (player) sessionStorage.removeItem('eq_auth_'+player);
+  if (player) {
+    trackStop();
+    sessionStorage.removeItem('eq_auth_'+player);
+  }
   player = null;
   showScreen('home');
 }
@@ -3597,6 +3854,7 @@ function finishGame() {
 
   addPoints(player, gameState.score);
   saveStars(player, lv.id, stars);
+  trackLevelComplete(player, lv.id, totalQs - gameState.mistakes, gameState.mistakes, stars);
   beep('win');
 
   // mega confetti party!
@@ -3732,6 +3990,171 @@ function speak(text, onEnd) {
 }
 
 const RESET_PASSWORD = '150579';
+const DASHBOARD_PASSWORD = '150579';
+
+// ===================== PARENT DASHBOARD =====================
+let dashPerfPlayer = 'elad';
+let dashAction = 'reset'; // 'reset' or 'dashboard'
+
+function openDashboardAuth() {
+  dashAction = 'dashboard';
+  openResetModal();
+  document.querySelector('#reset-modal-bg .pw-title').textContent = '📊 דשבורד הורים';
+  document.querySelector('#reset-modal-bg .pw-sub').textContent = 'סיסמת הורים להצגת הסטטיסטיקות';
+}
+
+function fmtSeconds(s) {
+  s = Math.round(s);
+  if (s < 60) return s + ' שנ\'';
+  const m = Math.floor(s/60);
+  if (m < 60) return m + ' דקות';
+  const h = Math.floor(m/60);
+  return h + ' שע\' ' + (m%60) + ' דק\'';
+}
+
+function fmtRelative(ts) {
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 60) return 'לפני רגע';
+  if (diff < 3600) return 'לפני ' + Math.floor(diff/60) + ' דק\'';
+  if (diff < 86400) return 'לפני ' + Math.floor(diff/3600) + ' שע\'';
+  return 'לפני ' + Math.floor(diff/86400) + ' ימים';
+}
+
+function renderDashboard() {
+  // Kid summary cards
+  const kidsEl = document.getElementById('dash-kids');
+  const players = [
+    { p: 'elad', name: 'אלעד', img: 'images/elad.png' },
+    { p: 'tal',  name: 'טל',   img: 'images/tal.png' }
+  ];
+  kidsEl.innerHTML = players.map(({p, name, img}) => {
+    const stats = trackStats(p);
+    const totalSec = stats.totalSeconds || 0;
+    const today = stats.dailyMinutes?.[todayKey()] || 0;
+    const lvlsDone = completedCount(p);
+    const stars = totalStars(p);
+    const pts = getPoints(p);
+    const streak = getStreak(p);
+    const lastSeen = stats.recentActivity?.[0]?.ts;
+    return `
+      <div class="dash-kid">
+        <div class="dash-kid-head">
+          <div class="dash-kid-avatar"><img src="${img}" alt="${name}"></div>
+          <div class="dash-kid-info">
+            <div class="dash-kid-name">${name}</div>
+            <div class="dash-kid-sub">${lastSeen ? 'נראה ' + fmtRelative(lastSeen) : 'עוד לא התחיל'}</div>
+          </div>
+        </div>
+        <div class="dash-kid-stats-grid">
+          <div class="dash-stat-box"><b>${fmtSeconds(totalSec)}</b><small>⏱️ זמן כולל</small></div>
+          <div class="dash-stat-box"><b>${fmtSeconds(today)}</b><small>📅 היום</small></div>
+          <div class="dash-stat-box"><b>${lvlsDone}/${CURRICULUM.length}</b><small>🎯 שלבים</small></div>
+          <div class="dash-stat-box"><b>${stars}</b><small>⭐ כוכבים</small></div>
+          <div class="dash-stat-box"><b>${pts.toLocaleString()}</b><small>💎 נקודות</small></div>
+          <div class="dash-stat-box"><b>${streak}🔥</b><small>📈 רצף יומי</small></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Weekly chart — last 7 days
+  const chart = document.getElementById('dash-chart');
+  const days = [];
+  for (let i=6; i>=0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const label = ['א','ב','ג','ד','ה','ו','ש'][d.getDay()];
+    days.push({ key, label });
+  }
+  const eladStats = trackStats('elad');
+  const talStats = trackStats('tal');
+  const maxSeconds = Math.max(
+    ...days.map(d => Math.max(eladStats.dailyMinutes?.[d.key]||0, talStats.dailyMinutes?.[d.key]||0)),
+    60 // floor
+  );
+  chart.innerHTML = days.map(d => {
+    const eladSec = eladStats.dailyMinutes?.[d.key] || 0;
+    const talSec = talStats.dailyMinutes?.[d.key] || 0;
+    const eladPct = (eladSec/maxSeconds)*100;
+    const talPct = (talSec/maxSeconds)*100;
+    return `
+      <div class="dash-bar-col">
+        <div class="dash-bar-pair">
+          <div class="dash-bar elad" style="height:${eladPct}%" title="אלעד: ${fmtSeconds(eladSec)}"></div>
+          <div class="dash-bar tal" style="height:${talPct}%" title="טל: ${fmtSeconds(talSec)}"></div>
+        </div>
+        <div class="dash-bar-label">${d.label}</div>
+      </div>
+    `;
+  }).join('');
+
+  // Performance per level
+  document.getElementById('dash-perf-elad-btn').style.opacity = dashPerfPlayer==='elad' ? '1' : '0.5';
+  document.getElementById('dash-perf-tal-btn').style.opacity  = dashPerfPlayer==='tal' ? '1' : '0.5';
+  const perfStats = trackStats(dashPerfPlayer);
+  const perf = document.getElementById('dash-perf');
+  perf.innerHTML = CURRICULUM.map(lv => {
+    const ls = perfStats.levelStats?.[lv.id];
+    const total = ls ? (ls.correct + ls.wrong) : 0;
+    const acc = total > 0 ? Math.round((ls.correct/total)*100) : null;
+    let cls = '';
+    if (acc !== null) {
+      if (acc >= 80) cls = 'strong';
+      else if (acc < 60) cls = 'struggling';
+    }
+    return `
+      <div class="dash-perf-cell ${cls}">
+        <div class="dash-perf-num">שלב ${lv.id}</div>
+        <div class="dash-perf-acc">${acc !== null ? acc + '%' : 'לא שוחק'}</div>
+      </div>
+    `;
+  }).join('');
+
+  // Recent activity — merge both players, last 20 events
+  const activity = [];
+  ['elad','tal'].forEach(p => {
+    const stats = trackStats(p);
+    (stats.recentActivity || []).forEach(ev => activity.push({...ev, player: p}));
+  });
+  activity.sort((a,b) => b.ts - a.ts);
+  const recent = activity.slice(0, 20);
+  const actEl = document.getElementById('dash-activity');
+  if (!recent.length) {
+    actEl.innerHTML = '<div class="dash-activity-empty">עוד לא הייתה פעילות</div>';
+  } else {
+    actEl.innerHTML = recent.map(ev => {
+      const who = ev.player === 'elad' ? '🐯 אלעד' : '🐼 טל';
+      let emoji = '📝', text = '';
+      if (ev.type === 'login') { emoji = '🔐'; text = `${who} נכנס/ה למשחק`; }
+      else if (ev.type === 'level-done') {
+        emoji = '🎯';
+        const lvName = CURRICULUM.find(l=>l.id===ev.levelId)?.title || `שלב ${ev.levelId}`;
+        text = `${who} סיים/ה ${lvName} — <b>${'⭐'.repeat(ev.stars)}</b> (${ev.correct} נכון, ${ev.wrong} שגוי)`;
+      }
+      else if (ev.type === 'story-done') {
+        emoji = '📚';
+        const stName = STORIES.find(s=>s.id===ev.storyId)?.titleHe || `סיפור ${ev.storyId}`;
+        text = `${who} קרא/ה את "${stName}" — <b>${'⭐'.repeat(ev.stars)}</b>`;
+      }
+      else if (ev.type === 'screen') {
+        emoji = '🚪';
+        const scNames = { map:'מפת שלבים', stories:'סיפורים', leaderboard:'דירוג', game:'משחק', lesson:'שיעור', home:'מסך כניסה' };
+        if (!scNames[ev.screen]) return ''; // skip uninteresting screens
+        text = `${who} פתח/ה ${scNames[ev.screen]}`;
+      }
+      else return '';
+      return `
+        <div class="dash-activity-item">
+          <div class="dash-activity-emoji">${emoji}</div>
+          <div class="dash-activity-text">${text}</div>
+          <div class="dash-activity-time">${fmtRelative(ev.ts)}</div>
+        </div>
+      `;
+    }).filter(Boolean).join('') || '<div class="dash-activity-empty">עוד לא הייתה פעילות</div>';
+  }
+}
+
 function confirmReset() {
   openResetModal();
 }
@@ -3757,7 +4180,7 @@ function resetBack() {
 }
 function checkResetPassword() {
   const entered = document.getElementById('reset-input').value;
-  if (entered !== RESET_PASSWORD) {
+  if (entered !== RESET_PASSWORD && entered !== DASHBOARD_PASSWORD) {
     const inp = document.getElementById('reset-input');
     inp.classList.add('shake');
     document.getElementById('reset-error').textContent = '❌ סיסמה שגויה — רק להורים!';
@@ -3765,12 +4188,18 @@ function checkResetPassword() {
     return;
   }
   closeResetModal();
-  // Now actually wipe everything
+  if (dashAction === 'dashboard') {
+    dashAction = 'reset'; // reset state
+    showScreen('parent-dashboard');
+    return;
+  }
+  // Reset mode
   ['tal','elad'].forEach(p => {
     localStorage.removeItem(`eq_${p}_pts`);
     localStorage.removeItem(`eq_${p}_lvls`);
     localStorage.removeItem(`eq_${p}_stories`);
     localStorage.removeItem(`eq_${p}_streak`);
+    localStorage.removeItem(`eq_${p}_stats`);
     sessionStorage.removeItem('eq_auth_'+p);
   });
   localStorage.removeItem('eq_migrated_v2');
@@ -4087,6 +4516,7 @@ function finishStory() {
   if (pct >= 0.9) stars = 3;
   addPoints(player, storyState.score);
   saveStoryStars(player, currentStory.id, stars);
+  trackStoryComplete(player, currentStory.id, stars);
   beep('win');
   fireConfetti(80);
   if (stars === 3) setTimeout(()=>fireConfetti(60), 400);
