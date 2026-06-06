@@ -1701,11 +1701,11 @@ const CURRICULUM = [
     id: 6,
     image: 'images/level1.png',
     icon: '🏗️',
-    title: 'המשפט הפשוט',
-    titleEn: 'Simple Sentence',
+    title: 'פעלים שעובדים לבד',
+    titleEn: 'Intransitive Verbs',
     color: '#6366f1',
     gradient: 'linear-gradient(135deg, #8b5cf6 0%, #4338ca 100%)',
-    formula: 'Subject + Verb',
+    formula: 'Subject + Verb (בלי מושא!)',
     formulaHe: 'מי + מה עושה',
     expl: `<div class="expl-legend">
   <span><span class="lg-dot" style="background:#818cf8"></span>Subject (מי)</span>
@@ -1713,20 +1713,33 @@ const CURRICULUM = [
 </div>
 <div class="expl-grid">
   <div class="expl-card">
-    <div class="expl-emoji">🏗️</div>
+    <div class="expl-emoji">💡</div>
     <div class="expl-body">
-      <div class="expl-rule"><b class="gr-s">Subject</b> + <b class="gr-v">Verb</b></div>
-      <div class="expl-rule-he"><b class="gr-s">מי</b> + <b class="gr-v">מה עושה</b></div>
+      <div class="expl-rule">יש פעלים ש<b>לא צריכים "מה"!</b></div>
+      <div class="expl-rule-he">אפשר לעמוד עם רק <b class="gr-s">מי</b> + <b class="gr-v">מה עושה</b></div>
     </div>
   </div>
   <div class="expl-card">
-    <div class="expl-emoji">✅</div>
+    <div class="expl-emoji">🏃</div>
     <div class="expl-body">
-      <div class="expl-rule">דוגמאות</div>
+      <div class="expl-rule">דוגמאות לפעלים שעובדים לבד</div>
       <div class="expl-examples">
-        <span class="expl-ex"><b class="gr-s">I</b>&nbsp;<b class="gr-v">learn</b></span>
-        <span class="expl-ex"><b class="gr-s">She</b>&nbsp;<b class="gr-v">helps</b></span>
-        <span class="expl-ex"><b class="gr-s">They</b>&nbsp;<b class="gr-v">run</b></span>
+        <span class="expl-ex"><b class="gr-s">I</b>&nbsp;<b class="gr-v">run</b></span>
+        <span class="expl-ex"><b class="gr-s">She</b>&nbsp;<b class="gr-v">smiles</b></span>
+        <span class="expl-ex"><b class="gr-s">They</b>&nbsp;<b class="gr-v">sleep</b></span>
+        <span class="expl-ex"><b class="gr-s">He</b>&nbsp;<b class="gr-v">cries</b></span>
+        <span class="expl-ex"><b class="gr-s">We</b>&nbsp;<b class="gr-v">wait</b></span>
+        <span class="expl-ex"><b class="gr-s">You</b>&nbsp;<b class="gr-v">jump</b></span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">🦁</div>
+    <div class="expl-body">
+      <div class="expl-rule"><b class="gr-s">He / She / It</b> → הפועל מקבל <span class="gr-add">+s</span>!</div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-s">She</b>&nbsp;<b class="gr-v">run<span class="gr-add">s</span></b></span>
+        <span class="expl-ex"><b class="gr-s">He</b>&nbsp;<b class="gr-v">smile<span class="gr-add">s</span></b></span>
       </div>
     </div>
   </div>
@@ -1738,32 +1751,33 @@ const CURRICULUM = [
   </div>
 </div>`,
     examples: [
-      { en: 'I learn.', he: 'אני לומד/ת.', tokens: [{w:'I',t:'s'},{w:'learn',t:'v'}] },
-      { en: 'Mia wins.', he: 'מיה מנצחת.', tokens: [{w:'Mia',t:'s'},{w:'wins',t:'v'}] },
-      { en: 'We play.', he: 'אנחנו משחקים.', tokens: [{w:'We',t:'s'},{w:'play',t:'v'}] },
+      { en: 'I run.', he: 'אני רץ/ה.', tokens: [{w:'I',t:'s'},{w:'run',t:'v'}] },
+      { en: 'She smiles.', he: 'היא מחייכת.', tokens: [{w:'She',t:'s'},{w:'smiles',t:'v'}] },
+      { en: 'They sleep.', he: 'הם ישנים.', tokens: [{w:'They',t:'s'},{w:'sleep',t:'v'}] },
+      { en: 'He cries.', he: 'הוא בוכה.', tokens: [{w:'He',t:'s'},{w:'cries',t:'v'}] },
     ],
-    rule: '💡 כלל הזהב: באנגלית תמיד "מי" לפני "מה עושה". אף פעם לא הפוך!',
+    rule: '💡 כל הפעלים פה לא צריכים "מה" — הם עומדים לבד. שלב 7 יוסיף פעלים שצריכים מושא.',
     game: {
       type: 'scramble',
       qs: [
-        { he: 'אני לומד/ת.', words: ['learn','I'], correct: ['I','learn'], why: 'מי (I) תמיד לפני מה עושה (learn)' },
-        { he: 'הם מנצחים.', words: ['win','They'], correct: ['They','win'], why: 'They = מי. הסדר: מי ← פועל' },
-        { he: 'היא עוזרת.', words: ['She','helps'], correct: ['She','helps'], why: 'אחרי She/He/It הפועל מקבל s — helps, לא help!' },
-        { he: 'אנחנו מחכים.', words: ['wait','We'], correct: ['We','wait'], why: 'We = מי בהתחלה, wait = פועל אחריו' },
-        { he: 'הוא משחק.', words: ['He','plays'], correct: ['He','plays'], why: 'He → plays (עם s כי זה גוף שלישי יחיד)' },
-        { he: 'הם לומדים.', words: ['learn','They'], correct: ['They','learn'], why: 'They (רבים) → learn (בלי s — רק he/she/it מקבלים s)' },
-        { he: 'אתה רץ.', words: ['run','You'], correct: ['You','run'], why: 'You = מי בהתחלה, run = פועל' },
-        { he: 'היא שרה.', words: ['sings','She'], correct: ['She','sings'], why: 'She → sings (עם s, גוף שלישי יחיד)' },
-        { he: 'אני בוכה.', words: ['cry','I'], correct: ['I','cry'], why: 'I + פועל בלי s' },
-        { he: 'הוא ישן.', words: ['sleeps','He'], correct: ['He','sleeps'], why: 'He → sleeps (גוף שלישי יחיד = +s)' },
-        { he: 'הם רצים.', words: ['run','They'], correct: ['They','run'], why: 'They רבים → run בלי s' },
-        { he: 'אני קופץ/ת.', words: ['jump','I'], correct: ['I','jump'], why: 'I + פועל בלי s' },
-        { he: 'אתם משחקים.', words: ['You','play'], correct: ['You','play'], why: 'You + פועל בלי s' },
-        { he: 'הוא קורא.', words: ['He','reads'], correct: ['He','reads'], why: 'He → reads (גוף שלישי יחיד = +s)' },
-        { he: 'אנחנו חושבים.', words: ['think','We'], correct: ['We','think'], why: 'We רבים → think בלי s' },
-        { he: 'היא צוחקת.', words: ['She','laughs'], correct: ['She','laughs'], why: 'She → laughs (גוף שלישי יחיד = +s)' },
-        { he: 'אתה מחכה.', words: ['You','wait'], correct: ['You','wait'], why: 'You + פועל בלי s' },
-        { he: 'הם שותים.', words: ['drink','They'], correct: ['They','drink'], why: 'They רבים → drink בלי s' },
+        { he: 'אני רץ/ה.', words: ['run','I'], correct: ['I','run'], why: 'מי (I) לפני מה עושה (run). פועל שעובד לבד — בלי מושא!' },
+        { he: 'היא מחייכת.', words: ['smiles','She'], correct: ['She','smiles'], why: 'She → smiles (גוף שלישי יחיד = +s). הפועל לא צריך מושא.' },
+        { he: 'הם ישנים.', words: ['sleep','They'], correct: ['They','sleep'], why: 'They רבים → sleep בלי s. פועל ללא מושא.' },
+        { he: 'הוא בוכה.', words: ['cries','He'], correct: ['He','cries'], why: 'He → cries (y→ies). cry עומד לבד.' },
+        { he: 'אנחנו מחכים.', words: ['wait','We'], correct: ['We','wait'], why: 'We → wait. wait עובד לבד (או wait FOR).' },
+        { he: 'אתה קופץ.', words: ['jump','You'], correct: ['You','jump'], why: 'You → jump. jump עומד לבד.' },
+        { he: 'היא צוחקת.', words: ['She','laughs'], correct: ['She','laughs'], why: 'She → laughs (+s). laugh עובד לבד.' },
+        { he: 'הם רוקדים.', words: ['dance','They'], correct: ['They','dance'], why: 'They → dance בלי s. פועל שעובד לבד.' },
+        { he: 'אני יושב/ת.', words: ['sit','I'], correct: ['I','sit'], why: 'I → sit. sit לא צריך מושא.' },
+        { he: 'הוא ישן.', words: ['sleeps','He'], correct: ['He','sleeps'], why: 'He → sleeps (+s). sleep עומד לבד.' },
+        { he: 'אנחנו עומדים.', words: ['stand','We'], correct: ['We','stand'], why: 'We → stand. stand לא צריך מושא.' },
+        { he: 'היא בוכה.', words: ['cries','She'], correct: ['She','cries'], why: 'She → cries. cry פועל יחיד שעובד לבד.' },
+        { he: 'אתם מחכים.', words: ['You','wait'], correct: ['You','wait'], why: 'You → wait. פועל ללא מושא.' },
+        { he: 'הם צוחקים.', words: ['laugh','They'], correct: ['They','laugh'], why: 'They רבים → laugh בלי s.' },
+        { he: 'אני שוחה.', words: ['swim','I'], correct: ['I','swim'], why: 'I → swim. swim עומד לבד.' },
+        { he: 'הוא קופץ.', words: ['He','jumps'], correct: ['He','jumps'], why: 'He → jumps (+s).' },
+        { he: 'הם רצים.', words: ['run','They'], correct: ['They','run'], why: 'They רבים → run בלי s.' },
+        { he: 'היא רוקדת.', words: ['dances','She'], correct: ['She','dances'], why: 'She → dances (+s).' },
       ]
     }
   },
@@ -1771,12 +1785,12 @@ const CURRICULUM = [
     id: 7,
     image: 'images/level2.png',
     icon: '🎯',
-    title: 'מי + מה עושה + מה',
+    title: 'פעלים שצריכים "מה"',
     titleEn: 'Subject + Verb + Object',
     color: '#0ea5e9',
     gradient: 'linear-gradient(135deg, #06b6d4 0%, #0369a1 100%)',
     formula: 'Subject + Verb + Object',
-    formulaHe: 'מי + מה עושה + מה/את מה',
+    formulaHe: 'מי + מה עושה + מה',
     expl: `<div class="expl-legend">
   <span><span class="lg-dot" style="background:#818cf8"></span>Subject (מי)</span>
   <span><span class="lg-dot" style="background:#34d399"></span>Verb (מה עושה)</span>
@@ -1785,6 +1799,13 @@ const CURRICULUM = [
 <div class="expl-grid">
   <div class="expl-card">
     <div class="expl-emoji">🎯</div>
+    <div class="expl-body">
+      <div class="expl-rule">פעלים שמחייבים <b class="gr-o">מה / את מי</b>!</div>
+      <div class="expl-rule-he">בלי המושא — המשפט לא שלם</div>
+    </div>
+  </div>
+  <div class="expl-card">
+    <div class="expl-emoji">📐</div>
     <div class="expl-body">
       <div class="expl-rule"><b class="gr-s">Subject</b> + <b class="gr-v">Verb</b> + <b class="gr-o">Object</b></div>
       <div class="expl-rule-he"><b class="gr-s">מי</b> + <b class="gr-v">מה עושה</b> + <b class="gr-o">מה</b></div>
@@ -1798,6 +1819,18 @@ const CURRICULUM = [
         <span class="expl-ex"><b class="gr-s">I</b>&nbsp;<b class="gr-v">learn</b>&nbsp;<b class="gr-o">English</b></span>
         <span class="expl-ex"><b class="gr-s">She</b>&nbsp;<b class="gr-v">helps</b>&nbsp;<b class="gr-o">the team</b></span>
         <span class="expl-ex"><b class="gr-s">We</b>&nbsp;<b class="gr-v">play</b>&nbsp;<b class="gr-o">chess</b></span>
+        <span class="expl-ex"><b class="gr-s">He</b>&nbsp;<b class="gr-v">eats</b>&nbsp;<b class="gr-o">an apple</b></span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">🤔</div>
+    <div class="expl-body">
+      <div class="expl-rule">איך לדעת אם פועל צריך מושא?</div>
+      <div class="expl-rule-he">שאל/י "מה?" — אם יש תשובה הגיונית, הוא צריך!</div>
+      <div class="expl-examples">
+        <span class="expl-ex">I learn → מה? <b class="gr-o">English</b> ✓</span>
+        <span class="expl-ex">I run → מה? אין! ✗ (שלב 6)</span>
       </div>
     </div>
   </div>
