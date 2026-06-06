@@ -1292,6 +1292,177 @@ body { font-family:'Heebo',sans-serif; background:var(--dark); color:var(--text)
 const CURRICULUM = [
   {
     id: 1,
+    image: 'images/level4.png',
+    icon: '👤',
+    title: 'כינויי גוף',
+    titleEn: 'Subject Pronouns',
+    color: '#ec4899',
+    gradient: 'linear-gradient(135deg, #f472b6 0%, #be185d 100%)',
+    formula: 'I / you / he / she / we / they',
+    formulaHe: 'כינויי גוף — במקום שם',
+    expl: 'במקום לחזור על שם, משתמשים ב<b>כינוי</b>. חשוב: <b>I</b> תמיד באות גדולה! <b>he/she</b> = יחיד, <b>they</b> = רבים.',
+    examples: [
+      { en: 'Sam wins → He wins.', he: 'סם מנצח ← הוא מנצח.', tokens: [{w:'He',t:'s'},{w:'=',t:''},{w:'Sam',t:'o'}] },
+      { en: 'Mia learns → She learns.', he: 'מיה לומדת ← היא לומדת.', tokens: [{w:'She',t:'s'},{w:'=',t:''},{w:'Mia',t:'o'}] },
+      { en: 'The kids play → They play.', he: 'הילדים משחקים ← הם משחקים.', tokens: [{w:'They',t:'s'},{w:'=',t:''},{w:'kids',t:'o'}] },
+    ],
+    rule: '💡 I=אני | you=אתה/את | he=הוא | she=היא | we=אנחנו | they=הם/הן. ו-I תמיד I גדולה!',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: '___ play chess. (Mia + Sam)', opts: ['He','She','We','They'], correct: 3, he: 'הם משחקים שחמט', hint: 'שניים = רבים = they' },
+        { sent: '___ learns English. (Mia)', opts: ['He','She','They','I'], correct: 1, he: 'היא לומדת אנגלית', hint: 'Mia = בת = she' },
+        { sent: '___ win the race. (Sam)', opts: ['He','She','They','We'], correct: 0, he: 'הוא מנצח במרוץ', hint: 'Sam = בן = he' },
+        { sent: '___ have a hobby. (all of us)', opts: ['I','He','We','They'], correct: 2, he: 'לנו יש תחביב', hint: 'כולנו ביחד = we' },
+        { sent: '___ help the team. (I + you)', opts: ['We','They','I','She'], correct: 0, he: 'אנחנו עוזרים לקבוצה', hint: 'אני + אתה = we' },
+        { sent: '___ find the flower. (a girl)', opts: ['He','She','They','I'], correct: 1, he: 'היא מוצאת את הפרח', hint: 'בנות = she' },
+      ]
+    }
+  },
+  {
+    id: 2,
+    image: 'images/level11.png',
+    icon: '🟰',
+    title: 'am / is / are',
+    titleEn: 'The verb "be"',
+    color: '#16a34a',
+    gradient: 'linear-gradient(135deg, #4ade80 0%, #14532d 100%)',
+    formula: 'I am | He/She/It is | You/We/They are',
+    formulaHe: 'הפועל "להיות"',
+    expl: 'הפועל <b>be</b> באנגלית הוא הכי חשוב! הוא משמש לתאר <b>מי אנחנו</b>, <b>איפה אנחנו</b>, <b>מה אנחנו מרגישים</b>. הוא משתנה לפי הגוף: <b>I am</b> (אני), <b>He/She/It is</b> (הוא/היא/זה), <b>You/We/They are</b> (אתה/אנחנו/הם).',
+    examples: [
+      { en: 'I am a student.', he: 'אני תלמיד.', tokens: [{w:'I',t:'s'},{w:'am',t:'v'},{w:'a student',t:'o'}] },
+      { en: 'She is happy today.', he: 'היא שמחה היום.', tokens: [{w:'She',t:'s'},{w:'is',t:'v'},{w:'happy',t:'o'}] },
+      { en: 'We are friends.', he: 'אנחנו חברים.', tokens: [{w:'We',t:'s'},{w:'are',t:'v'},{w:'friends',t:'o'}] },
+      { en: 'They are at home.', he: 'הם בבית.', tokens: [{w:'They',t:'s'},{w:'are',t:'v'},{w:'at home',t:'o'}] },
+    ],
+    rule: '💡 הזיכרון הקל: <b>I am</b> (תמיד am אחרי I), <b>He/She/It is</b>, <b>You/We/They are</b>. בכתיב מקוצר: I\'m, he\'s, we\'re.',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: 'I ___ a student.', opts: ['am','is','are','be'], correct: 0, he: 'אני תלמיד/ה.', hint: 'I → תמיד am' },
+        { sent: 'She ___ happy.', opts: ['am','is','are','be'], correct: 1, he: 'היא שמחה.', hint: 'She (יחיד) → is' },
+        { sent: 'We ___ friends.', opts: ['am','is','are','be'], correct: 2, he: 'אנחנו חברים.', hint: 'We (רבים) → are' },
+        { sent: 'He ___ at home.', opts: ['am','is','are','be'], correct: 1, he: 'הוא בבית.', hint: 'He → is' },
+        { sent: 'You ___ very nice.', opts: ['am','is','are','be'], correct: 2, he: 'אתה/את מאוד נחמד/ה.', hint: 'You → are (גם יחיד וגם רבים!)' },
+        { sent: 'They ___ in the park.', opts: ['am','is','are','be'], correct: 2, he: 'הם בפארק.', hint: 'They (רבים) → are' },
+        { sent: 'It ___ a beautiful day.', opts: ['am','is','are','be'], correct: 1, he: 'זה יום יפה.', hint: 'It → is' },
+        { sent: 'Sam and Mia ___ friends.', opts: ['am','is','are','be'], correct: 2, he: 'סם ומיה חברים.', hint: 'שני אנשים = they → are' },
+        { sent: 'My mother ___ a teacher.', opts: ['am','is','are','be'], correct: 1, he: 'אמא שלי מורה.', hint: 'mother = she → is' },
+        { sent: 'The dogs ___ in the garden.', opts: ['am','is','are','be'], correct: 2, he: 'הכלבים בגן.', hint: 'dogs (רבים) → are' },
+        { sent: 'I ___ ready for the test.', opts: ['am','is','are','be'], correct: 0, he: 'אני מוכן/ה למבחן.', hint: 'I → am' },
+        { sent: 'The cake ___ very sweet.', opts: ['am','is','are','be'], correct: 1, he: 'העוגה מאוד מתוקה.', hint: 'the cake = it → is' },
+      ]
+    }
+  },
+  {
+    id: 3,
+    image: 'images/plural.png',
+    icon: '📚',
+    title: 'יחיד ורבים — Plurals',
+    titleEn: 'Singular and Plural',
+    color: '#0ea5e9',
+    gradient: 'linear-gradient(135deg, #38bdf8 0%, #075985 100%)',
+    formula: 'cat → cats | box → boxes | child → children',
+    formulaHe: 'אחד / הרבה',
+    expl: 'איך אומרים <b>רבים</b> באנגלית? רוב המילים: <b>+s</b> (cat → cats, book → books). מילים שמסתיימות ב-s/x/sh/ch: <b>+es</b> (box → boxes, watch → watches). מילים עם <b>y</b> בסוף: y → ies (baby → babies). חריגים: child → <b>children</b>, man → men, foot → feet.',
+    examples: [
+      { en: 'I have one cat.', he: 'יש לי חתול אחד.', tokens: [{w:'one cat',t:'o'}] },
+      { en: 'She has three cats.', he: 'יש לה שלושה חתולים.', tokens: [{w:'three cats',t:'o'}] },
+      { en: 'There are two boxes.', he: 'יש שתי קופסאות.', tokens: [{w:'two boxes',t:'o'}] },
+      { en: 'The children play.', he: 'הילדים משחקים.', tokens: [{w:'children',t:'s'}] },
+    ],
+    rule: '💡 כלל זהב: +s לרוב, +es אחרי s/x/sh/ch, y→ies. חריגים: child→children, man→men, foot→feet, tooth→teeth.',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: 'I have two ___. (cat)', opts: ['cat','cats','cates','caty'], correct: 1, he: 'יש לי שני חתולים.', hint: 'cat → cats (+s)' },
+        { sent: 'There are five ___. (box)', opts: ['box','boxs','boxes','boxies'], correct: 2, he: 'יש חמש קופסאות.', hint: 'box → boxes (אחרי x: +es)' },
+        { sent: 'She has three ___. (baby)', opts: ['babys','babies','baby','babyes'], correct: 1, he: 'יש לה שלושה תינוקות.', hint: 'baby → babies (y → ies)' },
+        { sent: 'The ___ are happy. (child)', opts: ['childs','childes','children','child'], correct: 2, he: 'הילדים שמחים.', hint: 'child → children (חריג!)' },
+        { sent: 'I see two ___. (man)', opts: ['mans','men','manes','manies'], correct: 1, he: 'אני רואה שני גברים.', hint: 'man → men (חריג!)' },
+        { sent: 'We have many ___. (book)', opts: ['book','books','bookes','bookies'], correct: 1, he: 'יש לנו הרבה ספרים.', hint: 'book → books (+s)' },
+        { sent: 'There are six ___. (watch)', opts: ['watchs','watches','watch','watchies'], correct: 1, he: 'יש שישה שעונים.', hint: 'watch → watches (אחרי ch: +es)' },
+        { sent: 'My ___ are clean. (foot)', opts: ['foots','feet','fote','footes'], correct: 1, he: 'הרגליים שלי נקיות.', hint: 'foot → feet (חריג!)' },
+        { sent: 'He has many ___. (toy)', opts: ['toys','toies','toy','toyes'], correct: 0, he: 'יש לו הרבה צעצועים.', hint: 'toy → toys (תנועה לפני y: רק +s)' },
+        { sent: 'There are ten ___. (flower)', opts: ['flower','flowers','flowes','floweries'], correct: 1, he: 'יש עשרה פרחים.', hint: 'flower → flowers (+s)' },
+      ]
+    }
+  },
+  {
+    id: 4,
+    image: 'images/level7.png',
+    icon: '🎒',
+    title: 'have / has — יש לי',
+    titleEn: 'Have / Has',
+    color: '#06b6d4',
+    gradient: 'linear-gradient(135deg, #22d3ee 0%, #0e7490 100%)',
+    formula: 'I/You/We/They have | He/She/It has',
+    formulaHe: 'יש ל...',
+    expl: 'באנגלית "<b>יש ל...</b>" זה <b>have</b> או <b>has</b>. הכלל פשוט: <b>I, You, We, They → have</b>. <b>He, She, It → has</b>. הוא תמיד אומר על משהו שיש לנו: ספר, אח, חבר, תחביב...',
+    examples: [
+      { en: 'I have a dog.', he: 'יש לי כלב.', tokens: [{w:'I',t:'s'},{w:'have',t:'v'},{w:'a dog',t:'o'}] },
+      { en: 'She has a book.', he: 'יש לה ספר.', tokens: [{w:'She',t:'s'},{w:'has',t:'v'},{w:'a book',t:'o'}] },
+      { en: 'We have a pool.', he: 'יש לנו בריכה.', tokens: [{w:'We',t:'s'},{w:'have',t:'v'},{w:'a pool',t:'o'}] },
+      { en: 'He has a hobby.', he: 'יש לו תחביב.', tokens: [{w:'He',t:'s'},{w:'has',t:'v'},{w:'a hobby',t:'o'}] },
+      { en: 'They have many friends.', he: 'יש להם הרבה חברים.', tokens: [{w:'They',t:'s'},{w:'have',t:'v'},{w:'friends',t:'o'}] },
+    ],
+    rule: '💡 הכלל הקל: <b>he/she/it → has</b> (עם s כמו פעלים אחרים). <b>כל השאר → have</b>.',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: 'I ___ a brother.', opts: ['have','has','am','do'], correct: 0, he: 'יש לי אח.', hint: 'I → have' },
+        { sent: 'She ___ a cat.', opts: ['have','has','is','does'], correct: 1, he: 'יש לה חתול.', hint: 'She → has' },
+        { sent: 'We ___ a big house.', opts: ['has','have','are','do'], correct: 1, he: 'יש לנו בית גדול.', hint: 'We (רבים) → have' },
+        { sent: 'He ___ a new bike.', opts: ['have','has','is','do'], correct: 1, he: 'יש לו אופניים חדשים.', hint: 'He → has' },
+        { sent: 'They ___ a secret.', opts: ['has','have','is','does'], correct: 1, he: 'יש להם סוד.', hint: 'They (רבים) → have' },
+        { sent: 'It ___ four legs.', opts: ['have','has','are','do'], correct: 1, he: 'יש לו ארבע רגליים.', hint: 'It → has' },
+        { sent: 'You ___ a nice toy.', opts: ['has','have','is','does'], correct: 1, he: 'יש לך צעצוע נחמד.', hint: 'You → have' },
+        { sent: 'Mia ___ a beautiful flower.', opts: ['have','has','is','do'], correct: 1, he: 'למיה יש פרח יפה.', hint: 'מיה = שם של בת = she → has' },
+        { sent: 'Sam and Ben ___ a team.', opts: ['has','have','is','does'], correct: 1, he: 'לסם ובן יש קבוצה.', hint: 'שני אנשים = רבים = they → have' },
+        { sent: 'The dog ___ a ball.', opts: ['have','has','is','do'], correct: 1, he: 'לכלב יש כדור.', hint: 'הכלב = it → has' },
+        { sent: 'My parents ___ a car.', opts: ['has','have','is','does'], correct: 1, he: 'להורים שלי יש מכונית.', hint: 'parents = רבים → have' },
+        { sent: 'The teacher ___ many books.', opts: ['have','has','are','do'], correct: 1, he: 'למורה יש הרבה ספרים.', hint: 'the teacher = he/she → has' },
+      ]
+    }
+  },
+  {
+    id: 5,
+    image: 'images/level12.png',
+    icon: '📍',
+    title: 'there is / there are',
+    titleEn: 'There is / There are',
+    color: '#eab308',
+    gradient: 'linear-gradient(135deg, #facc15 0%, #854d0e 100%)',
+    formula: 'There is + יחיד | There are + רבים',
+    formulaHe: 'יש',
+    expl: 'איך אומרים "<b>יש</b>" באנגלית? אם זה <b>דבר אחד</b> → <b>there is</b>. אם זה <b>הרבה דברים</b> → <b>there are</b>. דוגמה: "<b>יש</b> חתול בחדר" = There is a cat. "<b>יש</b> חתולים בחדר" = There are cats.',
+    examples: [
+      { en: 'There is a cat on the chair.', he: 'יש חתול על הכיסא.', tokens: [{w:'There is',t:'s'},{w:'a cat',t:'o'}] },
+      { en: 'There are many books here.', he: 'יש כאן הרבה ספרים.', tokens: [{w:'There are',t:'s'},{w:'books',t:'o'}] },
+      { en: 'There is a flower in the garden.', he: 'יש פרח בגן.', tokens: [{w:'There is',t:'s'},{w:'a flower',t:'o'}] },
+      { en: 'There are three children outside.', he: 'יש שלושה ילדים בחוץ.', tokens: [{w:'There are',t:'s'},{w:'children',t:'o'}] },
+    ],
+    rule: '💡 כלל זהב: יחיד = There is. רבים (s בסוף, או many/some/numbers) = There are. אם המספר 1 = is. אם 2+ = are.',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: 'There ___ a cat on the chair.', opts: ['is','are','am','be'], correct: 0, he: 'יש חתול על הכיסא.', hint: 'a cat = יחיד → is' },
+        { sent: 'There ___ many books here.', opts: ['is','are','am','be'], correct: 1, he: 'יש הרבה ספרים כאן.', hint: 'many books = רבים → are' },
+        { sent: 'There ___ a flower in the garden.', opts: ['is','are','am','be'], correct: 0, he: 'יש פרח בגן.', hint: 'a flower = יחיד → is' },
+        { sent: 'There ___ three children outside.', opts: ['is','are','am','be'], correct: 1, he: 'יש שלושה ילדים בחוץ.', hint: 'three children = רבים → are' },
+        { sent: 'There ___ a big cake on the table.', opts: ['is','are','am','be'], correct: 0, he: 'יש עוגה גדולה על השולחן.', hint: 'a cake = יחיד → is' },
+        { sent: 'There ___ two dogs in the park.', opts: ['is','are','am','be'], correct: 1, he: 'יש שני כלבים בפארק.', hint: 'two dogs = רבים → are' },
+        { sent: 'There ___ a new student in our class.', opts: ['is','are','am','be'], correct: 0, he: 'יש תלמיד חדש בכיתה שלנו.', hint: 'a student = יחיד → is' },
+        { sent: 'There ___ many flowers in the garden.', opts: ['is','are','am','be'], correct: 1, he: 'יש הרבה פרחים בגן.', hint: 'many flowers = רבים → are' },
+        { sent: 'There ___ a book on the shelf.', opts: ['is','are','am','be'], correct: 0, he: 'יש ספר על המדף.', hint: 'a book = יחיד → is' },
+        { sent: 'There ___ some friends at the party.', opts: ['is','are','am','be'], correct: 1, he: 'יש כמה חברים במסיבה.', hint: 'some friends = רבים → are' },
+      ]
+    }
+  },
+  {
+    id: 6,
+    image: 'images/level1.png',
     icon: '🏗️',
     title: 'המשפט הפשוט',
     titleEn: 'Simple Sentence',
@@ -1331,7 +1502,8 @@ const CURRICULUM = [
     }
   },
   {
-    id: 2,
+    id: 7,
+    image: 'images/level2.png',
     icon: '🎯',
     title: 'מי + מה עושה + מה',
     titleEn: 'Subject + Verb + Object',
@@ -1370,7 +1542,8 @@ const CURRICULUM = [
     }
   },
   {
-    id: 3,
+    id: 8,
+    image: 'images/level3.png',
     icon: '🔤',
     title: 'a, an, the',
     titleEn: 'Articles',
@@ -1398,63 +1571,42 @@ const CURRICULUM = [
     }
   },
   {
-    id: 4,
-    icon: '👤',
-    title: 'כינויי גוף',
-    titleEn: 'Subject Pronouns',
-    color: '#ec4899',
-    gradient: 'linear-gradient(135deg, #f472b6 0%, #be185d 100%)',
-    formula: 'I / you / he / she / we / they',
-    formulaHe: 'כינויי גוף — במקום שם',
-    expl: 'במקום לחזור על שם, משתמשים ב<b>כינוי</b>. חשוב: <b>I</b> תמיד באות גדולה! <b>he/she</b> = יחיד, <b>they</b> = רבים.',
+    id: 9,
+    image: 'images/possessive.png',
+    icon: '🔑',
+    title: 'שייכות — my / your / his / her',
+    titleEn: 'Possessive Adjectives',
+    color: '#10b981',
+    gradient: 'linear-gradient(135deg, #34d399 0%, #064e3b 100%)',
+    formula: 'I → my | He → his | She → her | We → our',
+    formulaHe: 'של מי?',
+    expl: 'איך אומרים "<b>של מי</b>" באנגלית? לכל כינוי גוף יש מילת שייכות שלו: <b>I → my</b> (שלי), <b>You → your</b> (שלך), <b>He → his</b> (שלו), <b>She → her</b> (שלה), <b>We → our</b> (שלנו), <b>They → their</b> (שלהם), <b>It → its</b> (שלו).',
     examples: [
-      { en: 'Sam wins → He wins.', he: 'סם מנצח ← הוא מנצח.', tokens: [{w:'He',t:'s'},{w:'=',t:''},{w:'Sam',t:'o'}] },
-      { en: 'Mia learns → She learns.', he: 'מיה לומדת ← היא לומדת.', tokens: [{w:'She',t:'s'},{w:'=',t:''},{w:'Mia',t:'o'}] },
-      { en: 'The kids play → They play.', he: 'הילדים משחקים ← הם משחקים.', tokens: [{w:'They',t:'s'},{w:'=',t:''},{w:'kids',t:'o'}] },
+      { en: 'This is my book.', he: 'זה הספר שלי.', tokens: [{w:'my',t:'art'},{w:'book',t:'o'}] },
+      { en: "What is your name?", he: 'מה שמך?', tokens: [{w:'your',t:'art'},{w:'name',t:'o'}] },
+      { en: "Her cat is cute.", he: 'החתול שלה חמוד.', tokens: [{w:'Her',t:'art'},{w:'cat',t:'s'}] },
+      { en: "Our team won.", he: 'הקבוצה שלנו ניצחה.', tokens: [{w:'Our',t:'art'},{w:'team',t:'s'}] },
     ],
-    rule: '💡 I=אני | you=אתה/את | he=הוא | she=היא | we=אנחנו | they=הם/הן. ו-I תמיד I גדולה!',
+    rule: '💡 הזיכרון הקל: I→my, you→your, he→his, she→her, we→our, they→their, it→its.',
     game: {
       type: 'fill',
       qs: [
-        { sent: '___ play chess. (Mia + Sam)', opts: ['He','She','We','They'], correct: 3, he: 'הם משחקים שחמט', hint: 'שניים = רבים = they' },
-        { sent: '___ learns English. (Mia)', opts: ['He','She','They','I'], correct: 1, he: 'היא לומדת אנגלית', hint: 'Mia = בת = she' },
-        { sent: '___ win the race. (Sam)', opts: ['He','She','They','We'], correct: 0, he: 'הוא מנצח במרוץ', hint: 'Sam = בן = he' },
-        { sent: '___ have a hobby. (all of us)', opts: ['I','He','We','They'], correct: 2, he: 'לנו יש תחביב', hint: 'כולנו ביחד = we' },
-        { sent: '___ help the team. (I + you)', opts: ['We','They','I','She'], correct: 0, he: 'אנחנו עוזרים לקבוצה', hint: 'אני + אתה = we' },
-        { sent: '___ find the flower. (a girl)', opts: ['He','She','They','I'], correct: 1, he: 'היא מוצאת את הפרח', hint: 'בנות = she' },
+        { sent: 'This is ___ book. (I)', opts: ['I','my','me','mine'], correct: 1, he: 'זה הספר שלי.', hint: 'I → my' },
+        { sent: 'What is ___ name? (you)', opts: ['you','your','yours','my'], correct: 1, he: 'מה שמך?', hint: 'you → your' },
+        { sent: '___ cat is cute. (she)', opts: ['She','Her','Hers','His'], correct: 1, he: 'החתול שלה חמוד.', hint: 'she → her' },
+        { sent: '___ team won the race. (we)', opts: ['We','Our','Us','Ours'], correct: 1, he: 'הקבוצה שלנו ניצחה.', hint: 'we → our' },
+        { sent: '___ dog is big. (he)', opts: ['He','His','Him','He\'s'], correct: 1, he: 'הכלב שלו גדול.', hint: 'he → his' },
+        { sent: 'I have ___ keys. (I)', opts: ['I','my','me','mine'], correct: 1, he: 'יש לי את המפתחות שלי.', hint: 'I → my' },
+        { sent: '___ house is new. (they)', opts: ['They','Their','Them','Theirs'], correct: 1, he: 'הבית שלהם חדש.', hint: 'they → their' },
+        { sent: 'The dog likes ___ food. (it)', opts: ['it','its','it\'s','itself'], correct: 1, he: 'הכלב אוהב את האוכל שלו.', hint: 'it → its' },
+        { sent: '___ parents are kind. (you)', opts: ['You','Your','Yours','You\'re'], correct: 1, he: 'ההורים שלך נחמדים.', hint: 'you → your' },
+        { sent: 'Mia and ___ friend play. (she)', opts: ['she','her','hers','herself'], correct: 1, he: 'מיה והחברה שלה משחקות.', hint: 'she → her' },
       ]
     }
   },
   {
-    id: 5,
-    icon: '❓',
-    title: 'שאלות: Do / Does',
-    titleEn: 'Yes/No Questions',
-    color: '#f59e0b',
-    gradient: 'linear-gradient(135deg, #fbbf24 0%, #b45309 100%)',
-    formula: 'Do/Does + Subject + Verb?',
-    formulaHe: 'Do/Does + מי + פועל בסיס?',
-    expl: 'כדי לשאול שאלת כן/לא: מוסיפים <b>Do</b> (לרוב) או <b>Does</b> (he/she/it) בהתחלה. חשוב: <b>הפועל חוזר לצורת הבסיס!</b> She plays → Does she play? (לא plays!)',
-    examples: [
-      { en: 'You play. → Do you play?', he: 'את/ה משחק/ת ← האם את/ה משחק/ת?', tokens: [{w:'Do',t:'art'},{w:'you',t:'s'},{w:'play',t:'v'}] },
-      { en: 'He wins. → Does he win?', he: 'הוא מנצח ← האם הוא מנצח?', tokens: [{w:'Does',t:'art'},{w:'he',t:'s'},{w:'win',t:'v'}] },
-      { en: 'They learn. → Do they learn?', he: 'הם לומדים ← האם הם לומדים?', tokens: [{w:'Do',t:'art'},{w:'they',t:'s'},{w:'learn',t:'v'}] },
-    ],
-    rule: '💡 I/you/we/they → Do | he/she/it → Does. אחרי Does הפועל ללא s! (does he win, לא does he wins)',
-    game: {
-      type: 'fill',
-      qs: [
-        { sent: '___ you like chess?', opts: ['Do','Does','Is','Have'], correct: 0, he: 'האם אתה אוהב שחמט?', hint: 'you → Do' },
-        { sent: '___ she win the race?', opts: ['Do','Does','Is','Have'], correct: 1, he: 'האם היא מנצחת במרוץ?', hint: 'she → Does' },
-        { sent: '___ they learn English?', opts: ['Do','Does','Is','Have'], correct: 0, he: 'האם הם לומדים אנגלית?', hint: 'they → Do' },
-        { sent: '___ he play in the pool?', opts: ['Do','Does','Is','Have'], correct: 1, he: 'האם הוא משחק בבריכה?', hint: 'he → Does' },
-        { sent: '___ we wait here?', opts: ['Do','Does','Is','Have'], correct: 0, he: 'האם אנחנו מחכים פה?', hint: 'we → Do' },
-        { sent: '___ it take time?', opts: ['Do','Does','Is','Have'], correct: 1, he: 'האם זה לוקח זמן?', hint: 'it → Does' },
-      ]
-    }
-  },
-  {
-    id: 6,
+    id: 10,
+    image: 'images/level6.png',
     icon: '🚫',
     title: "don't / doesn't",
     titleEn: 'Negation',
@@ -1482,211 +1634,71 @@ const CURRICULUM = [
     }
   },
   {
-    id: 7,
-    icon: '🎒',
-    title: 'have / has — יש לי',
-    titleEn: 'Have / Has',
-    color: '#06b6d4',
-    gradient: 'linear-gradient(135deg, #22d3ee 0%, #0e7490 100%)',
-    formula: 'I/You/We/They have | He/She/It has',
-    formulaHe: 'יש ל...',
-    expl: 'באנגלית "<b>יש ל...</b>" זה <b>have</b> או <b>has</b>. הכלל פשוט: <b>I, You, We, They → have</b>. <b>He, She, It → has</b>. הוא תמיד אומר על משהו שיש לנו: ספר, אח, חבר, תחביב...',
-    examples: [
-      { en: 'I have a dog.', he: 'יש לי כלב.', tokens: [{w:'I',t:'s'},{w:'have',t:'v'},{w:'a dog',t:'o'}] },
-      { en: 'She has a book.', he: 'יש לה ספר.', tokens: [{w:'She',t:'s'},{w:'has',t:'v'},{w:'a book',t:'o'}] },
-      { en: 'We have a pool.', he: 'יש לנו בריכה.', tokens: [{w:'We',t:'s'},{w:'have',t:'v'},{w:'a pool',t:'o'}] },
-      { en: 'He has a hobby.', he: 'יש לו תחביב.', tokens: [{w:'He',t:'s'},{w:'has',t:'v'},{w:'a hobby',t:'o'}] },
-      { en: 'They have many friends.', he: 'יש להם הרבה חברים.', tokens: [{w:'They',t:'s'},{w:'have',t:'v'},{w:'friends',t:'o'}] },
-    ],
-    rule: '💡 הכלל הקל: <b>he/she/it → has</b> (עם s כמו פעלים אחרים). <b>כל השאר → have</b>.',
-    game: {
-      type: 'fill',
-      qs: [
-        { sent: 'I ___ a brother.', opts: ['have','has','am','do'], correct: 0, he: 'יש לי אח.', hint: 'I → have' },
-        { sent: 'She ___ a cat.', opts: ['have','has','is','does'], correct: 1, he: 'יש לה חתול.', hint: 'She → has' },
-        { sent: 'We ___ a big house.', opts: ['has','have','are','do'], correct: 1, he: 'יש לנו בית גדול.', hint: 'We (רבים) → have' },
-        { sent: 'He ___ a new bike.', opts: ['have','has','is','do'], correct: 1, he: 'יש לו אופניים חדשים.', hint: 'He → has' },
-        { sent: 'They ___ a secret.', opts: ['has','have','is','does'], correct: 1, he: 'יש להם סוד.', hint: 'They (רבים) → have' },
-        { sent: 'It ___ four legs.', opts: ['have','has','are','do'], correct: 1, he: 'יש לו ארבע רגליים.', hint: 'It → has' },
-        { sent: 'You ___ a nice toy.', opts: ['has','have','is','does'], correct: 1, he: 'יש לך צעצוע נחמד.', hint: 'You → have' },
-        { sent: 'Mia ___ a beautiful flower.', opts: ['have','has','is','do'], correct: 1, he: 'למיה יש פרח יפה.', hint: 'מיה = שם של בת = she → has' },
-        { sent: 'Sam and Ben ___ a team.', opts: ['has','have','is','does'], correct: 1, he: 'לסם ובן יש קבוצה.', hint: 'שני אנשים = רבים = they → have' },
-        { sent: 'The dog ___ a ball.', opts: ['have','has','is','do'], correct: 1, he: 'לכלב יש כדור.', hint: 'הכלב = it → has' },
-        { sent: 'My parents ___ a car.', opts: ['has','have','is','does'], correct: 1, he: 'להורים שלי יש מכונית.', hint: 'parents = רבים → have' },
-        { sent: 'The teacher ___ many books.', opts: ['have','has','are','do'], correct: 1, he: 'למורה יש הרבה ספרים.', hint: 'the teacher = he/she → has' },
-      ]
-    }
-  },
-  {
-    id: 8,
-    icon: '🎧',
-    title: 'האזן ותרגם',
-    titleEn: 'Listen & Translate',
-    color: '#a855f7',
-    gradient: 'linear-gradient(135deg, #c084fc 0%, #7e22ce 100%)',
-    formula: '🔊 Listen → 🇮🇱 Translate',
-    formulaHe: 'תרגיל האזנה',
-    expl: 'תרגיל חשוב במיוחד! <b>תלחץ/י על 🔊</b>, תקשיב/י למשפט באנגלית בעיון, ואז תבחר/י את התרגום הנכון לעברית. אפשר לשמוע שוב כמה פעמים שצריך — חזרה זה הכי חשוב כשלומדים שפה!',
-    examples: [
-      { en: 'I have a dog.', he: 'יש לי כלב.', tokens: [{w:'I',t:'s'},{w:'have',t:'v'},{w:'a dog',t:'o'}] },
-      { en: 'She runs fast.', he: 'היא רצה מהר.', tokens: [{w:'She',t:'s'},{w:'runs',t:'v'},{w:'fast',t:'o'}] },
-      { en: 'We play together.', he: 'אנחנו משחקים ביחד.', tokens: [{w:'We',t:'s'},{w:'play',t:'v'},{w:'together',t:'o'}] },
-    ],
-    rule: '💡 טיפ: אל תלחץ/י על "בדוק" עד שאת/ה בטוח/ה — האזן/י כמה פעמים שצריך!',
-    game: {
-      type: 'listen-translate',
-      qs: [
-        { en: 'I have a dog at home.', opts: ['יש לי כלב בבית.', 'יש לי חתול בבית.', 'אני אוהב את הכלב שלי.', 'אני מחפש את הכלב בבית.'], correct: 0, why: '"I have a dog" = יש לי כלב. "at home" = בבית.' },
-        { en: 'She plays chess with her brother.', opts: ['היא לומדת שחמט עם אחיה.', 'היא משחקת שחמט עם אחיה.', 'הוא משחק שחמט עם אחותו.', 'היא משחקת שחמט עם חברה.'], correct: 1, why: '"plays" = משחקת. "with her brother" = עם אחיה.' },
-        { en: 'We learn English in the school.', opts: ['אנחנו לומדים אנגלית בבית.', 'אנחנו מלמדים אנגלית בבית הספר.', 'אנחנו לומדים אנגלית בבית הספר.', 'הם לומדים אנגלית בבית הספר.'], correct: 2, why: '"We learn" = אנחנו לומדים. "in the school" = בבית הספר.' },
-        { en: 'He runs fast in the park.', opts: ['הוא רץ לאט בפארק.', 'היא רצה מהר בפארק.', 'הוא הולך מהר בפארק.', 'הוא רץ מהר בפארק.'], correct: 3, why: '"He runs" = הוא רץ. "fast" = מהר. "in the park" = בפארק.' },
-        { en: 'They eat the cake at home.', opts: ['הם אוכלים את העוגה בבית.', 'הם אוכלים את הפיצה בבית.', 'אנחנו אוכלים את העוגה בבית.', 'הם אופים את העוגה בבית.'], correct: 0, why: '"They eat" = הם אוכלים. "at home" = בבית.' },
-        { en: 'My mother makes a big cake.', opts: ['אמא שלי קונה עוגה גדולה.', 'אמא שלי מכינה עוגה גדולה.', 'אבא שלי מכין עוגה גדולה.', 'אמא שלי מכינה עוגה קטנה.'], correct: 1, why: '"makes" = מכינה. "big cake" = עוגה גדולה.' },
-        { en: 'I find a flower for mom.', opts: ['אני קוטף פרח לאמא.', 'אני נותן פרח לאחותי.', 'אני מוצא פרח לאמא.', 'אני קונה פרח לאמא.'], correct: 2, why: '"find" = מוצא. "for mom" = לאמא.' },
-        { en: 'We play football with our friends.', opts: ['אנחנו רואים כדורגל עם החברים.', 'אנחנו משחקים שחמט עם החברים שלנו.', 'אנחנו משחקים כדורגל עם החברים שלנו.', 'אנחנו אוהבים לשחק עם החברים שלנו.'], correct: 2, why: '"play football" = משחקים כדורגל. "our friends" = החברים שלנו.' },
-        { en: 'She brings a book to school.', opts: ['היא מביאה ספר לחבר.', 'הוא מביא ספר לבית הספר.', 'אנחנו מביאים ספר לבית הספר.', 'היא מביאה ספר לבית הספר.'], correct: 3, why: '"She brings" = היא מביאה. "to school" = לבית הספר.' },
-        { en: 'Today is a special birthday party.', opts: ['היום זו מסיבת יום הולדת מיוחדת.', 'מחר זו מסיבת יום הולדת מיוחדת.', 'היום זו מסיבת יום הולדת רגילה.', 'היום זה יום מיוחד.'], correct: 0, why: '"Today" = היום. "special birthday party" = מסיבת יום הולדת מיוחדת.' },
-        { en: 'He gives her a beautiful present.', opts: ['היא נותנת לו מתנה יפה.', 'הוא נותן לה מתנה יפה.', 'הוא מקבל ממנה מתנה יפה.', 'הוא קונה לה מתנה יפה.'], correct: 1, why: '"He gives" = הוא נותן. "her" = לה. "beautiful present" = מתנה יפה.' },
-        { en: 'They run together to the school.', opts: ['הם רצים ביחד לבית.', 'הם הולכים ביחד לבית הספר.', 'אנחנו רצים ביחד לבית הספר.', 'הם רצים ביחד לבית הספר.'], correct: 3, why: '"They run together" = הם רצים ביחד. "to the school" = לבית הספר.' },
-      ]
-    }
-  },
-  {
-    id: 9,
-    icon: '🧩',
-    title: 'האזן וסדר',
-    titleEn: 'Listen & Arrange',
-    color: '#ec4899',
-    gradient: 'linear-gradient(135deg, #f472b6 0%, #be185d 100%)',
-    formula: '🔊 Listen → 📝 Build sentence',
-    formulaHe: 'בנה משפט מקריאה',
-    expl: 'עכשיו לאתגר אמיתי! <b>תקשיב/י למשפט באנגלית</b>, ואז סדר/י את המילים בסדר הנכון. אפשר ללחוץ על 🔊 שוב ושוב — תלמד/י דרך השמיעה את הסדר הנכון של המילים באנגלית.',
-    examples: [
-      { en: 'I have a dog.', he: 'יש לי כלב.', tokens: [{w:'I',t:'s'},{w:'have',t:'v'},{w:'a dog',t:'o'}] },
-      { en: 'She runs to the park.', he: 'היא רצה לפארק.', tokens: [{w:'She',t:'s'},{w:'runs',t:'v'},{w:'to the park',t:'o'}] },
-    ],
-    rule: '💡 הקשבה היא המורה הכי טובה! ככל שתשמע/י יותר, ככה יהיה לך טבעי יותר.',
-    game: {
-      type: 'listen-scramble',
-      qs: [
-        { en: 'I have a dog.', words: ['have','I','a','dog'], correct: ['I','have','a','dog'], he: 'יש לי כלב.', why: 'I + have + a + dog. הסדר: מי-פועל-מגדיר-שם עצם.' },
-        { en: 'She runs to school.', words: ['runs','to','She','school'], correct: ['She','runs','to','school'], he: 'היא רצה לבית הספר.', why: 'She + runs + to + school. גוף שלישי יחיד = runs (עם s).' },
-        { en: 'We eat the cake.', words: ['eat','the','We','cake'], correct: ['We','eat','the','cake'], he: 'אנחנו אוכלים את העוגה.', why: 'We + eat + the + cake. the = עוגה ספציפית.' },
-        { en: 'He plays in school.', words: ['plays','He','in','school'], correct: ['He','plays','in','school'], he: 'הוא משחק בבית הספר.', why: 'He + plays + in + school. He יחיד → plays עם s.' },
-        { en: 'They win the race.', words: ['the','win','They','race'], correct: ['They','win','the','race'], he: 'הם מנצחים במרוץ.', why: 'They + win + the + race. They רבים → win בלי s.' },
-        { en: 'She finds a flower.', words: ['finds','a','She','flower'], correct: ['She','finds','a','flower'], he: 'היא מוצאת פרח.', why: 'She + finds + a + flower. a = פרח כלשהו.' },
-        { en: 'I learn English fast.', words: ['English','learn','I','fast'], correct: ['I','learn','English','fast'], he: 'אני לומד/ת אנגלית מהר.', why: 'I + learn + English + fast. fast (איך) בסוף.' },
-        { en: 'He gives her presents.', words: ['gives','He','presents','her'], correct: ['He','gives','her','presents'], he: 'הוא נותן לה מתנות.', why: 'He + gives + her + presents. her לפני המתנות (למי).' },
-        { en: 'We run together fast.', words: ['run','We','fast','together'], correct: ['We','run','together','fast'], he: 'אנחנו רצים ביחד מהר.', why: 'We + run + together + fast. together לפני fast.' },
-        { en: 'They play with friends.', words: ['play','with','They','friends'], correct: ['They','play','with','friends'], he: 'הם משחקים עם חברים.', why: 'They + play + with + friends. with = עם.' },
-      ]
-    }
-  },
-  {
-    id: 10,
-    icon: '🕰️',
-    title: 'זמן עבר — Past Simple',
-    titleEn: 'Past Simple',
-    color: '#0891b2',
-    gradient: 'linear-gradient(135deg, #22d3ee 0%, #0c4a6e 100%)',
-    formula: 'Yesterday I + Verb-ed/saw/said',
-    formulaHe: 'אתמול / לפני זמן',
-    expl: 'באנגלית, כשמדברים על דברים ש<b>קרו אתמול</b> או <b>בעבר</b>, הפועל משתנה. רוב הפעלים מקבלים <b>-ed</b> בסוף (play→played, learn→learned). יש פעלים מיוחדים: <b>see→saw</b>, <b>say→said</b>, <b>come→came</b>, <b>find→found</b>. אותו הפועל לכל הגופים — אין צורך ב-s!',
-    examples: [
-      { en: 'I played in the park yesterday.', he: 'אני שיחקתי בפארק אתמול.', tokens: [{w:'I',t:'s'},{w:'played',t:'v'},{w:'yesterday',t:'o'}] },
-      { en: 'She saw a beautiful flower.', he: 'היא ראתה פרח יפה.', tokens: [{w:'She',t:'s'},{w:'saw',t:'v'},{w:'a flower',t:'o'}] },
-      { en: 'They said hello to us.', he: 'הם אמרו שלום אלינו.', tokens: [{w:'They',t:'s'},{w:'said',t:'v'},{w:'hello',t:'o'}] },
-      { en: 'He came back home late.', he: 'הוא חזר הביתה מאוחר.', tokens: [{w:'He',t:'s'},{w:'came back',t:'v'},{w:'late',t:'o'}] },
-    ],
-    rule: '💡 פעלים מיוחדים בעבר: see→saw, say→said, come→came, find→found, have→had, run→ran, eat→ate, go→went. השאר: פשוט מוסיפים -ed!',
-    game: {
-      type: 'fill',
-      qs: [
-        { sent: 'Yesterday I ___ a dog in the park. (see)', opts: ['see','saw','seen','sees'], correct: 1, he: 'אתמול ראיתי כלב בפארק.', hint: 'see → saw בעבר' },
-        { sent: 'She ___ "hello" to me. (say)', opts: ['say','says','said','saying'], correct: 2, he: 'היא אמרה לי "שלום".', hint: 'say → said בעבר' },
-        { sent: 'We ___ in the garden yesterday. (play)', opts: ['play','plays','played','playing'], correct: 2, he: 'אנחנו שיחקנו בגן אתמול.', hint: 'play → played (+ed)' },
-        { sent: 'He ___ back home late. (come)', opts: ['come','comes','came','coming'], correct: 2, he: 'הוא חזר הביתה מאוחר.', hint: 'come → came בעבר' },
-        { sent: 'They ___ a secret garden. (find)', opts: ['find','finds','found','finding'], correct: 2, he: 'הם מצאו גן סודי.', hint: 'find → found בעבר' },
-        { sent: 'I ___ a big cake yesterday. (eat)', opts: ['eat','eats','ate','eating'], correct: 2, he: 'אכלתי עוגה גדולה אתמול.', hint: 'eat → ate בעבר' },
-        { sent: 'She ___ to school by bus. (go)', opts: ['go','goes','went','going'], correct: 2, he: 'היא הלכה לבית הספר באוטובוס.', hint: 'go → went בעבר' },
-        { sent: 'We ___ English last week. (learn)', opts: ['learn','learns','learned','learning'], correct: 2, he: 'אנחנו למדנו אנגלית בשבוע שעבר.', hint: 'learn → learned (+ed)' },
-        { sent: 'He ___ the race yesterday. (win)', opts: ['win','wins','won','winning'], correct: 2, he: 'הוא ניצח במרוץ אתמול.', hint: 'win → won בעבר (חריג!)' },
-        { sent: 'They ___ a flower for mom. (give)', opts: ['give','gives','gave','giving'], correct: 2, he: 'הם נתנו פרח לאמא.', hint: 'give → gave בעבר' },
-        { sent: 'I ___ fast in the morning. (run)', opts: ['run','runs','ran','running'], correct: 2, he: 'רצתי מהר בבוקר.', hint: 'run → ran בעבר' },
-        { sent: 'She ___ a new book. (have)', opts: ['have','has','had','having'], correct: 2, he: 'היה לה ספר חדש.', hint: 'have → had בעבר' },
-      ]
-    }
-  },
-  {
     id: 11,
-    icon: '🟰',
-    title: 'am / is / are',
-    titleEn: 'The verb "be"',
-    color: '#16a34a',
-    gradient: 'linear-gradient(135deg, #4ade80 0%, #14532d 100%)',
-    formula: 'I am | He/She/It is | You/We/They are',
-    formulaHe: 'הפועל "להיות"',
-    expl: 'הפועל <b>be</b> באנגלית הוא הכי חשוב! הוא משמש לתאר <b>מי אנחנו</b>, <b>איפה אנחנו</b>, <b>מה אנחנו מרגישים</b>. הוא משתנה לפי הגוף: <b>I am</b> (אני), <b>He/She/It is</b> (הוא/היא/זה), <b>You/We/They are</b> (אתה/אנחנו/הם).',
+    image: 'images/level5.png',
+    icon: '❓',
+    title: 'שאלות: Do / Does',
+    titleEn: 'Yes/No Questions',
+    color: '#f59e0b',
+    gradient: 'linear-gradient(135deg, #fbbf24 0%, #b45309 100%)',
+    formula: 'Do/Does + Subject + Verb?',
+    formulaHe: 'Do/Does + מי + פועל בסיס?',
+    expl: 'כדי לשאול שאלת כן/לא: מוסיפים <b>Do</b> (לרוב) או <b>Does</b> (he/she/it) בהתחלה. חשוב: <b>הפועל חוזר לצורת הבסיס!</b> She plays → Does she play? (לא plays!)',
     examples: [
-      { en: 'I am a student.', he: 'אני תלמיד.', tokens: [{w:'I',t:'s'},{w:'am',t:'v'},{w:'a student',t:'o'}] },
-      { en: 'She is happy today.', he: 'היא שמחה היום.', tokens: [{w:'She',t:'s'},{w:'is',t:'v'},{w:'happy',t:'o'}] },
-      { en: 'We are friends.', he: 'אנחנו חברים.', tokens: [{w:'We',t:'s'},{w:'are',t:'v'},{w:'friends',t:'o'}] },
-      { en: 'They are at home.', he: 'הם בבית.', tokens: [{w:'They',t:'s'},{w:'are',t:'v'},{w:'at home',t:'o'}] },
+      { en: 'You play. → Do you play?', he: 'את/ה משחק/ת ← האם את/ה משחק/ת?', tokens: [{w:'Do',t:'art'},{w:'you',t:'s'},{w:'play',t:'v'}] },
+      { en: 'He wins. → Does he win?', he: 'הוא מנצח ← האם הוא מנצח?', tokens: [{w:'Does',t:'art'},{w:'he',t:'s'},{w:'win',t:'v'}] },
+      { en: 'They learn. → Do they learn?', he: 'הם לומדים ← האם הם לומדים?', tokens: [{w:'Do',t:'art'},{w:'they',t:'s'},{w:'learn',t:'v'}] },
     ],
-    rule: '💡 הזיכרון הקל: <b>I am</b> (תמיד am אחרי I), <b>He/She/It is</b>, <b>You/We/They are</b>. בכתיב מקוצר: I\'m, he\'s, we\'re.',
+    rule: '💡 I/you/we/they → Do | he/she/it → Does. אחרי Does הפועל ללא s! (does he win, לא does he wins)',
     game: {
       type: 'fill',
       qs: [
-        { sent: 'I ___ a student.', opts: ['am','is','are','be'], correct: 0, he: 'אני תלמיד/ה.', hint: 'I → תמיד am' },
-        { sent: 'She ___ happy.', opts: ['am','is','are','be'], correct: 1, he: 'היא שמחה.', hint: 'She (יחיד) → is' },
-        { sent: 'We ___ friends.', opts: ['am','is','are','be'], correct: 2, he: 'אנחנו חברים.', hint: 'We (רבים) → are' },
-        { sent: 'He ___ at home.', opts: ['am','is','are','be'], correct: 1, he: 'הוא בבית.', hint: 'He → is' },
-        { sent: 'You ___ very nice.', opts: ['am','is','are','be'], correct: 2, he: 'אתה/את מאוד נחמד/ה.', hint: 'You → are (גם יחיד וגם רבים!)' },
-        { sent: 'They ___ in the park.', opts: ['am','is','are','be'], correct: 2, he: 'הם בפארק.', hint: 'They (רבים) → are' },
-        { sent: 'It ___ a beautiful day.', opts: ['am','is','are','be'], correct: 1, he: 'זה יום יפה.', hint: 'It → is' },
-        { sent: 'Sam and Mia ___ friends.', opts: ['am','is','are','be'], correct: 2, he: 'סם ומיה חברים.', hint: 'שני אנשים = they → are' },
-        { sent: 'My mother ___ a teacher.', opts: ['am','is','are','be'], correct: 1, he: 'אמא שלי מורה.', hint: 'mother = she → is' },
-        { sent: 'The dogs ___ in the garden.', opts: ['am','is','are','be'], correct: 2, he: 'הכלבים בגן.', hint: 'dogs (רבים) → are' },
-        { sent: 'I ___ ready for the test.', opts: ['am','is','are','be'], correct: 0, he: 'אני מוכן/ה למבחן.', hint: 'I → am' },
-        { sent: 'The cake ___ very sweet.', opts: ['am','is','are','be'], correct: 1, he: 'העוגה מאוד מתוקה.', hint: 'the cake = it → is' },
+        { sent: '___ you like chess?', opts: ['Do','Does','Is','Have'], correct: 0, he: 'האם אתה אוהב שחמט?', hint: 'you → Do' },
+        { sent: '___ she win the race?', opts: ['Do','Does','Is','Have'], correct: 1, he: 'האם היא מנצחת במרוץ?', hint: 'she → Does' },
+        { sent: '___ they learn English?', opts: ['Do','Does','Is','Have'], correct: 0, he: 'האם הם לומדים אנגלית?', hint: 'they → Do' },
+        { sent: '___ he play in the pool?', opts: ['Do','Does','Is','Have'], correct: 1, he: 'האם הוא משחק בבריכה?', hint: 'he → Does' },
+        { sent: '___ we wait here?', opts: ['Do','Does','Is','Have'], correct: 0, he: 'האם אנחנו מחכים פה?', hint: 'we → Do' },
+        { sent: '___ it take time?', opts: ['Do','Does','Is','Have'], correct: 1, he: 'האם זה לוקח זמן?', hint: 'it → Does' },
       ]
     }
   },
   {
     id: 12,
-    icon: '📍',
-    title: 'there is / there are',
-    titleEn: 'There is / There are',
-    color: '#eab308',
-    gradient: 'linear-gradient(135deg, #facc15 0%, #854d0e 100%)',
-    formula: 'There is + יחיד | There are + רבים',
-    formulaHe: 'יש',
-    expl: 'איך אומרים "<b>יש</b>" באנגלית? אם זה <b>דבר אחד</b> → <b>there is</b>. אם זה <b>הרבה דברים</b> → <b>there are</b>. דוגמה: "<b>יש</b> חתול בחדר" = There is a cat. "<b>יש</b> חתולים בחדר" = There are cats.',
+    image: 'images/wh.png',
+    icon: '❓',
+    title: 'שאלות Wh — What/Where/Who',
+    titleEn: 'Wh-Questions',
+    color: '#f59e0b',
+    gradient: 'linear-gradient(135deg, #fbbf24 0%, #92400e 100%)',
+    formula: 'What/Where/Who/When/Why/How + ?',
+    formulaHe: 'מה? איפה? מי?',
+    expl: 'שאלות "Wh" באנגלית מתחילות במילת שאלה: <b>What?</b> (מה?), <b>Where?</b> (איפה?), <b>Who?</b> (מי?), <b>When?</b> (מתי?), <b>Why?</b> (למה?), <b>How?</b> (איך?). אחרי מילת השאלה בא <b>is/are/do/does</b>.',
     examples: [
-      { en: 'There is a cat on the chair.', he: 'יש חתול על הכיסא.', tokens: [{w:'There is',t:'s'},{w:'a cat',t:'o'}] },
-      { en: 'There are many books here.', he: 'יש כאן הרבה ספרים.', tokens: [{w:'There are',t:'s'},{w:'books',t:'o'}] },
-      { en: 'There is a flower in the garden.', he: 'יש פרח בגן.', tokens: [{w:'There is',t:'s'},{w:'a flower',t:'o'}] },
-      { en: 'There are three children outside.', he: 'יש שלושה ילדים בחוץ.', tokens: [{w:'There are',t:'s'},{w:'children',t:'o'}] },
+      { en: 'What is your name?', he: 'מה שמך?', tokens: [{w:'What',t:'art'},{w:'is',t:'v'}] },
+      { en: 'Where is my book?', he: 'איפה הספר שלי?', tokens: [{w:'Where',t:'art'},{w:'is',t:'v'}] },
+      { en: 'Who is your friend?', he: 'מי החבר שלך?', tokens: [{w:'Who',t:'art'},{w:'is',t:'v'}] },
+      { en: 'When do you play?', he: 'מתי אתה משחק?', tokens: [{w:'When',t:'art'},{w:'do',t:'v'}] },
     ],
-    rule: '💡 כלל זהב: יחיד = There is. רבים (s בסוף, או many/some/numbers) = There are. אם המספר 1 = is. אם 2+ = are.',
+    rule: '💡 What=מה, Where=איפה, Who=מי, When=מתי, Why=למה, How=איך. סדר: Wh + is/are/do/does + נושא + פועל?',
     game: {
       type: 'fill',
       qs: [
-        { sent: 'There ___ a cat on the chair.', opts: ['is','are','am','be'], correct: 0, he: 'יש חתול על הכיסא.', hint: 'a cat = יחיד → is' },
-        { sent: 'There ___ many books here.', opts: ['is','are','am','be'], correct: 1, he: 'יש הרבה ספרים כאן.', hint: 'many books = רבים → are' },
-        { sent: 'There ___ a flower in the garden.', opts: ['is','are','am','be'], correct: 0, he: 'יש פרח בגן.', hint: 'a flower = יחיד → is' },
-        { sent: 'There ___ three children outside.', opts: ['is','are','am','be'], correct: 1, he: 'יש שלושה ילדים בחוץ.', hint: 'three children = רבים → are' },
-        { sent: 'There ___ a big cake on the table.', opts: ['is','are','am','be'], correct: 0, he: 'יש עוגה גדולה על השולחן.', hint: 'a cake = יחיד → is' },
-        { sent: 'There ___ two dogs in the park.', opts: ['is','are','am','be'], correct: 1, he: 'יש שני כלבים בפארק.', hint: 'two dogs = רבים → are' },
-        { sent: 'There ___ a new student in our class.', opts: ['is','are','am','be'], correct: 0, he: 'יש תלמיד חדש בכיתה שלנו.', hint: 'a student = יחיד → is' },
-        { sent: 'There ___ many flowers in the garden.', opts: ['is','are','am','be'], correct: 1, he: 'יש הרבה פרחים בגן.', hint: 'many flowers = רבים → are' },
-        { sent: 'There ___ a book on the shelf.', opts: ['is','are','am','be'], correct: 0, he: 'יש ספר על המדף.', hint: 'a book = יחיד → is' },
-        { sent: 'There ___ some friends at the party.', opts: ['is','are','am','be'], correct: 1, he: 'יש כמה חברים במסיבה.', hint: 'some friends = רבים → are' },
+        { sent: '___ is your name?', opts: ['What','Where','Who','When'], correct: 0, he: 'מה שמך?', hint: 'מה = What' },
+        { sent: '___ is my book?', opts: ['What','Where','Who','When'], correct: 1, he: 'איפה הספר שלי?', hint: 'איפה = Where' },
+        { sent: '___ is your friend?', opts: ['What','Where','Who','When'], correct: 2, he: 'מי החבר שלך?', hint: 'מי = Who' },
+        { sent: '___ do you play football?', opts: ['What','Where','Who','When'], correct: 3, he: 'מתי אתה משחק כדורגל?', hint: 'מתי = When' },
+        { sent: '___ are you sad?', opts: ['What','Where','Why','When'], correct: 2, he: 'למה אתה עצוב?', hint: 'למה = Why' },
+        { sent: '___ are you today?', opts: ['What','Where','Who','How'], correct: 3, he: 'מה שלומך היום?', hint: 'איך = How (לשאלת שלום)' },
+        { sent: '___ is the cat?', opts: ['What','Where','Who','When'], correct: 1, he: 'איפה החתול?', hint: 'איפה = Where' },
+        { sent: '___ time is it?', opts: ['What','Where','Who','When'], correct: 0, he: 'מה השעה?', hint: 'מה השעה = What time' },
+        { sent: '___ is this gift for?', opts: ['What','Where','Who','When'], correct: 2, he: 'בשביל מי המתנה הזאת?', hint: 'מי = Who' },
+        { sent: '___ many books do you have?', opts: ['What','Where','How','When'], correct: 2, he: 'כמה ספרים יש לך?', hint: 'כמה = How many' },
       ]
     }
   },
   {
     id: 13,
+    image: 'images/level13.png',
     icon: '📦',
     title: 'מילות יחס — Prepositions',
     titleEn: 'Prepositions',
@@ -1722,6 +1734,77 @@ const CURRICULUM = [
   },
   {
     id: 14,
+    image: 'images/continuous.png',
+    icon: '🎬',
+    title: 'הווה מתמשך — -ing',
+    titleEn: 'Present Continuous',
+    color: '#ec4899',
+    gradient: 'linear-gradient(135deg, #f472b6 0%, #831843 100%)',
+    formula: 'am/is/are + Verb-ing',
+    formulaHe: 'מה קורה עכשיו?',
+    expl: 'מה אנחנו עושים <b>ברגע זה</b>? בשביל זה יש את <b>הווה מתמשך</b>: <b>am/is/are + פועל-ing</b>. דוגמה: "אני <b>משחק עכשיו</b>" = "I <b>am playing</b> now". זה שונה מהווה רגיל (I play) — הוא מתאר הרגל. הווה מתמשך = ברגע זה!',
+    examples: [
+      { en: 'I am playing now.', he: 'אני משחק עכשיו.', tokens: [{w:'I',t:'s'},{w:'am playing',t:'v'},{w:'now',t:'o'}] },
+      { en: 'She is running fast.', he: 'היא רצה מהר.', tokens: [{w:'She',t:'s'},{w:'is running',t:'v'}] },
+      { en: 'We are learning English.', he: 'אנחנו לומדים אנגלית.', tokens: [{w:'We',t:'s'},{w:'are learning',t:'v'},{w:'English',t:'o'}] },
+      { en: 'They are eating cake.', he: 'הם אוכלים עוגה.', tokens: [{w:'They',t:'s'},{w:'are eating',t:'v'},{w:'cake',t:'o'}] },
+    ],
+    rule: '💡 נוסחה: am/is/are + V+ing. I am, He/She/It is, You/We/They are. שים לב — לא you eating, אלא you ARE eating!',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: 'I ___ playing now.', opts: ['am','is','are','be'], correct: 0, he: 'אני משחק עכשיו.', hint: 'I → am' },
+        { sent: 'She ___ running fast.', opts: ['am','is','are','be'], correct: 1, he: 'היא רצה מהר.', hint: 'She → is' },
+        { sent: 'We ___ learning English.', opts: ['am','is','are','be'], correct: 2, he: 'אנחנו לומדים אנגלית.', hint: 'We → are' },
+        { sent: 'They ___ eating cake.', opts: ['am','is','are','be'], correct: 2, he: 'הם אוכלים עוגה.', hint: 'They → are' },
+        { sent: 'He ___ reading a book.', opts: ['am','is','are','be'], correct: 1, he: 'הוא קורא ספר.', hint: 'He → is' },
+        { sent: 'You ___ writing well.', opts: ['am','is','are','be'], correct: 2, he: 'אתה כותב יפה.', hint: 'You → are' },
+        { sent: 'The dog ___ sleeping.', opts: ['am','is','are','be'], correct: 1, he: 'הכלב ישן.', hint: 'the dog = it → is' },
+        { sent: 'We are ___ in the park. (play)', opts: ['play','plays','playing','played'], correct: 2, he: 'אנחנו משחקים בפארק.', hint: 'play + ing = playing' },
+        { sent: 'She is ___ a song. (sing)', opts: ['sing','sings','singing','sang'], correct: 2, he: 'היא שרה שיר.', hint: 'sing + ing = singing' },
+        { sent: 'I am ___ to school. (go)', opts: ['go','goes','going','went'], correct: 2, he: 'אני הולך לבית הספר.', hint: 'go + ing = going' },
+      ]
+    }
+  },
+  {
+    id: 15,
+    image: 'images/level10.png',
+    icon: '🕰️',
+    title: 'זמן עבר — Past Simple',
+    titleEn: 'Past Simple',
+    color: '#0891b2',
+    gradient: 'linear-gradient(135deg, #22d3ee 0%, #0c4a6e 100%)',
+    formula: 'Yesterday I + Verb-ed/saw/said',
+    formulaHe: 'אתמול / לפני זמן',
+    expl: 'באנגלית, כשמדברים על דברים ש<b>קרו אתמול</b> או <b>בעבר</b>, הפועל משתנה. רוב הפעלים מקבלים <b>-ed</b> בסוף (play→played, learn→learned). יש פעלים מיוחדים: <b>see→saw</b>, <b>say→said</b>, <b>come→came</b>, <b>find→found</b>. אותו הפועל לכל הגופים — אין צורך ב-s!',
+    examples: [
+      { en: 'I played in the park yesterday.', he: 'אני שיחקתי בפארק אתמול.', tokens: [{w:'I',t:'s'},{w:'played',t:'v'},{w:'yesterday',t:'o'}] },
+      { en: 'She saw a beautiful flower.', he: 'היא ראתה פרח יפה.', tokens: [{w:'She',t:'s'},{w:'saw',t:'v'},{w:'a flower',t:'o'}] },
+      { en: 'They said hello to us.', he: 'הם אמרו שלום אלינו.', tokens: [{w:'They',t:'s'},{w:'said',t:'v'},{w:'hello',t:'o'}] },
+      { en: 'He came back home late.', he: 'הוא חזר הביתה מאוחר.', tokens: [{w:'He',t:'s'},{w:'came back',t:'v'},{w:'late',t:'o'}] },
+    ],
+    rule: '💡 פעלים מיוחדים בעבר: see→saw, say→said, come→came, find→found, have→had, run→ran, eat→ate, go→went. השאר: פשוט מוסיפים -ed!',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: 'Yesterday I ___ a dog in the park. (see)', opts: ['see','saw','seen','sees'], correct: 1, he: 'אתמול ראיתי כלב בפארק.', hint: 'see → saw בעבר' },
+        { sent: 'She ___ "hello" to me. (say)', opts: ['say','says','said','saying'], correct: 2, he: 'היא אמרה לי "שלום".', hint: 'say → said בעבר' },
+        { sent: 'We ___ in the garden yesterday. (play)', opts: ['play','plays','played','playing'], correct: 2, he: 'אנחנו שיחקנו בגן אתמול.', hint: 'play → played (+ed)' },
+        { sent: 'He ___ back home late. (come)', opts: ['come','comes','came','coming'], correct: 2, he: 'הוא חזר הביתה מאוחר.', hint: 'come → came בעבר' },
+        { sent: 'They ___ a secret garden. (find)', opts: ['find','finds','found','finding'], correct: 2, he: 'הם מצאו גן סודי.', hint: 'find → found בעבר' },
+        { sent: 'I ___ a big cake yesterday. (eat)', opts: ['eat','eats','ate','eating'], correct: 2, he: 'אכלתי עוגה גדולה אתמול.', hint: 'eat → ate בעבר' },
+        { sent: 'She ___ to school by bus. (go)', opts: ['go','goes','went','going'], correct: 2, he: 'היא הלכה לבית הספר באוטובוס.', hint: 'go → went בעבר' },
+        { sent: 'We ___ English last week. (learn)', opts: ['learn','learns','learned','learning'], correct: 2, he: 'אנחנו למדנו אנגלית בשבוע שעבר.', hint: 'learn → learned (+ed)' },
+        { sent: 'He ___ the race yesterday. (win)', opts: ['win','wins','won','winning'], correct: 2, he: 'הוא ניצח במרוץ אתמול.', hint: 'win → won בעבר (חריג!)' },
+        { sent: 'They ___ a flower for mom. (give)', opts: ['give','gives','gave','giving'], correct: 2, he: 'הם נתנו פרח לאמא.', hint: 'give → gave בעבר' },
+        { sent: 'I ___ fast in the morning. (run)', opts: ['run','runs','ran','running'], correct: 2, he: 'רצתי מהר בבוקר.', hint: 'run → ran בעבר' },
+        { sent: 'She ___ a new book. (have)', opts: ['have','has','had','having'], correct: 2, he: 'היה לה ספר חדש.', hint: 'have → had בעבר' },
+      ]
+    }
+  },
+  {
+    id: 16,
+    image: 'images/level14.png',
     icon: '🆚',
     title: 'השוואה — Comparatives',
     titleEn: 'Comparatives',
@@ -1754,7 +1837,109 @@ const CURRICULUM = [
     }
   },
   {
-    id: 15,
+    id: 17,
+    image: 'images/numbers.png',
+    icon: '🔢',
+    title: 'מספרים ושעות',
+    titleEn: 'Numbers and Time',
+    color: '#dc2626',
+    gradient: 'linear-gradient(135deg, #f87171 0%, #7f1d1d 100%)',
+    formula: 'one, two, three... | o\'clock, half past',
+    formulaHe: 'כמה? מה השעה?',
+    expl: 'מספרים: <b>one (1), two (2), three (3), four (4), five (5)...</b>. עשרות: <b>twenty (20), thirty (30)...</b>. שעות: <b>three o\'clock</b> (3:00), <b>half past three</b> (3:30), <b>quarter past three</b> (3:15), <b>quarter to four</b> (3:45).',
+    examples: [
+      { en: 'I have ten books.', he: 'יש לי עשרה ספרים.', tokens: [{w:'ten',t:'art'},{w:'books',t:'o'}] },
+      { en: "It is three o'clock.", he: 'השעה שלוש.', tokens: [{w:"three o'clock",t:'o'}] },
+      { en: 'I am twelve years old.', he: 'אני בן 12.', tokens: [{w:'twelve',t:'art'},{w:'years old',t:'o'}] },
+      { en: 'School ends at half past two.', he: 'בית הספר מסתיים בשתיים וחצי.', tokens: [{w:'half past two',t:'o'}] },
+    ],
+    rule: '💡 1-10: one, two, three, four, five, six, seven, eight, nine, ten. שעה עגולה: X o\'clock. חצי: half past X. רבע אחרי: quarter past. רבע ל: quarter to.',
+    game: {
+      type: 'fill',
+      qs: [
+        { sent: 'I have ___ cats. (3)', opts: ['two','three','four','five'], correct: 1, he: 'יש לי שלושה חתולים.', hint: '3 = three' },
+        { sent: 'She is ___ years old. (10)', opts: ['nine','ten','eleven','twelve'], correct: 1, he: 'היא בת עשר.', hint: '10 = ten' },
+        { sent: "It is ___ o'clock. (5:00)", opts: ['four','five','six','seven'], correct: 1, he: 'השעה חמש.', hint: '5 = five' },
+        { sent: 'We have ___ books. (7)', opts: ['six','seven','eight','nine'], correct: 1, he: 'יש לנו שבעה ספרים.', hint: '7 = seven' },
+        { sent: 'He won ___ races. (2)', opts: ['one','two','three','four'], correct: 1, he: 'הוא ניצח בשני מרוצים.', hint: '2 = two' },
+        { sent: 'School starts at ___. (8:00)', opts: ["seven o'clock","eight o'clock","nine o'clock","ten o'clock"], correct: 1, he: 'בית הספר מתחיל בשמונה.', hint: "8:00 = eight o'clock" },
+        { sent: 'Lunch is at half past ___. (12:30)', opts: ['eleven','twelve','one','two'], correct: 1, he: 'ארוחת הצהריים בשתים עשרה וחצי.', hint: '12:30 = half past twelve' },
+        { sent: 'I have ___ apples. (4)', opts: ['three','four','five','six'], correct: 1, he: 'יש לי ארבעה תפוחים.', hint: '4 = four' },
+        { sent: 'The party starts at ___. (3:00)', opts: ["two o'clock","three o'clock","four o'clock","five o'clock"], correct: 1, he: "המסיבה מתחילה בשלוש.", hint: "3:00 = three o'clock" },
+        { sent: 'We are ___ kids in class. (20)', opts: ['ten','fifteen','twenty','twenty-five'], correct: 2, he: 'אנחנו עשרים ילדים בכיתה.', hint: '20 = twenty' },
+      ]
+    }
+  },
+  {
+    id: 18,
+    image: 'images/level8.png',
+    icon: '🎧',
+    title: 'האזן ותרגם',
+    titleEn: 'Listen & Translate',
+    color: '#a855f7',
+    gradient: 'linear-gradient(135deg, #c084fc 0%, #7e22ce 100%)',
+    formula: '🔊 Listen → 🇮🇱 Translate',
+    formulaHe: 'תרגיל האזנה',
+    expl: 'תרגיל חשוב במיוחד! <b>תלחץ/י על 🔊</b>, תקשיב/י למשפט באנגלית בעיון, ואז תבחר/י את התרגום הנכון לעברית. אפשר לשמוע שוב כמה פעמים שצריך — חזרה זה הכי חשוב כשלומדים שפה!',
+    examples: [
+      { en: 'I have a dog.', he: 'יש לי כלב.', tokens: [{w:'I',t:'s'},{w:'have',t:'v'},{w:'a dog',t:'o'}] },
+      { en: 'She runs fast.', he: 'היא רצה מהר.', tokens: [{w:'She',t:'s'},{w:'runs',t:'v'},{w:'fast',t:'o'}] },
+      { en: 'We play together.', he: 'אנחנו משחקים ביחד.', tokens: [{w:'We',t:'s'},{w:'play',t:'v'},{w:'together',t:'o'}] },
+    ],
+    rule: '💡 טיפ: אל תלחץ/י על "בדוק" עד שאת/ה בטוח/ה — האזן/י כמה פעמים שצריך!',
+    game: {
+      type: 'listen-translate',
+      qs: [
+        { en: 'I have a dog at home.', opts: ['יש לי כלב בבית.', 'יש לי חתול בבית.', 'אני אוהב את הכלב שלי.', 'אני מחפש את הכלב בבית.'], correct: 0, why: '"I have a dog" = יש לי כלב. "at home" = בבית.' },
+        { en: 'She plays chess with her brother.', opts: ['היא לומדת שחמט עם אחיה.', 'היא משחקת שחמט עם אחיה.', 'הוא משחק שחמט עם אחותו.', 'היא משחקת שחמט עם חברה.'], correct: 1, why: '"plays" = משחקת. "with her brother" = עם אחיה.' },
+        { en: 'We learn English in the school.', opts: ['אנחנו לומדים אנגלית בבית.', 'אנחנו מלמדים אנגלית בבית הספר.', 'אנחנו לומדים אנגלית בבית הספר.', 'הם לומדים אנגלית בבית הספר.'], correct: 2, why: '"We learn" = אנחנו לומדים. "in the school" = בבית הספר.' },
+        { en: 'He runs fast in the park.', opts: ['הוא רץ לאט בפארק.', 'היא רצה מהר בפארק.', 'הוא הולך מהר בפארק.', 'הוא רץ מהר בפארק.'], correct: 3, why: '"He runs" = הוא רץ. "fast" = מהר. "in the park" = בפארק.' },
+        { en: 'They eat the cake at home.', opts: ['הם אוכלים את העוגה בבית.', 'הם אוכלים את הפיצה בבית.', 'אנחנו אוכלים את העוגה בבית.', 'הם אופים את העוגה בבית.'], correct: 0, why: '"They eat" = הם אוכלים. "at home" = בבית.' },
+        { en: 'My mother makes a big cake.', opts: ['אמא שלי קונה עוגה גדולה.', 'אמא שלי מכינה עוגה גדולה.', 'אבא שלי מכין עוגה גדולה.', 'אמא שלי מכינה עוגה קטנה.'], correct: 1, why: '"makes" = מכינה. "big cake" = עוגה גדולה.' },
+        { en: 'I find a flower for mom.', opts: ['אני קוטף פרח לאמא.', 'אני נותן פרח לאחותי.', 'אני מוצא פרח לאמא.', 'אני קונה פרח לאמא.'], correct: 2, why: '"find" = מוצא. "for mom" = לאמא.' },
+        { en: 'We play football with our friends.', opts: ['אנחנו רואים כדורגל עם החברים.', 'אנחנו משחקים שחמט עם החברים שלנו.', 'אנחנו משחקים כדורגל עם החברים שלנו.', 'אנחנו אוהבים לשחק עם החברים שלנו.'], correct: 2, why: '"play football" = משחקים כדורגל. "our friends" = החברים שלנו.' },
+        { en: 'She brings a book to school.', opts: ['היא מביאה ספר לחבר.', 'הוא מביא ספר לבית הספר.', 'אנחנו מביאים ספר לבית הספר.', 'היא מביאה ספר לבית הספר.'], correct: 3, why: '"She brings" = היא מביאה. "to school" = לבית הספר.' },
+        { en: 'Today is a special birthday party.', opts: ['היום זו מסיבת יום הולדת מיוחדת.', 'מחר זו מסיבת יום הולדת מיוחדת.', 'היום זו מסיבת יום הולדת רגילה.', 'היום זה יום מיוחד.'], correct: 0, why: '"Today" = היום. "special birthday party" = מסיבת יום הולדת מיוחדת.' },
+        { en: 'He gives her a beautiful present.', opts: ['היא נותנת לו מתנה יפה.', 'הוא נותן לה מתנה יפה.', 'הוא מקבל ממנה מתנה יפה.', 'הוא קונה לה מתנה יפה.'], correct: 1, why: '"He gives" = הוא נותן. "her" = לה. "beautiful present" = מתנה יפה.' },
+        { en: 'They run together to the school.', opts: ['הם רצים ביחד לבית.', 'הם הולכים ביחד לבית הספר.', 'אנחנו רצים ביחד לבית הספר.', 'הם רצים ביחד לבית הספר.'], correct: 3, why: '"They run together" = הם רצים ביחד. "to the school" = לבית הספר.' },
+      ]
+    }
+  },
+  {
+    id: 19,
+    image: 'images/level9.png',
+    icon: '🧩',
+    title: 'האזן וסדר',
+    titleEn: 'Listen & Arrange',
+    color: '#ec4899',
+    gradient: 'linear-gradient(135deg, #f472b6 0%, #be185d 100%)',
+    formula: '🔊 Listen → 📝 Build sentence',
+    formulaHe: 'בנה משפט מקריאה',
+    expl: 'עכשיו לאתגר אמיתי! <b>תקשיב/י למשפט באנגלית</b>, ואז סדר/י את המילים בסדר הנכון. אפשר ללחוץ על 🔊 שוב ושוב — תלמד/י דרך השמיעה את הסדר הנכון של המילים באנגלית.',
+    examples: [
+      { en: 'I have a dog.', he: 'יש לי כלב.', tokens: [{w:'I',t:'s'},{w:'have',t:'v'},{w:'a dog',t:'o'}] },
+      { en: 'She runs to the park.', he: 'היא רצה לפארק.', tokens: [{w:'She',t:'s'},{w:'runs',t:'v'},{w:'to the park',t:'o'}] },
+    ],
+    rule: '💡 הקשבה היא המורה הכי טובה! ככל שתשמע/י יותר, ככה יהיה לך טבעי יותר.',
+    game: {
+      type: 'listen-scramble',
+      qs: [
+        { en: 'I have a dog.', words: ['have','I','a','dog'], correct: ['I','have','a','dog'], he: 'יש לי כלב.', why: 'I + have + a + dog. הסדר: מי-פועל-מגדיר-שם עצם.' },
+        { en: 'She runs to school.', words: ['runs','to','She','school'], correct: ['She','runs','to','school'], he: 'היא רצה לבית הספר.', why: 'She + runs + to + school. גוף שלישי יחיד = runs (עם s).' },
+        { en: 'We eat the cake.', words: ['eat','the','We','cake'], correct: ['We','eat','the','cake'], he: 'אנחנו אוכלים את העוגה.', why: 'We + eat + the + cake. the = עוגה ספציפית.' },
+        { en: 'He plays in school.', words: ['plays','He','in','school'], correct: ['He','plays','in','school'], he: 'הוא משחק בבית הספר.', why: 'He + plays + in + school. He יחיד → plays עם s.' },
+        { en: 'They win the race.', words: ['the','win','They','race'], correct: ['They','win','the','race'], he: 'הם מנצחים במרוץ.', why: 'They + win + the + race. They רבים → win בלי s.' },
+        { en: 'She finds a flower.', words: ['finds','a','She','flower'], correct: ['She','finds','a','flower'], he: 'היא מוצאת פרח.', why: 'She + finds + a + flower. a = פרח כלשהו.' },
+        { en: 'I learn English fast.', words: ['English','learn','I','fast'], correct: ['I','learn','English','fast'], he: 'אני לומד/ת אנגלית מהר.', why: 'I + learn + English + fast. fast (איך) בסוף.' },
+        { en: 'He gives her presents.', words: ['gives','He','presents','her'], correct: ['He','gives','her','presents'], he: 'הוא נותן לה מתנות.', why: 'He + gives + her + presents. her לפני המתנות (למי).' },
+        { en: 'We run together fast.', words: ['run','We','fast','together'], correct: ['We','run','together','fast'], he: 'אנחנו רצים ביחד מהר.', why: 'We + run + together + fast. together לפני fast.' },
+        { en: 'They play with friends.', words: ['play','with','They','friends'], correct: ['They','play','with','friends'], he: 'הם משחקים עם חברים.', why: 'They + play + with + friends. with = עם.' },
+      ]
+    }
+  },
+  {
+    id: 20,
+    image: 'images/level15.png',
     icon: '⌨️',
     title: 'תכתיב — Listen & Type',
     titleEn: 'Dictation',
@@ -2021,7 +2206,7 @@ function refreshMap() {
         `}
       </div>
       <div class="lc-illust">
-        <img src="images/level${lv.id}.png" alt="" onerror="this.style.display='none';this.parentNode.querySelector('.lc-fallback-icon').style.display='flex';">
+        <img src="${lv.image || 'images/level'+lv.id+'.png'}" alt="" onerror="this.style.display='none';this.parentNode.querySelector('.lc-fallback-icon').style.display='flex';">
         <div class="lc-fallback-icon" style="display:none;font-size:4.5em;align-items:center;justify-content:center;width:100%;height:100%;filter:drop-shadow(0 6px 14px rgba(124,58,237,0.4));">${lv.icon}</div>
         <span class="sparkle">✨</span>
         <span class="sparkle">✨</span>
@@ -2034,6 +2219,25 @@ function refreshMap() {
 }
 
 // New helpers for redesigned UI
+// One-time migration from v1 (15 levels) → v2 (20 levels, reordered)
+function migrateProgressV2() {
+  if (localStorage.getItem('eq_migrated_v2') === '1') return;
+  // Old ID → New ID mapping (curriculum reorder following CEFR A1)
+  const idMap = {1:6, 2:7, 3:8, 4:1, 5:11, 6:10, 7:4, 8:18, 9:19, 10:15, 11:2, 12:5, 13:13, 14:16, 15:20};
+  ['tal','elad'].forEach(p => {
+    const k = `eq_${p}_lvls`;
+    const old = JSON.parse(localStorage.getItem(k) || '{}');
+    const fresh = {};
+    Object.keys(old).forEach(oldId => {
+      const newId = idMap[+oldId];
+      if (newId) fresh[newId] = old[oldId];
+    });
+    if (Object.keys(fresh).length) localStorage.setItem(k, JSON.stringify(fresh));
+  });
+  localStorage.setItem('eq_migrated_v2', '1');
+}
+migrateProgressV2();
+
 // Daily streak — counts consecutive days the player played
 function todayKey() {
   const d = new Date();
