@@ -612,6 +612,83 @@ body { font-family:'Heebo',sans-serif; background:var(--dark); color:var(--text)
 .lb-summary-title { color:#fff; font-weight:900; font-size:1em; margin-bottom:4px; }
 .lb-summary-sub { color:#b8a8e0; font-size:0.85em; }
 
+/* ===== VISUAL EXPLANATION CARDS ===== */
+.expl-grid {
+  display:flex; flex-direction:column; gap:10px;
+  margin-top:8px;
+}
+.expl-card {
+  background:rgba(43,31,92,0.55);
+  border:1px solid rgba(168,85,247,0.2);
+  border-radius:14px; padding:12px 14px;
+  display:flex; gap:12px; align-items:flex-start;
+}
+.expl-card.warn { border-color:rgba(239,68,68,0.35); background:rgba(127,29,29,0.3); }
+.expl-card.add { border-color:rgba(244,114,182,0.35); background:rgba(131,24,67,0.3); }
+.expl-card.tip { border-color:rgba(16,185,129,0.35); background:rgba(6,78,59,0.25); }
+.expl-emoji { font-size:1.8em; line-height:1; flex-shrink:0; }
+.expl-body { flex:1; min-width:0; }
+.expl-rule { color:#fff; font-size:1em; font-weight:800; margin-bottom:6px; line-height:1.4; }
+.expl-rule-he { color:#d1c4f0; font-weight:700; }
+.expl-examples { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+.expl-ex {
+  display:inline-flex; align-items:center;
+  background:rgba(0,0,0,0.35); padding:5px 11px; border-radius:10px;
+  direction:ltr; font-family:'SF Mono','Menlo',monospace; font-size:0.92em; color:#e8e8f0;
+  font-weight:600; border:1px solid rgba(168,85,247,0.15);
+}
+.expl-ex.simple { font-family:'Heebo',sans-serif; direction:rtl; }
+
+/* Color-coded grammar parts */
+.gr-s {
+  color:#a5b4fc; font-weight:900;
+  background:rgba(129,140,248,0.22);
+  padding:1px 6px; border-radius:6px;
+  border:1px solid rgba(129,140,248,0.4);
+} /* Subject — blue */
+.gr-v {
+  color:#6ee7b7; font-weight:900;
+  background:rgba(52,211,153,0.22);
+  padding:1px 6px; border-radius:6px;
+  border:1px solid rgba(52,211,153,0.4);
+} /* Verb — green */
+.gr-o {
+  color:#fde68a; font-weight:900;
+  background:rgba(251,191,36,0.22);
+  padding:1px 6px; border-radius:6px;
+  border:1px solid rgba(251,191,36,0.4);
+} /* Object — orange */
+.gr-art {
+  color:#d8b4fe; font-weight:900;
+  background:rgba(192,132,252,0.22);
+  padding:1px 6px; border-radius:6px;
+  border:1px solid rgba(192,132,252,0.4);
+} /* Article/marker — purple */
+.gr-add {
+  color:#f472b6; font-weight:900;
+  background:rgba(244,114,182,0.18);
+  padding:1px 5px; border-radius:5px;
+  border:1px dashed rgba(244,114,182,0.35);
+}
+.gr-irr {
+  color:#fca5a5; font-weight:900;
+  background:rgba(239,68,68,0.15);
+  padding:1px 5px; border-radius:5px;
+}
+.gr-arrow { color:#a78bfa; font-weight:900; padding:0 4px; }
+
+/* Color legend (shown at top of expl section) */
+.expl-legend {
+  display:flex; gap:8px; flex-wrap:wrap; justify-content:center;
+  margin-bottom:10px; font-size:0.78em;
+}
+.expl-legend span {
+  display:inline-flex; align-items:center; gap:4px;
+  background:rgba(0,0,0,0.25); padding:3px 9px; border-radius:10px;
+  color:#b8a8e0; font-weight:700;
+}
+.expl-legend .lg-dot { width:10px; height:10px; border-radius:50%; }
+
 /* ===== LISTEN BUTTON ===== */
 .listen-big-btn {
   width:100%; max-width:280px; margin:0 auto 18px;
@@ -1300,7 +1377,32 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #f472b6 0%, #be185d 100%)',
     formula: 'I / you / he / she / we / they',
     formulaHe: 'כינויי גוף — במקום שם',
-    expl: 'במקום לחזור על שם, משתמשים ב<b>כינוי</b>. חשוב: <b>I</b> תמיד באות גדולה! <b>he/she</b> = יחיד, <b>they</b> = רבים.',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">👤</div>
+    <div class="expl-body">
+      <div class="expl-rule">יחיד — אדם אחד</div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-s">I</b> · אני</span>
+        <span class="expl-ex"><b class="gr-s">you</b> · את/ה</span>
+        <span class="expl-ex"><b class="gr-s">he</b> · הוא</span>
+        <span class="expl-ex"><b class="gr-s">she</b> · היא</span>
+        <span class="expl-ex"><b class="gr-s">it</b> · חיה / חפץ</span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">👥</div>
+    <div class="expl-body">
+      <div class="expl-rule">רבים — הרבה אנשים</div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-s">we</b> · אנחנו</span>
+        <span class="expl-ex"><b class="gr-s">you</b> · אתם/ן</span>
+        <span class="expl-ex"><b class="gr-s">they</b> · הם / הן</span>
+      </div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'Sam wins → He wins.', he: 'סם מנצח ← הוא מנצח.', tokens: [{w:'He',t:'s'},{w:'=',t:''},{w:'Sam',t:'o'}] },
       { en: 'Mia learns → She learns.', he: 'מיה לומדת ← היא לומדת.', tokens: [{w:'She',t:'s'},{w:'=',t:''},{w:'Mia',t:'o'}] },
@@ -1329,7 +1431,44 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #4ade80 0%, #14532d 100%)',
     formula: 'I am | He/She/It is | You/We/They are',
     formulaHe: 'הפועל "להיות"',
-    expl: 'הפועל <b>be</b> באנגלית הוא הכי חשוב! הוא משמש לתאר <b>מי אנחנו</b>, <b>איפה אנחנו</b>, <b>מה אנחנו מרגישים</b>. הוא משתנה לפי הגוף: <b>I am</b> (אני), <b>He/She/It is</b> (הוא/היא/זה), <b>You/We/They are</b> (אתה/אנחנו/הם).',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">🟰</div>
+    <div class="expl-body">
+      <div class="expl-rule">הפועל <b class="gr-v">be</b> — להיות (הכי חשוב באנגלית!)</div>
+    </div>
+  </div>
+  <div class="expl-card">
+    <div class="expl-emoji">1️⃣</div>
+    <div class="expl-body">
+      <div class="expl-rule"><b class="gr-s">I</b> + <b class="gr-v">am</b></div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-s">I</b>&nbsp;<b class="gr-v">am</b> happy</span>
+        <span class="expl-ex"><b class="gr-s">I</b>&nbsp;<b class="gr-v">am</b> Sam</span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">3️⃣</div>
+    <div class="expl-body">
+      <div class="expl-rule"><b class="gr-s">He / She / It</b> + <b class="gr-v">is</b></div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-s">She</b>&nbsp;<b class="gr-v">is</b> happy</span>
+        <span class="expl-ex"><b class="gr-s">It</b>&nbsp;<b class="gr-v">is</b> a cat</span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card">
+    <div class="expl-emoji">👥</div>
+    <div class="expl-body">
+      <div class="expl-rule"><b class="gr-s">You / We / They</b> + <b class="gr-v">are</b></div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-s">We</b>&nbsp;<b class="gr-v">are</b> friends</span>
+        <span class="expl-ex"><b class="gr-s">They</b>&nbsp;<b class="gr-v">are</b> here</span>
+      </div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'I am a student.', he: 'אני תלמיד.', tokens: [{w:'I',t:'s'},{w:'am',t:'v'},{w:'a student',t:'o'}] },
       { en: 'She is happy today.', he: 'היא שמחה היום.', tokens: [{w:'She',t:'s'},{w:'is',t:'v'},{w:'happy',t:'o'}] },
@@ -1365,7 +1504,51 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #38bdf8 0%, #075985 100%)',
     formula: 'cat → cats | box → boxes | child → children',
     formulaHe: 'אחד / הרבה',
-    expl: 'איך אומרים <b>רבים</b> באנגלית? רוב המילים: <b>+s</b> (cat → cats, book → books). מילים שמסתיימות ב-s/x/sh/ch: <b>+es</b> (box → boxes, watch → watches). מילים עם <b>y</b> בסוף: y → ies (baby → babies). חריגים: child → <b>children</b>, man → men, foot → feet.',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">📚</div>
+    <div class="expl-body">
+      <div class="expl-rule">רוב המילים — מוסיפים <span class="gr-add">+s</span></div>
+      <div class="expl-examples">
+        <span class="expl-ex">cat → cat<span class="gr-add">s</span></span>
+        <span class="expl-ex">book → book<span class="gr-add">s</span></span>
+        <span class="expl-ex">dog → dog<span class="gr-add">s</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">➕</div>
+    <div class="expl-body">
+      <div class="expl-rule">אחרי <b>s, x, sh, ch</b> — מוסיפים <span class="gr-add">+es</span></div>
+      <div class="expl-examples">
+        <span class="expl-ex">box → box<span class="gr-add">es</span></span>
+        <span class="expl-ex">watch → watch<span class="gr-add">es</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">🔄</div>
+    <div class="expl-body">
+      <div class="expl-rule">מילים שמסתיימות ב-<b>y</b>: <span class="gr-add">y → ies</span></div>
+      <div class="expl-examples">
+        <span class="expl-ex">bab<span class="gr-add">y</span> → bab<span class="gr-add">ies</span></span>
+        <span class="expl-ex">stor<span class="gr-add">y</span> → stor<span class="gr-add">ies</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card warn">
+    <div class="expl-emoji">⚠️</div>
+    <div class="expl-body">
+      <div class="expl-rule">חריגים — צריך לזכור בעל פה!</div>
+      <div class="expl-examples">
+        <span class="expl-ex">child → <span class="gr-irr">children</span></span>
+        <span class="expl-ex">man → <span class="gr-irr">men</span></span>
+        <span class="expl-ex">foot → <span class="gr-irr">feet</span></span>
+        <span class="expl-ex">tooth → <span class="gr-irr">teeth</span></span>
+      </div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'I have one cat.', he: 'יש לי חתול אחד.', tokens: [{w:'one cat',t:'o'}] },
       { en: 'She has three cats.', he: 'יש לה שלושה חתולים.', tokens: [{w:'three cats',t:'o'}] },
@@ -1399,7 +1582,34 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #22d3ee 0%, #0e7490 100%)',
     formula: 'I/You/We/They have | He/She/It has',
     formulaHe: 'יש ל...',
-    expl: 'באנגלית "<b>יש ל...</b>" זה <b>have</b> או <b>has</b>. הכלל פשוט: <b>I, You, We, They → have</b>. <b>He, She, It → has</b>. הוא תמיד אומר על משהו שיש לנו: ספר, אח, חבר, תחביב...',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">🎒</div>
+    <div class="expl-body">
+      <div class="expl-rule"><b class="gr-v">have / has</b> = "יש לי / יש לו"</div>
+    </div>
+  </div>
+  <div class="expl-card">
+    <div class="expl-emoji">👤</div>
+    <div class="expl-body">
+      <div class="expl-rule"><b class="gr-s">I / You / We / They</b> + <b class="gr-v">have</b></div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-s">I</b>&nbsp;<b class="gr-v">have</b> a dog</span>
+        <span class="expl-ex"><b class="gr-s">They</b>&nbsp;<b class="gr-v">have</b> books</span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">🦁</div>
+    <div class="expl-body">
+      <div class="expl-rule"><b class="gr-s">He / She / It</b> + <b class="gr-v">ha<span class="gr-add">s</span></b></div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-s">She</b>&nbsp;<b class="gr-v">has</b> a cat</span>
+        <span class="expl-ex"><b class="gr-s">It</b>&nbsp;<b class="gr-v">has</b> 4 legs</span>
+      </div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'I have a dog.', he: 'יש לי כלב.', tokens: [{w:'I',t:'s'},{w:'have',t:'v'},{w:'a dog',t:'o'}] },
       { en: 'She has a book.', he: 'יש לה ספר.', tokens: [{w:'She',t:'s'},{w:'has',t:'v'},{w:'a book',t:'o'}] },
@@ -1436,7 +1646,34 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #facc15 0%, #854d0e 100%)',
     formula: 'There is + יחיד | There are + רבים',
     formulaHe: 'יש',
-    expl: 'איך אומרים "<b>יש</b>" באנגלית? אם זה <b>דבר אחד</b> → <b>there is</b>. אם זה <b>הרבה דברים</b> → <b>there are</b>. דוגמה: "<b>יש</b> חתול בחדר" = There is a cat. "<b>יש</b> חתולים בחדר" = There are cats.',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">📍</div>
+    <div class="expl-body">
+      <div class="expl-rule">איך אומרים <b>"יש"</b> באנגלית?</div>
+    </div>
+  </div>
+  <div class="expl-card">
+    <div class="expl-emoji">1️⃣</div>
+    <div class="expl-body">
+      <div class="expl-rule">דבר אחד → <b class="gr-v">there is</b></div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-v">There is</b> a cat</span>
+        <span class="expl-ex"><b class="gr-v">There is</b> a book</span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">🔢</div>
+    <div class="expl-body">
+      <div class="expl-rule">הרבה דברים → <b class="gr-v">there are</b></div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-v">There are</b> cat<span class="gr-add">s</span></span>
+        <span class="expl-ex"><b class="gr-v">There are</b> 3 books</span>
+      </div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'There is a cat on the chair.', he: 'יש חתול על הכיסא.', tokens: [{w:'There is',t:'s'},{w:'a cat',t:'o'}] },
       { en: 'There are many books here.', he: 'יש כאן הרבה ספרים.', tokens: [{w:'There are',t:'s'},{w:'books',t:'o'}] },
@@ -1470,7 +1707,36 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #8b5cf6 0%, #4338ca 100%)',
     formula: 'Subject + Verb',
     formulaHe: 'מי + מה עושה',
-    expl: 'כל משפט באנגלית חייב להתחיל ב-<b>מי (Subject)</b> ואחריו <b>מה עושה (Verb)</b>. בעברית אפשר לדלג על "אני" — באנגלית אסור! תמיד אומרים <b>I learn</b>, לא רק <b>learn</b>.',
+    expl: `<div class="expl-legend">
+  <span><span class="lg-dot" style="background:#818cf8"></span>Subject (מי)</span>
+  <span><span class="lg-dot" style="background:#34d399"></span>Verb (מה עושה)</span>
+</div>
+<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">🏗️</div>
+    <div class="expl-body">
+      <div class="expl-rule"><b class="gr-s">Subject</b> + <b class="gr-v">Verb</b></div>
+      <div class="expl-rule-he"><b class="gr-s">מי</b> + <b class="gr-v">מה עושה</b></div>
+    </div>
+  </div>
+  <div class="expl-card">
+    <div class="expl-emoji">✅</div>
+    <div class="expl-body">
+      <div class="expl-rule">דוגמאות</div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-s">I</b>&nbsp;<b class="gr-v">learn</b></span>
+        <span class="expl-ex"><b class="gr-s">She</b>&nbsp;<b class="gr-v">helps</b></span>
+        <span class="expl-ex"><b class="gr-s">They</b>&nbsp;<b class="gr-v">run</b></span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card warn">
+    <div class="expl-emoji">⚠️</div>
+    <div class="expl-body">
+      <div class="expl-rule">תמיד <b class="gr-s">מי</b> לפני <b class="gr-v">מה עושה</b> — לעולם לא הפוך!</div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'I learn.', he: 'אני לומד/ת.', tokens: [{w:'I',t:'s'},{w:'learn',t:'v'}] },
       { en: 'Mia wins.', he: 'מיה מנצחת.', tokens: [{w:'Mia',t:'s'},{w:'wins',t:'v'}] },
@@ -1511,7 +1777,37 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #06b6d4 0%, #0369a1 100%)',
     formula: 'Subject + Verb + Object',
     formulaHe: 'מי + מה עושה + מה/את מה',
-    expl: 'עכשיו נוסיף את <b>המשלים (Object)</b> — מה עושים? את מי? מה? בעברית הסדר גמיש, באנגלית הסדר <b>קבוע תמיד</b>: מי ← מה עושה ← מה.',
+    expl: `<div class="expl-legend">
+  <span><span class="lg-dot" style="background:#818cf8"></span>Subject (מי)</span>
+  <span><span class="lg-dot" style="background:#34d399"></span>Verb (מה עושה)</span>
+  <span><span class="lg-dot" style="background:#fbbf24"></span>Object (מה)</span>
+</div>
+<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">🎯</div>
+    <div class="expl-body">
+      <div class="expl-rule"><b class="gr-s">Subject</b> + <b class="gr-v">Verb</b> + <b class="gr-o">Object</b></div>
+      <div class="expl-rule-he"><b class="gr-s">מי</b> + <b class="gr-v">מה עושה</b> + <b class="gr-o">מה</b></div>
+    </div>
+  </div>
+  <div class="expl-card">
+    <div class="expl-emoji">✅</div>
+    <div class="expl-body">
+      <div class="expl-rule">דוגמאות</div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-s">I</b>&nbsp;<b class="gr-v">learn</b>&nbsp;<b class="gr-o">English</b></span>
+        <span class="expl-ex"><b class="gr-s">She</b>&nbsp;<b class="gr-v">helps</b>&nbsp;<b class="gr-o">the team</b></span>
+        <span class="expl-ex"><b class="gr-s">We</b>&nbsp;<b class="gr-v">play</b>&nbsp;<b class="gr-o">chess</b></span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card warn">
+    <div class="expl-emoji">⚠️</div>
+    <div class="expl-body">
+      <div class="expl-rule">בעברית הסדר גמיש, באנגלית <b>קבוע תמיד</b>!</div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'I learn English.', he: 'אני לומד/ת אנגלית.', tokens: [{w:'I',t:'s'},{w:'learn',t:'v'},{w:'English',t:'o'}] },
       { en: 'We play chess.', he: 'אנחנו משחקים שחמט.', tokens: [{w:'We',t:'s'},{w:'play',t:'v'},{w:'chess',t:'o'}] },
@@ -1551,7 +1847,49 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #34d399 0%, #047857 100%)',
     formula: 'a / an / the + noun',
     formulaHe: 'מגדיר + שם עצם',
-    expl: '<b>a</b> = משהו אחד כלשהו (עיצור). <b>an</b> = משהו אחד כלשהו (לפני תנועה: a,e,i,o,u). <b>the</b> = ספציפי, יודעים על מה מדברים. <b>ללא מגדיר</b> = דברים כלליים כמו chess, English.',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">🔤</div>
+    <div class="expl-body">
+      <div class="expl-rule"><b class="gr-art">a</b> = משהו אחד כלשהו</div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-art">a</b> dog</span>
+        <span class="expl-ex"><b class="gr-art">a</b> book</span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">🅰️</div>
+    <div class="expl-body">
+      <div class="expl-rule">לפני תנועה (<b>a, e, i, o, u</b>) → <b class="gr-art">an</b></div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-art">an</b> apple</span>
+        <span class="expl-ex"><b class="gr-art">an</b> idea</span>
+        <span class="expl-ex"><b class="gr-art">an</b> old car</span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card">
+    <div class="expl-emoji">👆</div>
+    <div class="expl-body">
+      <div class="expl-rule"><b class="gr-art">the</b> = דבר ספציפי (יודעים על מה מדברים)</div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-art">the</b> pool</span>
+        <span class="expl-ex"><b class="gr-art">the</b> flower</span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card tip">
+    <div class="expl-emoji">💡</div>
+    <div class="expl-body">
+      <div class="expl-rule">בלי מגדיר = דברים כלליים</div>
+      <div class="expl-examples">
+        <span class="expl-ex">I play chess</span>
+        <span class="expl-ex">I learn English</span>
+      </div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'I have a hobby.', he: 'יש לי תחביב (כלשהו).', tokens: [{w:'a',t:'art'},{w:'hobby',t:'o'}] },
       { en: 'It is an idea.', he: 'זה רעיון. (idea מתחיל ב-i!)', tokens: [{w:'an',t:'art'},{w:'idea',t:'o'}] },
@@ -1580,7 +1918,28 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #34d399 0%, #064e3b 100%)',
     formula: 'I → my | He → his | She → her | We → our',
     formulaHe: 'של מי?',
-    expl: 'איך אומרים "<b>של מי</b>" באנגלית? לכל כינוי גוף יש מילת שייכות שלו: <b>I → my</b> (שלי), <b>You → your</b> (שלך), <b>He → his</b> (שלו), <b>She → her</b> (שלה), <b>We → our</b> (שלנו), <b>They → their</b> (שלהם), <b>It → its</b> (שלו).',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">🔑</div>
+    <div class="expl-body">
+      <div class="expl-rule">לכל כינוי גוף יש מילת שייכות משלו!</div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">📝</div>
+    <div class="expl-body">
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-s">I</b> ↦ <b class="gr-art">my</b> · שלי</span>
+        <span class="expl-ex"><b class="gr-s">you</b> ↦ <b class="gr-art">your</b> · שלך</span>
+        <span class="expl-ex"><b class="gr-s">he</b> ↦ <b class="gr-art">his</b> · שלו</span>
+        <span class="expl-ex"><b class="gr-s">she</b> ↦ <b class="gr-art">her</b> · שלה</span>
+        <span class="expl-ex"><b class="gr-s">we</b> ↦ <b class="gr-art">our</b> · שלנו</span>
+        <span class="expl-ex"><b class="gr-s">they</b> ↦ <b class="gr-art">their</b> · שלהם</span>
+        <span class="expl-ex"><b class="gr-s">it</b> ↦ <b class="gr-art">its</b> · שלו (חפץ)</span>
+      </div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'This is my book.', he: 'זה הספר שלי.', tokens: [{w:'my',t:'art'},{w:'book',t:'o'}] },
       { en: "What is your name?", he: 'מה שמך?', tokens: [{w:'your',t:'art'},{w:'name',t:'o'}] },
@@ -1614,7 +1973,44 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #f87171 0%, #991b1b 100%)',
     formula: "Subject + don't/doesn't + Verb",
     formulaHe: 'מי + לא + פועל',
-    expl: 'כדי לשלול משפט: מוסיפים <b>don\'t</b> (לרוב) או <b>doesn\'t</b> (he/she/it) לפני הפועל. הפועל חוזר לבסיס! She doesn\'t <b>play</b> (לא plays)',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">🚫</div>
+    <div class="expl-body">
+      <div class="expl-rule">איך אומרים <b>"לא"</b>? משתמשים ב-<b class="gr-art">don't</b> או <b class="gr-art">doesn't</b></div>
+    </div>
+  </div>
+  <div class="expl-card">
+    <div class="expl-emoji">👤</div>
+    <div class="expl-body">
+      <div class="expl-rule"><b class="gr-s">I / You / We / They</b> + <b class="gr-art">don't</b></div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-s">I</b>&nbsp;<b class="gr-art">don't</b>&nbsp;<b class="gr-v">play</b></span>
+        <span class="expl-ex"><b class="gr-s">They</b>&nbsp;<b class="gr-art">don't</b>&nbsp;<b class="gr-v">like</b></span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">🦁</div>
+    <div class="expl-body">
+      <div class="expl-rule"><b class="gr-s">He / She / It</b> + <b class="gr-art">doe<span class="gr-add">s</span>n't</b></div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-s">She</b>&nbsp;<b class="gr-art">doesn't</b>&nbsp;<b class="gr-v">like</b></span>
+        <span class="expl-ex"><b class="gr-s">He</b>&nbsp;<b class="gr-art">doesn't</b>&nbsp;<b class="gr-v">run</b></span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card warn">
+    <div class="expl-emoji">⚠️</div>
+    <div class="expl-body">
+      <div class="expl-rule">אחרי don't/doesn't הפועל <b>תמיד בבסיס</b> (בלי s)!</div>
+      <div class="expl-examples">
+        <span class="expl-ex">She doesn't <b class="gr-v">play</b> ✓</span>
+        <span class="expl-ex">She doesn't <span class="gr-irr">plays</span> ✗</span>
+      </div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: "I don't wait.", he: 'אני לא מחכה.', tokens: [{w:"don't",t:'art'},{w:'wait',t:'v'}] },
       { en: "She doesn't win.", he: 'היא לא מנצחת.', tokens: [{w:"doesn't",t:'art'},{w:'win',t:'v'}] },
@@ -1643,7 +2039,34 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #fbbf24 0%, #b45309 100%)',
     formula: 'Do/Does + Subject + Verb?',
     formulaHe: 'Do/Does + מי + פועל בסיס?',
-    expl: 'כדי לשאול שאלת כן/לא: מוסיפים <b>Do</b> (לרוב) או <b>Does</b> (he/she/it) בהתחלה. חשוב: <b>הפועל חוזר לצורת הבסיס!</b> She plays → Does she play? (לא plays!)',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">❓</div>
+    <div class="expl-body">
+      <div class="expl-rule">איך שואלים שאלה? מתחילים ב-<b class="gr-art">Do</b> או <b class="gr-art">Does</b></div>
+    </div>
+  </div>
+  <div class="expl-card">
+    <div class="expl-emoji">👤</div>
+    <div class="expl-body">
+      <div class="expl-rule"><b class="gr-art">Do</b> + <b class="gr-s">I/you/we/they</b> + <b class="gr-v">פועל</b>?</div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-art">Do</b>&nbsp;<b class="gr-s">you</b>&nbsp;<b class="gr-v">like</b> pizza?</span>
+        <span class="expl-ex"><b class="gr-art">Do</b>&nbsp;<b class="gr-s">they</b>&nbsp;<b class="gr-v">play</b>?</span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">🦁</div>
+    <div class="expl-body">
+      <div class="expl-rule"><b class="gr-art">Doe<span class="gr-add">s</span></b> + <b class="gr-s">he/she/it</b> + <b class="gr-v">פועל</b>?</div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-art">Does</b>&nbsp;<b class="gr-s">she</b>&nbsp;<b class="gr-v">like</b> chess?</span>
+        <span class="expl-ex"><b class="gr-art">Does</b>&nbsp;<b class="gr-s">he</b>&nbsp;<b class="gr-v">run</b>?</span>
+      </div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'You play. → Do you play?', he: 'את/ה משחק/ת ← האם את/ה משחק/ת?', tokens: [{w:'Do',t:'art'},{w:'you',t:'s'},{w:'play',t:'v'}] },
       { en: 'He wins. → Does he win?', he: 'הוא מנצח ← האם הוא מנצח?', tokens: [{w:'Does',t:'art'},{w:'he',t:'s'},{w:'win',t:'v'}] },
@@ -1672,7 +2095,37 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #fbbf24 0%, #92400e 100%)',
     formula: 'What/Where/Who/When/Why/How + ?',
     formulaHe: 'מה? איפה? מי?',
-    expl: 'שאלות "Wh" באנגלית מתחילות במילת שאלה: <b>What?</b> (מה?), <b>Where?</b> (איפה?), <b>Who?</b> (מי?), <b>When?</b> (מתי?), <b>Why?</b> (למה?), <b>How?</b> (איך?). אחרי מילת השאלה בא <b>is/are/do/does</b>.',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">❓</div>
+    <div class="expl-body">
+      <div class="expl-rule">שאלות "Wh" מתחילות במילת שאלה</div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">📝</div>
+    <div class="expl-body">
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-art">What</b> · מה?</span>
+        <span class="expl-ex"><b class="gr-art">Where</b> · איפה?</span>
+        <span class="expl-ex"><b class="gr-art">Who</b> · מי?</span>
+        <span class="expl-ex"><b class="gr-art">When</b> · מתי?</span>
+        <span class="expl-ex"><b class="gr-art">Why</b> · למה?</span>
+        <span class="expl-ex"><b class="gr-art">How</b> · איך?</span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card">
+    <div class="expl-emoji">💬</div>
+    <div class="expl-body">
+      <div class="expl-rule">סדר: <b class="gr-art">Wh</b> + <b class="gr-v">is/are/do</b> + <b class="gr-s">מי</b>?</div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-art">What</b>&nbsp;<b class="gr-v">is</b>&nbsp;<b class="gr-s">your</b> name?</span>
+        <span class="expl-ex"><b class="gr-art">Where</b>&nbsp;<b class="gr-v">is</b>&nbsp;<b class="gr-s">my</b> book?</span>
+      </div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'What is your name?', he: 'מה שמך?', tokens: [{w:'What',t:'art'},{w:'is',t:'v'}] },
       { en: 'Where is my book?', he: 'איפה הספר שלי?', tokens: [{w:'Where',t:'art'},{w:'is',t:'v'}] },
@@ -1706,7 +2159,33 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #a78bfa 0%, #5b21b6 100%)',
     formula: 'in / on / under / at / to / with',
     formulaHe: 'איפה? אל מי? עם מה?',
-    expl: 'מילות יחס באנגלית קצת שונות מעברית! <b>in</b> = בתוך (in the box). <b>on</b> = על (on the table). <b>under</b> = מתחת (under the bed). <b>at</b> = במקום מסוים (at school, at home). <b>to</b> = אל (give to him, go to school). <b>with</b> = עם (with my friend).',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">📦</div>
+    <div class="expl-body">
+      <div class="expl-rule">מילות יחס — איפה? אל מי? עם מה?</div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">📍</div>
+    <div class="expl-body">
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-art">in</b> · בתוך</span>
+        <span class="expl-ex"><b class="gr-art">on</b> · על</span>
+        <span class="expl-ex"><b class="gr-art">under</b> · מתחת</span>
+        <span class="expl-ex"><b class="gr-art">at</b> · במקום מסוים</span>
+        <span class="expl-ex"><b class="gr-art">to</b> · אל</span>
+        <span class="expl-ex"><b class="gr-art">with</b> · עם</span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card warn">
+    <div class="expl-emoji">⚠️</div>
+    <div class="expl-body">
+      <div class="expl-rule">בית ספר / בית = <b class="gr-art">at</b> school, <b class="gr-art">at</b> home (לא in!)</div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'The cat is in the box.', he: 'החתול בתוך הקופסה.', tokens: [{w:'The cat',t:'s'},{w:'is in',t:'v'},{w:'the box',t:'o'}] },
       { en: 'The book is on the table.', he: 'הספר על השולחן.', tokens: [{w:'The book',t:'s'},{w:'is on',t:'v'},{w:'the table',t:'o'}] },
@@ -1742,7 +2221,36 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #f472b6 0%, #831843 100%)',
     formula: 'am/is/are + Verb-ing',
     formulaHe: 'מה קורה עכשיו?',
-    expl: 'מה אנחנו עושים <b>ברגע זה</b>? בשביל זה יש את <b>הווה מתמשך</b>: <b>am/is/are + פועל-ing</b>. דוגמה: "אני <b>משחק עכשיו</b>" = "I <b>am playing</b> now". זה שונה מהווה רגיל (I play) — הוא מתאר הרגל. הווה מתמשך = ברגע זה!',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">🎬</div>
+    <div class="expl-body">
+      <div class="expl-rule">מה קורה <b>עכשיו</b>?</div>
+      <div class="expl-rule-he"><b class="gr-v">am/is/are</b> + פועל<span class="gr-add">-ing</span></div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">📝</div>
+    <div class="expl-body">
+      <div class="expl-rule">דוגמאות</div>
+      <div class="expl-examples">
+        <span class="expl-ex"><b class="gr-s">I</b>&nbsp;<b class="gr-v">am</b> play<span class="gr-add">ing</span></span>
+        <span class="expl-ex"><b class="gr-s">She</b>&nbsp;<b class="gr-v">is</b> runn<span class="gr-add">ing</span></span>
+        <span class="expl-ex"><b class="gr-s">We</b>&nbsp;<b class="gr-v">are</b> eat<span class="gr-add">ing</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card tip">
+    <div class="expl-emoji">💡</div>
+    <div class="expl-body">
+      <div class="expl-rule">הבדל מהווה רגיל:</div>
+      <div class="expl-examples">
+        <span class="expl-ex">I play (כל יום)</span>
+        <span class="expl-ex">I am playing (עכשיו!)</span>
+      </div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'I am playing now.', he: 'אני משחק עכשיו.', tokens: [{w:'I',t:'s'},{w:'am playing',t:'v'},{w:'now',t:'o'}] },
       { en: 'She is running fast.', he: 'היא רצה מהר.', tokens: [{w:'She',t:'s'},{w:'is running',t:'v'}] },
@@ -1776,7 +2284,41 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #22d3ee 0%, #0c4a6e 100%)',
     formula: 'Yesterday I + Verb-ed/saw/said',
     formulaHe: 'אתמול / לפני זמן',
-    expl: 'באנגלית, כשמדברים על דברים ש<b>קרו אתמול</b> או <b>בעבר</b>, הפועל משתנה. רוב הפעלים מקבלים <b>-ed</b> בסוף (play→played, learn→learned). יש פעלים מיוחדים: <b>see→saw</b>, <b>say→said</b>, <b>come→came</b>, <b>find→found</b>. אותו הפועל לכל הגופים — אין צורך ב-s!',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">🕰️</div>
+    <div class="expl-body">
+      <div class="expl-rule">מה קרה <b>אתמול / בעבר</b>?</div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">📝</div>
+    <div class="expl-body">
+      <div class="expl-rule">רוב הפעלים: מוסיפים <span class="gr-add">+ed</span></div>
+      <div class="expl-examples">
+        <span class="expl-ex">play → play<span class="gr-add">ed</span></span>
+        <span class="expl-ex">learn → learn<span class="gr-add">ed</span></span>
+        <span class="expl-ex">help → help<span class="gr-add">ed</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card warn">
+    <div class="expl-emoji">⚠️</div>
+    <div class="expl-body">
+      <div class="expl-rule">חריגים — חייבים לזכור!</div>
+      <div class="expl-examples">
+        <span class="expl-ex">see → <span class="gr-irr">saw</span></span>
+        <span class="expl-ex">say → <span class="gr-irr">said</span></span>
+        <span class="expl-ex">come → <span class="gr-irr">came</span></span>
+        <span class="expl-ex">find → <span class="gr-irr">found</span></span>
+        <span class="expl-ex">have → <span class="gr-irr">had</span></span>
+        <span class="expl-ex">go → <span class="gr-irr">went</span></span>
+        <span class="expl-ex">eat → <span class="gr-irr">ate</span></span>
+        <span class="expl-ex">run → <span class="gr-irr">ran</span></span>
+      </div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'I played in the park yesterday.', he: 'אני שיחקתי בפארק אתמול.', tokens: [{w:'I',t:'s'},{w:'played',t:'v'},{w:'yesterday',t:'o'}] },
       { en: 'She saw a beautiful flower.', he: 'היא ראתה פרח יפה.', tokens: [{w:'She',t:'s'},{w:'saw',t:'v'},{w:'a flower',t:'o'}] },
@@ -1812,7 +2354,45 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #fca5a5 0%, #7f1d1d 100%)',
     formula: 'Adjective + -er + than',
     formulaHe: 'יותר... מ-',
-    expl: 'איך אומרים "יותר גדול / יותר מהיר"? לתואר קצר מוסיפים <b>-er</b> ואחריו <b>than</b>: big → <b>bigger than</b>, fast → <b>faster than</b>. לתואר ארוך מוסיפים <b>more</b>: beautiful → <b>more beautiful than</b>. יש חריגים: good → <b>better than</b>, bad → <b>worse than</b>.',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">🆚</div>
+    <div class="expl-body">
+      <div class="expl-rule">איך אומרים "יותר X"?</div>
+    </div>
+  </div>
+  <div class="expl-card">
+    <div class="expl-emoji">📏</div>
+    <div class="expl-body">
+      <div class="expl-rule">תארים קצרים: <span class="gr-add">+er</span> + <b>than</b></div>
+      <div class="expl-examples">
+        <span class="expl-ex">big → bigg<span class="gr-add">er than</span></span>
+        <span class="expl-ex">fast → fast<span class="gr-add">er than</span></span>
+        <span class="expl-ex">tall → tall<span class="gr-add">er than</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">📜</div>
+    <div class="expl-body">
+      <div class="expl-rule">תארים ארוכים: <span class="gr-add">more</span> + תואר + <b>than</b></div>
+      <div class="expl-examples">
+        <span class="expl-ex"><span class="gr-add">more</span> beautiful than</span>
+        <span class="expl-ex"><span class="gr-add">more</span> interesting than</span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card warn">
+    <div class="expl-emoji">⚠️</div>
+    <div class="expl-body">
+      <div class="expl-rule">חריגים</div>
+      <div class="expl-examples">
+        <span class="expl-ex">good → <span class="gr-irr">better</span></span>
+        <span class="expl-ex">bad → <span class="gr-irr">worse</span></span>
+      </div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'Sam is faster than Mia.', he: 'סם מהיר יותר ממיה.', tokens: [{w:'Sam',t:'s'},{w:'is',t:'v'},{w:'faster than',t:'o'}] },
       { en: 'The book is bigger than the pen.', he: 'הספר יותר גדול מהעט.', tokens: [{w:'The book',t:'s'},{w:'is',t:'v'},{w:'bigger than',t:'o'}] },
@@ -1846,7 +2426,38 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #f87171 0%, #7f1d1d 100%)',
     formula: 'one, two, three... | o\'clock, half past',
     formulaHe: 'כמה? מה השעה?',
-    expl: 'מספרים: <b>one (1), two (2), three (3), four (4), five (5)...</b>. עשרות: <b>twenty (20), thirty (30)...</b>. שעות: <b>three o\'clock</b> (3:00), <b>half past three</b> (3:30), <b>quarter past three</b> (3:15), <b>quarter to four</b> (3:45).',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">🔢</div>
+    <div class="expl-body">
+      <div class="expl-rule">מספרים 1—10</div>
+      <div class="expl-examples">
+        <span class="expl-ex">1 · one</span>
+        <span class="expl-ex">2 · two</span>
+        <span class="expl-ex">3 · three</span>
+        <span class="expl-ex">4 · four</span>
+        <span class="expl-ex">5 · five</span>
+        <span class="expl-ex">6 · six</span>
+        <span class="expl-ex">7 · seven</span>
+        <span class="expl-ex">8 · eight</span>
+        <span class="expl-ex">9 · nine</span>
+        <span class="expl-ex">10 · ten</span>
+      </div>
+    </div>
+  </div>
+  <div class="expl-card add">
+    <div class="expl-emoji">🕐</div>
+    <div class="expl-body">
+      <div class="expl-rule">שעות</div>
+      <div class="expl-examples">
+        <span class="expl-ex">3:00 · three o'clock</span>
+        <span class="expl-ex">3:30 · half past three</span>
+        <span class="expl-ex">3:15 · quarter past three</span>
+        <span class="expl-ex">3:45 · quarter to four</span>
+      </div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'I have ten books.', he: 'יש לי עשרה ספרים.', tokens: [{w:'ten',t:'art'},{w:'books',t:'o'}] },
       { en: "It is three o'clock.", he: 'השעה שלוש.', tokens: [{w:"three o'clock",t:'o'}] },
@@ -1880,7 +2491,22 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #c084fc 0%, #7e22ce 100%)',
     formula: '🔊 Listen → 🇮🇱 Translate',
     formulaHe: 'תרגיל האזנה',
-    expl: 'תרגיל חשוב במיוחד! <b>תלחץ/י על 🔊</b>, תקשיב/י למשפט באנגלית בעיון, ואז תבחר/י את התרגום הנכון לעברית. אפשר לשמוע שוב כמה פעמים שצריך — חזרה זה הכי חשוב כשלומדים שפה!',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">🎧</div>
+    <div class="expl-body">
+      <div class="expl-rule">תרגיל האזנה חשוב במיוחד!</div>
+      <div class="expl-rule-he">לחץ/י על 🔊 → הקשב/י → בחר/י תרגום</div>
+    </div>
+  </div>
+  <div class="expl-card tip">
+    <div class="expl-emoji">💡</div>
+    <div class="expl-body">
+      <div class="expl-rule">אפשר לשמוע שוב כמה פעמים שצריך</div>
+      <div class="expl-rule-he">חזרה היא המפתח ללמידת שפה!</div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'I have a dog.', he: 'יש לי כלב.', tokens: [{w:'I',t:'s'},{w:'have',t:'v'},{w:'a dog',t:'o'}] },
       { en: 'She runs fast.', he: 'היא רצה מהר.', tokens: [{w:'She',t:'s'},{w:'runs',t:'v'},{w:'fast',t:'o'}] },
@@ -1915,7 +2541,21 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #f472b6 0%, #be185d 100%)',
     formula: '🔊 Listen → 📝 Build sentence',
     formulaHe: 'בנה משפט מקריאה',
-    expl: 'עכשיו לאתגר אמיתי! <b>תקשיב/י למשפט באנגלית</b>, ואז סדר/י את המילים בסדר הנכון. אפשר ללחוץ על 🔊 שוב ושוב — תלמד/י דרך השמיעה את הסדר הנכון של המילים באנגלית.',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">🧩</div>
+    <div class="expl-body">
+      <div class="expl-rule">תקשיב/י למשפט → סדר/י את המילים</div>
+    </div>
+  </div>
+  <div class="expl-card tip">
+    <div class="expl-emoji">💡</div>
+    <div class="expl-body">
+      <div class="expl-rule">ההאזנה היא המורה הכי טובה!</div>
+      <div class="expl-rule-he">ככל שתשמע/י יותר ככה זה יהיה טבעי יותר</div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'I have a dog.', he: 'יש לי כלב.', tokens: [{w:'I',t:'s'},{w:'have',t:'v'},{w:'a dog',t:'o'}] },
       { en: 'She runs to the park.', he: 'היא רצה לפארק.', tokens: [{w:'She',t:'s'},{w:'runs',t:'v'},{w:'to the park',t:'o'}] },
@@ -1947,7 +2587,21 @@ const CURRICULUM = [
     gradient: 'linear-gradient(135deg, #d8b4fe 0%, #581c87 100%)',
     formula: '🔊 Listen → ⌨️ Type',
     formulaHe: 'הקשב והקלד',
-    expl: 'תרגיל אלוף! <b>תקשיב/י למשפט באנגלית</b> ותקליד/י אותו בעצמך. זה התרגיל הכי טוב — מחבר בין <b>הקשבה, איות, ודקדוק</b>. אפשר לשמוע שוב כמה פעמים שצריך. לא צריך פיסוק, הקלד/י רק את המילים.',
+    expl: `<div class="expl-grid">
+  <div class="expl-card">
+    <div class="expl-emoji">⌨️</div>
+    <div class="expl-body">
+      <div class="expl-rule">תרגיל אלוף — תקשיב/י והקלד/י את המשפט!</div>
+      <div class="expl-rule-he">מחבר האזנה + איות + דקדוק יחד</div>
+    </div>
+  </div>
+  <div class="expl-card tip">
+    <div class="expl-emoji">💡</div>
+    <div class="expl-body">
+      <div class="expl-rule">לא צריך פיסוק — רק את המילים</div>
+    </div>
+  </div>
+</div>`,
     examples: [
       { en: 'I have a dog.', he: 'יש לי כלב.', tokens: [{w:'I',t:'s'},{w:'have',t:'v'},{w:'a dog',t:'o'}] },
       { en: 'She runs fast.', he: 'היא רצה מהר.', tokens: [{w:'She',t:'s'},{w:'runs',t:'v'},{w:'fast',t:'o'}] },
