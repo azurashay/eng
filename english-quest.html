@@ -1246,18 +1246,18 @@ const CURRICULUM = [
     game: {
       type: 'listen-translate',
       qs: [
-        { en: 'I have a brother.', opts: ['יש לי אח.', 'יש לי אחות.', 'אני אוהב את אחי.', 'אני רואה אח.'], correct: 0, why: '"I have" = יש לי. "brother" = אח.' },
-        { en: 'She has a cat.', opts: ['לי יש חתול.', 'יש לה חתול.', 'היא מאכילה חתול.', 'יש לה כלב.'], correct: 1, why: '"She has" = יש לה. "cat" = חתול.' },
-        { en: 'They run fast.', opts: ['הוא רץ מהר.', 'אנחנו רצים מהר.', 'הם רצים מהר.', 'הם הולכים מהר.'], correct: 2, why: '"They" = הם. "run fast" = רצים מהר.' },
-        { en: 'He learns English.', opts: ['היא לומדת אנגלית.', 'הוא לומד אנגלית.', 'הוא יודע אנגלית.', 'אנחנו לומדים אנגלית.'], correct: 1, why: '"He" = הוא. "learns" = לומד.' },
-        { en: 'We play chess together.', opts: ['אנחנו משחקים שחמט ביחד.', 'הם משחקים שחמט ביחד.', 'אנחנו אוהבים שחמט.', 'אנחנו משחקים כדורגל ביחד.'], correct: 0, why: 'We = אנחנו, play = משחקים, chess = שחמט, together = ביחד.' },
-        { en: 'The flower is beautiful.', opts: ['הפרח גדול.', 'הפרח יפה.', 'הפרח בריא.', 'הפרחים יפים.'], correct: 1, why: '"is beautiful" = יפה (יחיד).' },
-        { en: 'My mother makes a cake.', opts: ['אמא שלי אוכלת עוגה.', 'אמא שלי מכינה עוגה.', 'אבא שלי מכין עוגה.', 'אמא שלי קונה עוגה.'], correct: 1, why: '"makes" = מכינה. "mother" = אמא.' },
-        { en: 'I find a secret garden.', opts: ['אני מחפש גן.', 'אני מוצא גן סודי.', 'אני אוהב את הגן.', 'אני יוצר גן סודי.'], correct: 1, why: '"find" = מוצא. "secret garden" = גן סודי.' },
-        { en: 'He gives her a present.', opts: ['היא נותנת לו מתנה.', 'הוא לוקח ממנה מתנה.', 'הוא נותן לה מתנה.', 'הוא קונה לה מתנה.'], correct: 2, why: '"He gives" = הוא נותן. "her" = לה.' },
-        { en: 'Today is a great day.', opts: ['היום זה יום מיוחד.', 'היום זה יום קשה.', 'היום זה יום נהדר.', 'מחר זה יום נהדר.'], correct: 2, why: '"today" = היום. "great day" = יום נהדר.' },
-        { en: 'They win the race.', opts: ['הם מפסידים במרוץ.', 'הם רואים את המרוץ.', 'הם מנצחים במרוץ.', 'הם רוצים לנצח.'], correct: 2, why: '"They win" = הם מנצחים. "the race" = במרוץ.' },
-        { en: 'I do not have a hobby.', opts: ['אין לי תחביב.', 'יש לי תחביב.', 'אני אוהב את התחביב שלי.', 'אני מחפש תחביב.'], correct: 0, why: '"do not have" (don\'t have) = אין לי.' },
+        { en: 'I have a dog at home.', opts: ['יש לי כלב בבית.', 'יש לי חתול בבית.', 'אני אוהב את הכלב שלי.', 'אני מחפש את הכלב בבית.'], correct: 0, why: '"I have a dog" = יש לי כלב. "at home" = בבית.' },
+        { en: 'She plays chess with her brother.', opts: ['היא לומדת שחמט עם אחיה.', 'היא משחקת שחמט עם אחיה.', 'הוא משחק שחמט עם אחותו.', 'היא משחקת שחמט עם חברה.'], correct: 1, why: '"plays" = משחקת. "with her brother" = עם אחיה.' },
+        { en: 'We learn English in the school.', opts: ['אנחנו לומדים אנגלית בבית.', 'אנחנו מלמדים אנגלית בבית הספר.', 'אנחנו לומדים אנגלית בבית הספר.', 'הם לומדים אנגלית בבית הספר.'], correct: 2, why: '"We learn" = אנחנו לומדים. "in the school" = בבית הספר.' },
+        { en: 'He runs fast in the park.', opts: ['הוא רץ לאט בפארק.', 'היא רצה מהר בפארק.', 'הוא הולך מהר בפארק.', 'הוא רץ מהר בפארק.'], correct: 3, why: '"He runs" = הוא רץ. "fast" = מהר. "in the park" = בפארק.' },
+        { en: 'They eat the cake at home.', opts: ['הם אוכלים את העוגה בבית.', 'הם אוכלים את הפיצה בבית.', 'אנחנו אוכלים את העוגה בבית.', 'הם אופים את העוגה בבית.'], correct: 0, why: '"They eat" = הם אוכלים. "at home" = בבית.' },
+        { en: 'My mother makes a big cake.', opts: ['אמא שלי קונה עוגה גדולה.', 'אמא שלי מכינה עוגה גדולה.', 'אבא שלי מכין עוגה גדולה.', 'אמא שלי מכינה עוגה קטנה.'], correct: 1, why: '"makes" = מכינה. "big cake" = עוגה גדולה.' },
+        { en: 'I find a flower for mom.', opts: ['אני קוטף פרח לאמא.', 'אני נותן פרח לאחותי.', 'אני מוצא פרח לאמא.', 'אני קונה פרח לאמא.'], correct: 2, why: '"find" = מוצא. "for mom" = לאמא.' },
+        { en: 'We play football with our friends.', opts: ['אנחנו רואים כדורגל עם החברים.', 'אנחנו משחקים שחמט עם החברים שלנו.', 'אנחנו משחקים כדורגל עם החברים שלנו.', 'אנחנו אוהבים לשחק עם החברים שלנו.'], correct: 2, why: '"play football" = משחקים כדורגל. "our friends" = החברים שלנו.' },
+        { en: 'She brings a book to school.', opts: ['היא מביאה ספר לחבר.', 'הוא מביא ספר לבית הספר.', 'אנחנו מביאים ספר לבית הספר.', 'היא מביאה ספר לבית הספר.'], correct: 3, why: '"She brings" = היא מביאה. "to school" = לבית הספר.' },
+        { en: 'Today is a special birthday party.', opts: ['היום זו מסיבת יום הולדת מיוחדת.', 'מחר זו מסיבת יום הולדת מיוחדת.', 'היום זו מסיבת יום הולדת רגילה.', 'היום זה יום מיוחד.'], correct: 0, why: '"Today" = היום. "special birthday party" = מסיבת יום הולדת מיוחדת.' },
+        { en: 'He gives her a beautiful present.', opts: ['היא נותנת לו מתנה יפה.', 'הוא נותן לה מתנה יפה.', 'הוא מקבל ממנה מתנה יפה.', 'הוא קונה לה מתנה יפה.'], correct: 1, why: '"He gives" = הוא נותן. "her" = לה. "beautiful present" = מתנה יפה.' },
+        { en: 'They run together to the school.', opts: ['הם רצים ביחד לבית.', 'הם הולכים ביחד לבית הספר.', 'אנחנו רצים ביחד לבית הספר.', 'הם רצים ביחד לבית הספר.'], correct: 3, why: '"They run together" = הם רצים ביחד. "to the school" = לבית הספר.' },
       ]
     }
   },
@@ -1279,16 +1279,16 @@ const CURRICULUM = [
     game: {
       type: 'listen-scramble',
       qs: [
-        { en: 'I have a dog.', words: ['have','I','a dog'], correct: ['I','have','a dog'], he: 'יש לי כלב.', why: 'I + have + a dog. מי לפני פועל לפני מה.' },
-        { en: 'She plays chess.', words: ['plays','chess','She'], correct: ['She','plays','chess'], he: 'היא משחקת שחמט.', why: 'She + plays + chess. גוף שלישי יחיד = plays (עם s).' },
-        { en: 'We run fast.', words: ['run','We','fast'], correct: ['We','run','fast'], he: 'אנחנו רצים מהר.', why: 'We + run + fast. We רבים = בלי s.' },
-        { en: 'He has a book.', words: ['a book','He','has'], correct: ['He','has','a book'], he: 'יש לו ספר.', why: 'He + has + a book. He = גוף שלישי יחיד → has.' },
-        { en: 'They win the race.', words: ['the race','They','win'], correct: ['They','win','the race'], he: 'הם מנצחים במרוץ.', why: 'They + win + the race. הסדר: מי-פועל-מה.' },
-        { en: 'I learn English.', words: ['English','learn','I'], correct: ['I','learn','English'], he: 'אני לומד/ת אנגלית.', why: 'I + learn + English. שפה = בלי a/the.' },
-        { en: 'She finds a flower.', words: ['finds','She','a flower'], correct: ['She','finds','a flower'], he: 'היא מוצאת פרח.', why: 'She + finds + a flower. finds = יחיד עם s. a flower = פרח כלשהו.' },
-        { en: 'We eat the cake.', words: ['eat','the cake','We'], correct: ['We','eat','the cake'], he: 'אנחנו אוכלים את העוגה.', why: 'We + eat + the cake. the = עוגה ספציפית.' },
-        { en: 'He helps his friend.', words: ['his friend','helps','He'], correct: ['He','helps','his friend'], he: 'הוא עוזר לחבר שלו.', why: 'He + helps + his friend. גוף שלישי יחיד → helps.' },
-        { en: 'They play together.', words: ['play','together','They'], correct: ['They','play','together'], he: 'הם משחקים ביחד.', why: 'They + play + together. together = ביחד (תיאור איך).' },
+        { en: 'I have a dog.', words: ['have','I','a','dog'], correct: ['I','have','a','dog'], he: 'יש לי כלב.', why: 'I + have + a + dog. הסדר: מי-פועל-מגדיר-שם עצם.' },
+        { en: 'She runs to school.', words: ['runs','to','She','school'], correct: ['She','runs','to','school'], he: 'היא רצה לבית הספר.', why: 'She + runs + to + school. גוף שלישי יחיד = runs (עם s).' },
+        { en: 'We eat the cake.', words: ['eat','the','We','cake'], correct: ['We','eat','the','cake'], he: 'אנחנו אוכלים את העוגה.', why: 'We + eat + the + cake. the = עוגה ספציפית.' },
+        { en: 'He plays in school.', words: ['plays','He','in','school'], correct: ['He','plays','in','school'], he: 'הוא משחק בבית הספר.', why: 'He + plays + in + school. He יחיד → plays עם s.' },
+        { en: 'They win the race.', words: ['the','win','They','race'], correct: ['They','win','the','race'], he: 'הם מנצחים במרוץ.', why: 'They + win + the + race. They רבים → win בלי s.' },
+        { en: 'She finds a flower.', words: ['finds','a','She','flower'], correct: ['She','finds','a','flower'], he: 'היא מוצאת פרח.', why: 'She + finds + a + flower. a = פרח כלשהו.' },
+        { en: 'I learn English fast.', words: ['English','learn','I','fast'], correct: ['I','learn','English','fast'], he: 'אני לומד/ת אנגלית מהר.', why: 'I + learn + English + fast. fast (איך) בסוף.' },
+        { en: 'He gives her presents.', words: ['gives','He','presents','her'], correct: ['He','gives','her','presents'], he: 'הוא נותן לה מתנות.', why: 'He + gives + her + presents. her לפני המתנות (למי).' },
+        { en: 'We run together fast.', words: ['run','We','fast','together'], correct: ['We','run','together','fast'], he: 'אנחנו רצים ביחד מהר.', why: 'We + run + together + fast. together לפני fast.' },
+        { en: 'They play with friends.', words: ['play','with','They','friends'], correct: ['They','play','with','friends'], he: 'הם משחקים עם חברים.', why: 'They + play + with + friends. with = עם.' },
       ]
     }
   }
