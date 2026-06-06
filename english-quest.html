@@ -391,6 +391,126 @@ body { font-family:'Heebo',sans-serif; background:var(--dark); color:var(--text)
   .lc-title { font-size:1.15em; }
 }
 
+/* ===== LEADERBOARD ===== */
+#leaderboard {
+  padding:0; min-height:100vh; padding-bottom:90px;
+  background:
+    radial-gradient(circle at 15% 8%, rgba(168,85,247,0.18) 0%, transparent 35%),
+    radial-gradient(circle at 90% 25%, rgba(124,58,237,0.15) 0%, transparent 40%),
+    radial-gradient(ellipse at center 50%, #1f1448 0%, #0d0820 70%);
+}
+.lb-inner { position:relative; z-index:1; padding:14px 16px 20px; max-width:760px; margin:0 auto; }
+
+.lb-hero {
+  text-align:center; margin-bottom:18px;
+}
+.lb-hero h2 { color:#fff; font-size:1.5em; font-weight:900; margin-bottom:4px; display:flex; gap:8px; align-items:center; justify-content:center; }
+.lb-hero p { color:#b8a8e0; font-size:0.92em; }
+
+/* Versus header */
+.lb-vs-card {
+  background:linear-gradient(135deg, #2b1f5c 0%, #1f1545 100%);
+  border:1px solid rgba(168,85,247,0.25); border-radius:24px;
+  padding:20px 14px; margin-bottom:22px;
+  display:grid; grid-template-columns:1fr auto 1fr; gap:10px; align-items:center;
+  box-shadow:0 12px 30px rgba(0,0,0,0.4);
+}
+.lb-side { text-align:center; }
+.lb-mascot {
+  width:78px; height:78px; margin:0 auto 6px;
+  background:radial-gradient(circle, #7c3aed 0%, #4c1d95 100%);
+  border-radius:50%; padding:6px;
+  box-shadow:0 6px 18px rgba(124,58,237,0.5);
+}
+.lb-mascot img { width:100%; height:100%; object-fit:contain; }
+.lb-name { font-size:1.15em; font-weight:900; color:#fff; margin-bottom:6px; }
+.lb-side-stats { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:6px; }
+.lb-side-stats .lb-stat {
+  background:rgba(124,58,237,0.18); border:1px solid rgba(168,85,247,0.25);
+  border-radius:10px; padding:4px 8px; font-size:0.78em; color:#d1c4f0; font-weight:700;
+  white-space:nowrap;
+}
+.lb-vs { font-size:1.5em; font-weight:900; color:#fcd34d; text-shadow:0 2px 8px rgba(252,211,77,0.5); }
+.lb-leader-badge {
+  display:inline-flex; align-items:center; gap:4px;
+  background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#5b3000;
+  font-size:0.75em; font-weight:900; padding:3px 9px; border-radius:10px;
+  margin-top:8px;
+}
+.lb-progress {
+  height:8px; background:rgba(0,0,0,0.3); border-radius:6px; overflow:hidden;
+  margin-top:8px;
+}
+.lb-progress-fill {
+  height:100%; background:linear-gradient(90deg, #7c3aed, #a855f7);
+  border-radius:6px; transition:width 0.5s;
+}
+
+/* The race track */
+.lb-track-title {
+  text-align:center; color:#fff; font-size:1.05em; font-weight:900;
+  margin:24px 0 12px; display:flex; align-items:center; justify-content:center; gap:10px;
+}
+.lb-track-title::before, .lb-track-title::after {
+  content:''; flex:1; height:2px; max-width:60px;
+  background:linear-gradient(90deg, transparent, rgba(168,85,247,0.4), transparent);
+}
+.lb-track-legend {
+  display:flex; justify-content:center; gap:14px; margin-bottom:14px; flex-wrap:wrap;
+  font-size:0.72em; color:#b8a8e0;
+}
+.lb-track-legend span { display:flex; align-items:center; gap:4px; }
+.lb-track-legend .leg-dot {
+  width:14px; height:14px; border-radius:50%; border:2px solid transparent;
+}
+.lb-track-legend .leg-dot.gold { background:linear-gradient(135deg,#fbbf24,#d97706); border-color:#fef3c7; }
+.lb-track-legend .leg-dot.silver { background:linear-gradient(135deg,#cbd5e1,#64748b); border-color:#f1f5f9; }
+.lb-track-legend .leg-dot.bronze { background:linear-gradient(135deg,#fb923c,#9a3412); border-color:#fed7aa; }
+.lb-track-legend .leg-dot.locked { background:#1f1545; border-color:#3d2a6a; }
+
+/* Each level row in the track */
+.lb-track {
+  display:flex; flex-direction:column; gap:10px;
+}
+.lb-row {
+  display:grid; grid-template-columns:46px 1fr auto auto; gap:10px; align-items:center;
+  background:linear-gradient(135deg, rgba(43,31,92,0.5) 0%, rgba(31,21,69,0.7) 100%);
+  border:1px solid rgba(168,85,247,0.15); border-radius:16px;
+  padding:10px 14px;
+}
+.lb-row.next-up {
+  border-color:rgba(168,85,247,0.45);
+  box-shadow:0 0 0 3px rgba(168,85,247,0.12);
+}
+.lb-row-num {
+  width:38px; height:38px; border-radius:50%;
+  background:rgba(124,58,237,0.25); border:2px solid rgba(168,85,247,0.35);
+  display:flex; align-items:center; justify-content:center;
+  font-weight:900; color:#fff; font-size:0.92em;
+}
+.lb-row-name { color:#fff; font-weight:800; font-size:0.95em; line-height:1.2; min-width:0; }
+.lb-row-name .lb-row-formula { color:#9d8fc7; font-size:0.7em; font-weight:600; }
+.lb-row-cell {
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  min-width:64px; padding:4px;
+  border-radius:12px;
+}
+.lb-row-cell.lead { background:rgba(251,191,36,0.12); border:1px solid rgba(251,191,36,0.3); }
+.lb-row-cell-emoji { font-size:1.1em; line-height:1; }
+.lb-row-cell-stars { display:flex; gap:1px; font-size:11px; }
+.lb-row-cell-stars .star.on { color:#fbbf24; text-shadow:0 0 4px rgba(251,191,36,0.6); }
+.lb-row-cell-stars .star.off { color:rgba(255,255,255,0.18); }
+.lb-row-cell.locked .lb-row-cell-stars .star { color:rgba(255,255,255,0.1); }
+
+.lb-summary {
+  margin-top:18px; padding:14px 16px;
+  background:linear-gradient(135deg, rgba(124,58,237,0.18), rgba(168,85,247,0.1));
+  border:1px solid rgba(168,85,247,0.25); border-radius:16px;
+  text-align:center;
+}
+.lb-summary-title { color:#fff; font-weight:900; font-size:1em; margin-bottom:4px; }
+.lb-summary-sub { color:#b8a8e0; font-size:0.85em; }
+
 /* ===== LISTEN BUTTON ===== */
 .listen-big-btn {
   width:100%; max-width:280px; margin:0 auto 18px;
@@ -881,6 +1001,7 @@ body { font-family:'Heebo',sans-serif; background:var(--dark); color:var(--text)
 
   <!-- bottom nav -->
   <div class="bottom-nav">
+    <button class="bn-item" onclick="showScreen('leaderboard')"><span class="bn-icon-wrap"><span class="bn-icon">🏆</span></span><span>דירוג</span></button>
     <button class="bn-item active"><span class="bn-icon-wrap"><span class="bn-icon">🏠</span></span><span>בית</span></button>
     <button class="bn-item" onclick="showScreen('stories')"><span class="bn-icon-wrap"><span class="bn-icon">📚</span></span><span>סיפורים</span></button>
   </div>
@@ -892,6 +1013,55 @@ body { font-family:'Heebo',sans-serif; background:var(--dark); color:var(--text)
     <button class="drawer-item" onclick="toggleDrawer();logout()">👥 החלף שחקן (התנתק)</button>
     <button class="drawer-item" onclick="toggleDrawer();window.location.href='learn.html'">📖 ללמוד אוצר מילים</button>
     <button class="drawer-item" onclick="toggleDrawer();confirmReset()">🔄 אפס נתונים</button>
+  </div>
+</div>
+
+<!-- LEADERBOARD -->
+<div id="leaderboard" class="screen">
+  <div class="lb-inner">
+    <div class="top-bar">
+      <button class="icon-circle" onclick="showScreen('map')">←</button>
+      <h2 style="color:#fff; font-size:1.3em; font-weight:900; margin:0;">🏆 דירוג</h2>
+      <div style="width:46px"></div>
+    </div>
+
+    <div class="lb-hero">
+      <p>מי מוביל את המסע באנגלית?</p>
+    </div>
+
+    <div class="lb-vs-card">
+      <div class="lb-side">
+        <div class="lb-mascot"><img src="images/elad.png" alt="אלעד"></div>
+        <div class="lb-name">אלעד</div>
+        <div id="lb-elad-badge"></div>
+        <div class="lb-progress"><div class="lb-progress-fill" id="lb-elad-prog" style="width:0%"></div></div>
+        <div class="lb-side-stats" id="lb-elad-stats"></div>
+      </div>
+      <div class="lb-vs">VS</div>
+      <div class="lb-side">
+        <div class="lb-mascot"><img src="images/tal.png" alt="טל"></div>
+        <div class="lb-name">טל</div>
+        <div id="lb-tal-badge"></div>
+        <div class="lb-progress"><div class="lb-progress-fill" id="lb-tal-prog" style="width:0%"></div></div>
+        <div class="lb-side-stats" id="lb-tal-stats"></div>
+      </div>
+    </div>
+
+    <div class="lb-track-title">🗺️ מסלול ההתקדמות</div>
+    <div class="lb-track-legend">
+      <span><span class="leg-dot gold"></span> 3 כוכבים</span>
+      <span><span class="leg-dot silver"></span> 2 כוכבים</span>
+      <span><span class="leg-dot bronze"></span> 1 כוכב</span>
+      <span><span class="leg-dot locked"></span> נעול</span>
+    </div>
+    <div class="lb-track" id="lb-track"></div>
+
+    <div class="lb-summary" id="lb-summary"></div>
+  </div>
+  <div class="bottom-nav">
+    <button class="bn-item active"><span class="bn-icon-wrap"><span class="bn-icon">🏆</span></span><span>דירוג</span></button>
+    <button class="bn-item" onclick="showScreen('map')"><span class="bn-icon-wrap"><span class="bn-icon">🏠</span></span><span>בית</span></button>
+    <button class="bn-item" onclick="showScreen('stories')"><span class="bn-icon-wrap"><span class="bn-icon">📚</span></span><span>סיפורים</span></button>
   </div>
 </div>
 
@@ -909,6 +1079,7 @@ body { font-family:'Heebo',sans-serif; background:var(--dark); color:var(--text)
     <div class="stories-list" id="stories-list"></div>
   </div>
   <div class="bottom-nav">
+    <button class="bn-item" onclick="showScreen('leaderboard')"><span class="bn-icon-wrap"><span class="bn-icon">🏆</span></span><span>דירוג</span></button>
     <button class="bn-item" onclick="showScreen('map')"><span class="bn-icon-wrap"><span class="bn-icon">🏠</span></span><span>בית</span></button>
     <button class="bn-item active"><span class="bn-icon-wrap"><span class="bn-icon">📚</span></span><span>סיפורים</span></button>
   </div>
@@ -1561,6 +1732,7 @@ function showScreen(id) {
   if (id==='home') refreshHome();
   if (id==='map') refreshMap();
   if (id==='stories') renderStories();
+  if (id==='leaderboard') renderLeaderboard();
 }
 
 function refreshHome() {
@@ -1797,6 +1969,91 @@ function quickStart() {
   const target = CURRICULUM.find(lv => isUnlocked(player, lv.id) && getStars(player, lv.id) === 0) || CURRICULUM[0];
   if (target) openLesson(target.id);
 }
+function renderLeaderboard() {
+  if (!player) { showScreen('home'); return; }
+  const data = {
+    elad: { pts: getPoints('elad'), stars: totalStars('elad'), lvls: completedCount('elad') },
+    tal:  { pts: getPoints('tal'),  stars: totalStars('tal'),  lvls: completedCount('tal') }
+  };
+  const totalPossible = CURRICULUM.length * 3;
+  const eladPct = Math.round((data.elad.stars/totalPossible)*100);
+  const talPct  = Math.round((data.tal.stars/totalPossible)*100);
+  document.getElementById('lb-elad-prog').style.width = eladPct + '%';
+  document.getElementById('lb-tal-prog').style.width  = talPct + '%';
+
+  const statRow = d => `
+    <span class="lb-stat">⭐ ${d.pts.toLocaleString()}</span>
+    <span class="lb-stat">💎 ${d.stars}</span>
+    <span class="lb-stat">🎯 ${d.lvls}/${CURRICULUM.length}</span>
+  `;
+  document.getElementById('lb-elad-stats').innerHTML = statRow(data.elad);
+  document.getElementById('lb-tal-stats').innerHTML  = statRow(data.tal);
+
+  // Badges
+  document.getElementById('lb-elad-badge').innerHTML = '';
+  document.getElementById('lb-tal-badge').innerHTML  = '';
+  if (data.elad.pts === 0 && data.tal.pts === 0) {
+    // no badges yet
+  } else if (data.elad.pts > data.tal.pts) {
+    document.getElementById('lb-elad-badge').innerHTML = '<div class="lb-leader-badge">🏆 מוביל</div>';
+  } else if (data.tal.pts > data.elad.pts) {
+    document.getElementById('lb-tal-badge').innerHTML = '<div class="lb-leader-badge">🏆 מובילה</div>';
+  } else {
+    document.getElementById('lb-elad-badge').innerHTML = '<div class="lb-leader-badge" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff">🤝 שוויון</div>';
+    document.getElementById('lb-tal-badge').innerHTML  = '<div class="lb-leader-badge" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff">🤝 שוויון</div>';
+  }
+
+  // Build the track — one row per level
+  const track = document.getElementById('lb-track');
+  track.innerHTML = '';
+  const starsHtml = n => [1,2,3].map(i => `<span class="star ${i<=n?'on':'off'}">★</span>`).join('');
+  const nodeClass = n => n===3?'gold':n===2?'silver':n===1?'bronze':'locked';
+  const nextUpId = (() => {
+    // first level where either player hasn't completed
+    const lv = CURRICULUM.find(l => getStars('elad', l.id) === 0 || getStars('tal', l.id) === 0);
+    return lv ? lv.id : null;
+  })();
+
+  CURRICULUM.forEach(lv => {
+    const eS = getStars('elad', lv.id);
+    const tS = getStars('tal', lv.id);
+    const eUnlocked = isUnlocked('elad', lv.id);
+    const tUnlocked = isUnlocked('tal', lv.id);
+    const lead = eS !== tS ? (eS > tS ? 'elad' : 'tal') : null;
+    const row = document.createElement('div');
+    row.className = `lb-row${nextUpId===lv.id?' next-up':''}`;
+    row.innerHTML = `
+      <div class="lb-row-num">${lv.id}</div>
+      <div class="lb-row-name">${lv.title.split(' — ')[0]}<div class="lb-row-formula">${lv.titleEn}</div></div>
+      <div class="lb-row-cell ${lead==='elad'?'lead':''} ${!eUnlocked?'locked':''}">
+        <span class="lb-row-cell-emoji">🐯</span>
+        <div class="lb-row-cell-stars">${starsHtml(eS)}</div>
+      </div>
+      <div class="lb-row-cell ${lead==='tal'?'lead':''} ${!tUnlocked?'locked':''}">
+        <span class="lb-row-cell-emoji">🐼</span>
+        <div class="lb-row-cell-stars">${starsHtml(tS)}</div>
+      </div>
+    `;
+    track.appendChild(row);
+  });
+
+  // Summary
+  const summary = document.getElementById('lb-summary');
+  if (data.elad.pts === 0 && data.tal.pts === 0) {
+    summary.innerHTML = `<div class="lb-summary-title">🚀 המסע מתחיל!</div><div class="lb-summary-sub">תיכנסו ותתחילו ללמוד — מי יגיע ראשון לקצה?</div>`;
+  } else {
+    const diff = Math.abs(data.elad.pts - data.tal.pts);
+    const winner = data.elad.pts > data.tal.pts ? 'אלעד' : data.tal.pts > data.elad.pts ? 'טל' : null;
+    const eRem = CURRICULUM.length - data.elad.lvls;
+    const tRem = CURRICULUM.length - data.tal.lvls;
+    if (winner) {
+      summary.innerHTML = `<div class="lb-summary-title">🏆 ${winner} מוביל/ה ב-${diff.toLocaleString()} נקודות!</div><div class="lb-summary-sub">לאלעד נשארו ${eRem} שלבים · לטל נשארו ${tRem} שלבים</div>`;
+    } else {
+      summary.innerHTML = `<div class="lb-summary-title">🤝 שוויון מושלם!</div><div class="lb-summary-sub">שניכם מובילים את המסע ביחד</div>`;
+    }
+  }
+}
+
 function showAchievements() {
   const stars = totalStars(player);
   const pts = getPoints(player);
