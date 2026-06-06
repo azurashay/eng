@@ -1149,6 +1149,34 @@ body { font-family:'Heebo',sans-serif; background:var(--dark); color:var(--text)
   </div>
 </div>
 
+<!-- Reset password modal (parent only) -->
+<div class="pw-modal-bg" id="reset-modal-bg" onclick="if(event.target===this)closeResetModal()">
+  <div class="pw-modal">
+    <div style="font-size:3em;margin-bottom:4px">🔐</div>
+    <div class="pw-title">איפוס נתונים</div>
+    <div class="pw-sub">סיסמת הורים — כל ההתקדמות תימחק!</div>
+    <input type="password" id="reset-input" class="pw-input" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="••••••" onkeydown="if(event.key==='Enter')checkResetPassword()">
+    <div class="pw-error" id="reset-error"></div>
+    <div class="pw-keypad">
+      <button class="pw-key" onclick="resetKey('1')">1</button>
+      <button class="pw-key" onclick="resetKey('2')">2</button>
+      <button class="pw-key" onclick="resetKey('3')">3</button>
+      <button class="pw-key" onclick="resetKey('4')">4</button>
+      <button class="pw-key" onclick="resetKey('5')">5</button>
+      <button class="pw-key" onclick="resetKey('6')">6</button>
+      <button class="pw-key" onclick="resetKey('7')">7</button>
+      <button class="pw-key" onclick="resetKey('8')">8</button>
+      <button class="pw-key" onclick="resetKey('9')">9</button>
+      <button class="pw-key pw-key-back" onclick="resetBack()">⌫</button>
+      <button class="pw-key" onclick="resetKey('0')">0</button>
+      <button class="pw-key" onclick="checkResetPassword()">✓</button>
+    </div>
+    <div class="pw-actions">
+      <button class="pw-btn pw-btn-cancel" onclick="closeResetModal()">ביטול</button>
+    </div>
+  </div>
+</div>
+
 <!-- MAP -->
 <div id="map" class="screen">
   <div class="map-inner">
@@ -3703,12 +3731,53 @@ function speak(text, onEnd) {
   }
 }
 
+const RESET_PASSWORD = '150579';
 function confirmReset() {
-  if (confirm('אפס את כל הנתונים של שני השחקנים? (לא ניתן לבטל)')) {
-    ['tal','elad'].forEach(p => { localStorage.removeItem(`eq_${p}_pts`); localStorage.removeItem(`eq_${p}_lvls`); });
-    refreshHome();
-    alert('נאפס! התחלה מחדש 🆕');
+  openResetModal();
+}
+function openResetModal() {
+  document.getElementById('reset-modal-bg').classList.add('show');
+  document.getElementById('reset-input').value = '';
+  document.getElementById('reset-error').textContent = '';
+  setTimeout(() => document.getElementById('reset-input').focus(), 100);
+}
+function closeResetModal() {
+  document.getElementById('reset-modal-bg').classList.remove('show');
+}
+function resetKey(d) {
+  const inp = document.getElementById('reset-input');
+  if (inp.value.length < 6) inp.value += d;
+  document.getElementById('reset-error').textContent = '';
+  if (inp.value.length === 6) setTimeout(checkResetPassword, 150);
+}
+function resetBack() {
+  const inp = document.getElementById('reset-input');
+  inp.value = inp.value.slice(0, -1);
+  document.getElementById('reset-error').textContent = '';
+}
+function checkResetPassword() {
+  const entered = document.getElementById('reset-input').value;
+  if (entered !== RESET_PASSWORD) {
+    const inp = document.getElementById('reset-input');
+    inp.classList.add('shake');
+    document.getElementById('reset-error').textContent = '❌ סיסמה שגויה — רק להורים!';
+    setTimeout(() => { inp.classList.remove('shake'); inp.value = ''; }, 450);
+    return;
   }
+  closeResetModal();
+  // Now actually wipe everything
+  ['tal','elad'].forEach(p => {
+    localStorage.removeItem(`eq_${p}_pts`);
+    localStorage.removeItem(`eq_${p}_lvls`);
+    localStorage.removeItem(`eq_${p}_stories`);
+    localStorage.removeItem(`eq_${p}_streak`);
+    sessionStorage.removeItem('eq_auth_'+p);
+  });
+  localStorage.removeItem('eq_migrated_v2');
+  player = null;
+  refreshHome();
+  showScreen('home');
+  alert('🆕 הנתונים אופסו לחלוטין! התחלה מחדש.');
 }
 
 // ===================== STORIES =====================
