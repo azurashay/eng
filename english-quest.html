@@ -2078,6 +2078,44 @@ function beep(type) {
   } catch(e){}
 }
 
+// ===================== TEXT-TO-SPEECH =====================
+const ttsSupported = 'speechSynthesis' in window;
+let englishVoice = null;
+function loadEnglishVoice() {
+  if (!ttsSupported) return;
+  const voices = window.speechSynthesis.getVoices();
+  englishVoice = voices.find(v => v.lang === 'en-US' && /female|samantha|karen|google/i.test(v.name))
+              || voices.find(v => v.lang === 'en-US')
+              || voices.find(v => v.lang && v.lang.startsWith('en'));
+}
+if (ttsSupported) {
+  loadEnglishVoice();
+  window.speechSynthesis.onvoiceschanged = loadEnglishVoice;
+}
+
+function speak(text, onEnd) {
+  if (!ttsSupported) {
+    console.warn('TTS not supported in this browser');
+    if (onEnd) onEnd();
+    return;
+  }
+  try {
+    window.speechSynthesis.cancel();
+    if (!englishVoice) loadEnglishVoice();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    u.rate = 0.85;
+    u.pitch = 1.0;
+    if (englishVoice) u.voice = englishVoice;
+    if (onEnd) u.onend = onEnd;
+    u.onerror = (e) => { console.warn('TTS error:', e); if (onEnd) onEnd(); };
+    window.speechSynthesis.speak(u);
+  } catch(e) {
+    console.warn('TTS speak failed:', e);
+    if (onEnd) onEnd();
+  }
+}
+
 function confirmReset() {
   if (confirm('אפס את כל הנתונים של שני השחקנים? (לא ניתן לבטל)')) {
     ['tal','elad'].forEach(p => { localStorage.removeItem(`eq_${p}_pts`); localStorage.removeItem(`eq_${p}_lvls`); });
