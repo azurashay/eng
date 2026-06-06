@@ -391,6 +391,27 @@ body { font-family:'Heebo',sans-serif; background:var(--dark); color:var(--text)
   .lc-title { font-size:1.15em; }
 }
 
+/* ===== LISTEN BUTTON ===== */
+.listen-big-btn {
+  width:100%; max-width:280px; margin:0 auto 18px;
+  background:linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  border:none; border-radius:24px; padding:24px 20px;
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  cursor:pointer; color:#fff;
+  box-shadow:0 8px 24px rgba(124,58,237,0.5), inset 0 -4px 0 rgba(0,0,0,0.15);
+  transition:transform 0.15s;
+}
+.listen-big-btn:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(124,58,237,0.65); }
+.listen-big-btn:active { transform:translateY(0); }
+.listen-big-btn .listen-icon {
+  font-size:3em; line-height:1;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+.listen-big-btn .listen-label {
+  font-family:'Heebo',sans-serif; font-size:1em; font-weight:800;
+}
+.listen-big-btn.speaking .listen-icon { animation:pulse 0.8s infinite; }
+
 /* ===== STORIES ===== */
 #stories, #story-read, #story-quiz {
   padding:0; min-height:100vh; padding-bottom:90px;
@@ -1205,6 +1226,71 @@ const CURRICULUM = [
         { sent: 'The teacher ___ many books.', opts: ['have','has','are','do'], correct: 1, he: 'למורה יש הרבה ספרים.', hint: 'the teacher = he/she → has' },
       ]
     }
+  },
+  {
+    id: 8,
+    icon: '🎧',
+    title: 'האזן ותרגם',
+    titleEn: 'Listen & Translate',
+    color: '#a855f7',
+    gradient: 'linear-gradient(135deg, #c084fc 0%, #7e22ce 100%)',
+    formula: '🔊 Listen → 🇮🇱 Translate',
+    formulaHe: 'תרגיל האזנה',
+    expl: 'תרגיל חשוב במיוחד! <b>תלחץ/י על 🔊</b>, תקשיב/י למשפט באנגלית בעיון, ואז תבחר/י את התרגום הנכון לעברית. אפשר לשמוע שוב כמה פעמים שצריך — חזרה זה הכי חשוב כשלומדים שפה!',
+    examples: [
+      { en: 'I have a dog.', he: 'יש לי כלב.', tokens: [{w:'I',t:'s'},{w:'have',t:'v'},{w:'a dog',t:'o'}] },
+      { en: 'She runs fast.', he: 'היא רצה מהר.', tokens: [{w:'She',t:'s'},{w:'runs',t:'v'},{w:'fast',t:'o'}] },
+      { en: 'We play together.', he: 'אנחנו משחקים ביחד.', tokens: [{w:'We',t:'s'},{w:'play',t:'v'},{w:'together',t:'o'}] },
+    ],
+    rule: '💡 טיפ: אל תלחץ/י על "בדוק" עד שאת/ה בטוח/ה — האזן/י כמה פעמים שצריך!',
+    game: {
+      type: 'listen-translate',
+      qs: [
+        { en: 'I have a brother.', opts: ['יש לי אח.', 'יש לי אחות.', 'אני אוהב את אחי.', 'אני רואה אח.'], correct: 0, why: '"I have" = יש לי. "brother" = אח.' },
+        { en: 'She has a cat.', opts: ['לי יש חתול.', 'יש לה חתול.', 'היא מאכילה חתול.', 'יש לה כלב.'], correct: 1, why: '"She has" = יש לה. "cat" = חתול.' },
+        { en: 'They run fast.', opts: ['הוא רץ מהר.', 'אנחנו רצים מהר.', 'הם רצים מהר.', 'הם הולכים מהר.'], correct: 2, why: '"They" = הם. "run fast" = רצים מהר.' },
+        { en: 'He learns English.', opts: ['היא לומדת אנגלית.', 'הוא לומד אנגלית.', 'הוא יודע אנגלית.', 'אנחנו לומדים אנגלית.'], correct: 1, why: '"He" = הוא. "learns" = לומד.' },
+        { en: 'We play chess together.', opts: ['אנחנו משחקים שחמט ביחד.', 'הם משחקים שחמט ביחד.', 'אנחנו אוהבים שחמט.', 'אנחנו משחקים כדורגל ביחד.'], correct: 0, why: 'We = אנחנו, play = משחקים, chess = שחמט, together = ביחד.' },
+        { en: 'The flower is beautiful.', opts: ['הפרח גדול.', 'הפרח יפה.', 'הפרח בריא.', 'הפרחים יפים.'], correct: 1, why: '"is beautiful" = יפה (יחיד).' },
+        { en: 'My mother makes a cake.', opts: ['אמא שלי אוכלת עוגה.', 'אמא שלי מכינה עוגה.', 'אבא שלי מכין עוגה.', 'אמא שלי קונה עוגה.'], correct: 1, why: '"makes" = מכינה. "mother" = אמא.' },
+        { en: 'I find a secret garden.', opts: ['אני מחפש גן.', 'אני מוצא גן סודי.', 'אני אוהב את הגן.', 'אני יוצר גן סודי.'], correct: 1, why: '"find" = מוצא. "secret garden" = גן סודי.' },
+        { en: 'He gives her a present.', opts: ['היא נותנת לו מתנה.', 'הוא לוקח ממנה מתנה.', 'הוא נותן לה מתנה.', 'הוא קונה לה מתנה.'], correct: 2, why: '"He gives" = הוא נותן. "her" = לה.' },
+        { en: 'Today is a great day.', opts: ['היום זה יום מיוחד.', 'היום זה יום קשה.', 'היום זה יום נהדר.', 'מחר זה יום נהדר.'], correct: 2, why: '"today" = היום. "great day" = יום נהדר.' },
+        { en: 'They win the race.', opts: ['הם מפסידים במרוץ.', 'הם רואים את המרוץ.', 'הם מנצחים במרוץ.', 'הם רוצים לנצח.'], correct: 2, why: '"They win" = הם מנצחים. "the race" = במרוץ.' },
+        { en: 'I do not have a hobby.', opts: ['אין לי תחביב.', 'יש לי תחביב.', 'אני אוהב את התחביב שלי.', 'אני מחפש תחביב.'], correct: 0, why: '"do not have" (don\'t have) = אין לי.' },
+      ]
+    }
+  },
+  {
+    id: 9,
+    icon: '🧩',
+    title: 'האזן וסדר',
+    titleEn: 'Listen & Arrange',
+    color: '#ec4899',
+    gradient: 'linear-gradient(135deg, #f472b6 0%, #be185d 100%)',
+    formula: '🔊 Listen → 📝 Build sentence',
+    formulaHe: 'בנה משפט מקריאה',
+    expl: 'עכשיו לאתגר אמיתי! <b>תקשיב/י למשפט באנגלית</b>, ואז סדר/י את המילים בסדר הנכון. אפשר ללחוץ על 🔊 שוב ושוב — תלמד/י דרך השמיעה את הסדר הנכון של המילים באנגלית.',
+    examples: [
+      { en: 'I have a dog.', he: 'יש לי כלב.', tokens: [{w:'I',t:'s'},{w:'have',t:'v'},{w:'a dog',t:'o'}] },
+      { en: 'She runs to the park.', he: 'היא רצה לפארק.', tokens: [{w:'She',t:'s'},{w:'runs',t:'v'},{w:'to the park',t:'o'}] },
+    ],
+    rule: '💡 הקשבה היא המורה הכי טובה! ככל שתשמע/י יותר, ככה יהיה לך טבעי יותר.',
+    game: {
+      type: 'listen-scramble',
+      qs: [
+        { en: 'I have a dog.', words: ['have','I','a dog'], correct: ['I','have','a dog'], he: 'יש לי כלב.', why: 'I + have + a dog. מי לפני פועל לפני מה.' },
+        { en: 'She plays chess.', words: ['plays','chess','She'], correct: ['She','plays','chess'], he: 'היא משחקת שחמט.', why: 'She + plays + chess. גוף שלישי יחיד = plays (עם s).' },
+        { en: 'We run fast.', words: ['run','We','fast'], correct: ['We','run','fast'], he: 'אנחנו רצים מהר.', why: 'We + run + fast. We רבים = בלי s.' },
+        { en: 'He has a book.', words: ['a book','He','has'], correct: ['He','has','a book'], he: 'יש לו ספר.', why: 'He + has + a book. He = גוף שלישי יחיד → has.' },
+        { en: 'They win the race.', words: ['the race','They','win'], correct: ['They','win','the race'], he: 'הם מנצחים במרוץ.', why: 'They + win + the race. הסדר: מי-פועל-מה.' },
+        { en: 'I learn English.', words: ['English','learn','I'], correct: ['I','learn','English'], he: 'אני לומד/ת אנגלית.', why: 'I + learn + English. שפה = בלי a/the.' },
+        { en: 'She finds a flower.', words: ['finds','She','a flower'], correct: ['She','finds','a flower'], he: 'היא מוצאת פרח.', why: 'She + finds + a flower. finds = יחיד עם s. a flower = פרח כלשהו.' },
+        { en: 'We eat the cake.', words: ['eat','the cake','We'], correct: ['We','eat','the cake'], he: 'אנחנו אוכלים את העוגה.', why: 'We + eat + the cake. the = עוגה ספציפית.' },
+        { en: 'He helps his friend.', words: ['his friend','helps','He'], correct: ['He','helps','his friend'], he: 'הוא עוזר לחבר שלו.', why: 'He + helps + his friend. גוף שלישי יחיד → helps.' },
+        { en: 'They play together.', words: ['play','together','They'], correct: ['They','play','together'], he: 'הם משחקים ביחד.', why: 'They + play + together. together = ביחד (תיאור איך).' },
+      ]
+    }
   }
 ];
 
@@ -1593,7 +1679,14 @@ function renderQ() {
 
   const q = qs[qi];
   const type = lv.game.type;
-  document.getElementById('q-type-lbl').textContent = type==='scramble'?'סדר את המילים':type==='fill'?'השלם את המשפט':'מצא את הטעות';
+  const typeLbl = {
+    'scramble':'סדר את המילים',
+    'fill':'השלם את המשפט',
+    'error':'מצא את הטעות',
+    'listen-translate':'🎧 האזן ובחר תרגום',
+    'listen-scramble':'🎧 האזן וסדר את המילים'
+  };
+  document.getElementById('q-type-lbl').textContent = typeLbl[type] || '';
 
   if (type==='scramble') {
     document.getElementById('q-he').textContent = `🔤 ${q.he}`;
@@ -1608,7 +1701,93 @@ function renderQ() {
     document.getElementById('q-he').textContent = '🔍 מצא את הטעות במשפט';
     document.getElementById('q-hint').textContent = 'לחץ על המילה הלא נכונה';
     renderError(q);
+  } else if (type==='listen-translate') {
+    document.getElementById('q-he').innerHTML = '🎧 <b>הקשב/י למשפט</b><br><span style="font-size:0.8em;color:var(--muted);font-weight:600">לחץ/י על הכפתור הסגול ובחר/י את התרגום הנכון</span>';
+    document.getElementById('q-hint').textContent = '';
+    renderListenTranslate(q);
+    document.getElementById('check-btn').style.display = 'none';
+    // Auto-play once when question loads
+    setTimeout(() => playListenAudio(q.en), 400);
+  } else if (type==='listen-scramble') {
+    document.getElementById('q-he').innerHTML = '🎧 <b>הקשב/י וסדר/י את המילים</b><br><span style="font-size:0.8em;color:var(--muted);font-weight:600">תוכל/י לשמוע שוב כמה פעמים שצריך</span>';
+    document.getElementById('q-hint').textContent = '';
+    renderListenScramble(q);
+    setTimeout(() => playListenAudio(q.en), 400);
   }
+}
+
+// === LISTENING HELPERS ===
+let _currentListenText = '';
+function playListenAudio(text) {
+  _currentListenText = text;
+  const btn = document.getElementById('listen-play-btn');
+  if (btn) btn.classList.add('speaking');
+  speak(text, () => { if (btn) btn.classList.remove('speaking'); });
+}
+function replayListen() { if (_currentListenText) playListenAudio(_currentListenText); }
+
+function renderListenTranslate(q) {
+  const area = document.getElementById('game-area');
+  area.innerHTML = `
+    <button id="listen-play-btn" class="listen-big-btn" onclick="replayListen()">
+      <span class="listen-icon">🔊</span>
+      <span class="listen-label">לחץ/י לשמיעה</span>
+    </button>
+    <div class="opts-grid" id="opts-grid"></div>
+  `;
+  const grid = document.getElementById('opts-grid');
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = opt;
+    btn.style.direction = 'rtl';
+    btn.style.textAlign = 'right';
+    btn.onclick = () => {
+      if (gameState.answered) return;
+      gameState.selected = i;
+      grid.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      checkListenTranslateAnswer(q);
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function checkListenTranslateAnswer(q) {
+  const grid = document.getElementById('opts-grid');
+  const correct = gameState.selected === q.correct;
+  grid.querySelectorAll('.opt-btn').forEach((b, i) => {
+    b.disabled = true;
+    if (i === q.correct) b.classList.add('correct');
+    else if (i === gameState.selected && !correct) b.classList.add('wrong');
+  });
+  if (correct) {
+    const pts = Math.max(100 - gameState.mistakes*10, 40);
+    onCorrect(pts);
+    showFeedback(`<span class="fb-big">${randomPraise()}</span>+${pts} נקודות 🎯<span class="fb-why">💡 ${q.why}</span>`, 'ok');
+  } else {
+    onWrong();
+    showFeedback(`<span class="fb-big">❌ כמעט!</span>התשובה הנכונה: <b>${q.opts[q.correct]}</b><span class="fb-why">💡 ${q.why}</span>`, 'bad');
+  }
+  gameState.answered = true;
+  document.getElementById('next-btn').classList.add('show');
+}
+
+function renderListenScramble(q) {
+  const area = document.getElementById('game-area');
+  gameState.poolWords = [...q.words];
+  gameState.answerWords = [];
+  area.innerHTML = `
+    <button id="listen-play-btn" class="listen-big-btn" onclick="replayListen()">
+      <span class="listen-icon">🔊</span>
+      <span class="listen-label">לחץ/י לשמיעה</span>
+    </button>
+    <div style="font-size:0.8em;color:var(--muted);text-align:center;margin-bottom:6px">אזור התשובה:</div>
+    <div class="answer-zone" id="ans-zone"></div>
+    <div style="font-size:0.8em;color:var(--muted);text-align:center;margin-bottom:6px">מילים זמינות:</div>
+    <div class="word-pool" id="pool-zone"></div>
+  `;
+  redrawScramble(q);
 }
 
 // --- SCRAMBLE ---
@@ -1729,7 +1908,7 @@ function checkAnswer() {
   const q = lv.game.activeQs[gameState.q];
   const type = lv.game.type;
 
-  if (type==='scramble') {
+  if (type==='scramble' || type==='listen-scramble') {
     const userAns = gameState.answerWords.join(' ');
     const correctAns = q.correct.join(' ');
     const correct = userAns === correctAns;
