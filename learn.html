@@ -532,7 +532,7 @@ function speak(text, onEnd) {
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'en-US';
-  u.rate = 0.65;
+  u.rate = 0.55;
   u.pitch = 1.0;
   if (englishVoice) u.voice = englishVoice;
   if (onEnd) u.onend = onEnd;
