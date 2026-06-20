@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>תרגול שיחה 🗣️ — Hey Units 1-3</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Heebo", sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 20px;
+  color: #fff;
+}
+.top { width: 100%; max-width: 700px; display: flex; justify-content: space-between; align-items: center; }
+.back { color: #fff; text-decoration: none; opacity: 0.9; font-size: 1em; background: rgba(255,255,255,0.18); padding: 8px 16px; border-radius: 14px; }
+.back:hover { background: rgba(255,255,255,0.3); }
+.hero { text-align: center; padding: 20px; max-width: 700px; }
+h1 { font-size: 2em; margin-bottom: 8px; text-shadow: 2px 4px 8px rgba(0,0,0,0.2); }
+.subtitle { font-size: 1.05em; opacity: 0.92; }
+.chat {
+  width: 100%; max-width: 700px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 24px;
+  padding: 20px;
+  display: flex; flex-direction: column; gap: 14px;
+  min-height: 300px;
+}
+.bubble { padding: 14px 18px; border-radius: 20px; max-width: 85%; line-height: 1.5; animation: pop 0.25s ease; }
+@keyframes pop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.bubble.bot { background: rgba(255,255,255,0.95); color: #333; align-self: flex-start; border-bottom-right-radius: 6px; direction: ltr; text-align: left; }
+.bubble.bot .he { display: block; direction: rtl; text-align: right; color: #764ba2; font-size: 0.85em; margin-top: 4px; opacity: 0.85; }
+.bubble.me { background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; align-self: flex-end; border-bottom-left-radius: 6px; direction: ltr; text-align: left; }
+.bubble.feedback { background: rgba(255,255,255,0.95); color: #333; align-self: flex-end; border-bottom-left-radius: 6px; font-size: 0.95em; }
+.bubble.feedback .word-good { color: #16a34a; font-weight: 700; }
+.bubble.feedback .word-bad { color: #dc2626; font-weight: 700; text-decoration: underline wavy; }
+.bubble.feedback .note { display: block; margin-top: 8px; direction: rtl; text-align: right; font-size: 0.9em; color: #555; }
+.bubble.feedback .score { display: inline-block; margin-top: 8px; direction: rtl; font-weight: 700; }
+.speaker { cursor: pointer; opacity: 0.6; margin-left: 6px; user-select: none; }
+.speaker:hover { opacity: 1; }
+
+.panel { width: 100%; max-width: 700px; margin-top: 16px; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.target {
+  background: rgba(0,0,0,0.18); border-radius: 16px; padding: 12px 18px; text-align: center;
+  direction: ltr; font-size: 1.15em; letter-spacing: 0.3px;
+}
+.target .lbl { display: block; direction: rtl; font-size: 0.75em; opacity: 0.8; margin-bottom: 4px; }
+.controls { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+button {
+  font-family: inherit; font-size: 1em; font-weight: 700; cursor: pointer;
+  border: none; border-radius: 16px; padding: 14px 22px; transition: all 0.2s;
+}
+.mic-btn { background: linear-gradient(135deg, #f093fb, #f5576c); color: #fff; }
+.mic-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.25); }
+.mic-btn.listening { animation: pulse 1s infinite; background: linear-gradient(135deg, #f5576c, #dc2626); }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+.skip-btn { background: rgba(255,255,255,0.2); color: #fff; }
+.skip-btn:hover { background: rgba(255,255,255,0.32); }
+.type-wrap { display: flex; gap: 8px; width: 100%; max-width: 480px; }
+.type-wrap input {
+  flex: 1; font-family: inherit; font-size: 1em; padding: 12px 16px; border-radius: 14px;
+  border: 2px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.95); color: #333; direction: ltr;
+}
+.send-btn { background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; }
+.status { font-size: 0.9em; opacity: 0.9; min-height: 1.2em; text-align: center; }
+.warn { background: rgba(255,200,0,0.2); border: 1px solid rgba(255,200,0,0.5); padding: 10px 14px; border-radius: 12px; font-size: 0.9em; display: none; }
+.restart { background: rgba(255,255,255,0.2); color: #fff; margin-top: 8px; }
+@media (max-width: 500px) { h1 { font-size: 1.5em; } .bubble { max-width: 92%; } }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <a href="index.html" class="back">→ חזרה</a>
+  <span style="opacity:0.85; font-size:0.9em;">תרגול שיחה</span>
+</div>
+
+<div class="hero">
+  <h1>🗣️ תרגול שיחה</h1>
+  <p class="subtitle">דבר/י עם החבר/ה, וקבל/י משוב מילה-מילה</p>
+</div>
+
+<div class="warn" id="srWarn">⚠️ הדפדפן שלך לא תומך בזיהוי דיבור. אפשר להקליד את התשובה במקום לדבר. (מומלץ Chrome)</div>
+
+<div class="chat" id="chat"></div>
+
+<div class="panel">
+  <div class="target" id="targetBox">
+    <span class="lbl">🎯 נסה/י להגיד:</span>
+    <span id="targetText">—</span>
+  </div>
+  <div class="controls" id="controls">
+    <button class="mic-btn" id="micBtn">🎤 לחץ/י ודבר/י</button>
+    <button class="skip-btn" id="skipBtn">⏭️ דלג/י</button>
+  </div>
+  <div class="type-wrap" id="typeWrap" style="display:none;">
+    <input id="typeInput" type="text" placeholder="הקלד/י את המשפט באנגלית..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <button class="send-btn" id="sendBtn">שלח/י</button>
+  </div>
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+/* ===================== TEXT-TO-SPEECH (same pattern as learn.html) ===================== */
+const ttsSupported = 'speechSynthesis' in window;
+let englishVoice = null;
+function loadVoices() {
+  if (!ttsSupported) return;
+  const voices = window.speechSynthesis.getVoices();
+  englishVoice = voices.find(v => v.lang === 'en-US' && /female|samantha|karen|google/i.test(v.name))
+              || voices.find(v => v.lang === 'en-US') || null;
+}
+if (ttsSupported) { loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; }
+function speak(text, onEnd) {
+  if (!ttsSupported) { if (onEnd) onEnd(); return; }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US'; u.rate = 0.85; u.pitch = 1.0;
+  if (englishVoice) u.voice = englishVoice;
+  if (onEnd) u.onend = onEnd;
+  window.speechSynthesis.speak(u);
+}
+
+/* ===================== CONVERSATION SCRIPT ===================== */
+/* A scripted dialog using Unit 1 vocabulary (name, age, birthday, hobby). */
+const DIALOG = [
+  { bot: "Hello! What is your name?",        he: "שלום! מה השם שלך?",          target: "My name is Tal" },
+  { bot: "Nice to meet you! How old are you?", he: "נעים להכיר! בן/בת כמה את/ה?", target: "I am ten years old" },
+  { bot: "When is your birthday?",            he: "מתי יום ההולדת שלך?",        target: "My birthday is in May" },
+  { bot: "Cool! What is your hobby?",         he: "מגניב! מה התחביב שלך?",      target: "My hobby is chess" },
+  { bot: "I like chess too! See you soon.",   he: "גם אני אוהב/ת שחמט! נתראה.",  target: null }
+];
+
+let step = 0;
+const chat = document.getElementById('chat');
+const targetText = document.getElementById('targetText');
+const targetBox = document.getElementById('targetBox');
+const controls = document.getElementById('controls');
+const status = document.getElementById('status');
+const micBtn = document.getElementById('micBtn');
+const skipBtn = document.getElementById('skipBtn');
+const typeWrap = document.getElementById('typeWrap');
+const typeInput = document.getElementById('typeInput');
+const sendBtn = document.getElementById('sendBtn');
+
+/* ===================== TEXT NORMALIZATION & WORD MATCHING ===================== */
+function normalize(s) {
+  return s.toLowerCase().replace(/[^a-z0-9'\s]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+function tokenize(s) {
+  const n = normalize(s);
+  return n ? n.split(' ') : [];
+}
+/* Longest Common Subsequence alignment: which expected/heard tokens line up in order. */
+function lcsMatch(exp, heard) {
+  const m = exp.length, n = heard.length;
+  const dp = Array.from({length: m+1}, () => new Array(n+1).fill(0));
+  for (let i = m-1; i >= 0; i--)
+    for (let j = n-1; j >= 0; j--)
+      dp[i][j] = exp[i] === heard[j] ? 1 + dp[i+1][j+1] : Math.max(dp[i+1][j], dp[i][j+1]);
+  const matchedExp = new Set(), matchedHeard = new Set();
+  let i = 0, j = 0;
+  while (i < m && j < n) {
+    if (exp[i] === heard[j]) { matchedExp.add(i); matchedHeard.add(j); i++; j++; }
+    else if (dp[i+1][j] >= dp[i][j+1]) i++;
+    else j++;
+  }
+  return { matchedExp, matchedHeard };
+}
+
+/* ===================== RENDERING ===================== */
+function addBotBubble(text, he) {
+  const b = document.createElement('div');
+  b.className = 'bubble bot';
+  b.innerHTML = `<span>${text}</span><span class="speaker" title="השמע">🔊</span><span class="he">${he}</span>`;
+  b.querySelector('.speaker').onclick = () => speak(text);
+  chat.appendChild(b);
+  chat.scrollTop = chat.scrollHeight;
+}
+function addMyBubble(text) {
+  const b = document.createElement('div');
+  b.className = 'bubble me';
+  b.textContent = text;
+  chat.appendChild(b);
+  chat.scrollTop = chat.scrollHeight;
+}
+function addFeedback(expectedRaw, heardRaw) {
+  const exp = tokenize(expectedRaw);
+  const heard = tokenize(heardRaw);
+  const { matchedExp, matchedHeard } = lcsMatch(exp, heard);
+
+  // Color each expected word: green if matched, red if missing/wrong.
+  const expWords = exp.map((w, idx) =>
+    `<span class="${matchedExp.has(idx) ? 'word-good' : 'word-bad'}">${w}</span>`).join(' ');
+  // Words the child said that don't belong.
+  const extra = heard.filter((w, idx) => !matchedHeard.has(idx));
+  const missing = exp.filter((w, idx) => !matchedExp.has(idx));
+  const score = exp.length ? Math.round(matchedExp.size / exp.length * 100) : 0;
+
+  let note = '';
+  if (score === 100 && extra.length === 0) {
+    note = '🎉 מושלם! אמרת בדיוק נכון.';
+  } else {
+    const parts = [];
+    if (missing.length) parts.push(`חסר: <b>${missing.join(', ')}</b>`);
+    if (extra.length)   parts.push(`מיותר: <b>${extra.join(', ')}</b>`);
+    note = (score >= 60 ? '👍 כמעט! ' : '💪 בוא/י ננסה שוב. ') + parts.join(' · ');
+  }
+
+  const b = document.createElement('div');
+  b.className = 'bubble feedback';
+  b.innerHTML = `<div>${expWords}</div><span class="note">${note}</span><span class="score">ציון: ${score}%</span>`;
+  chat.appendChild(b);
+  chat.scrollTop = chat.scrollHeight;
+  return score;
+}
+
+/* ===================== FLOW ===================== */
+function showStep() {
+  if (step >= DIALOG.length) return;
+  const turn = DIALOG[step];
+  addBotBubble(turn.bot, turn.he);
+  speak(turn.bot);
+  if (turn.target === null) {
+    // Final line — no response needed.
+    targetBox.style.display = 'none';
+    controls.style.display = 'none';
+    typeWrap.style.display = 'none';
+    status.innerHTML = '✅ סיימת את השיחה! כל הכבוד 🌟';
+    const r = document.createElement('button');
+    r.className = 'restart'; r.textContent = '🔄 שיחה חדשה';
+    r.onclick = () => location.reload();
+    status.appendChild(document.createElement('br'));
+    status.appendChild(r);
+    return;
+  }
+  targetText.textContent = turn.target;
+  status.textContent = '';
+}
+
+function handleResponse(heardRaw) {
+  const turn = DIALOG[step];
+  if (!turn || turn.target === null) return;
+  addMyBubble(heardRaw);
+  const score = addFeedback(turn.target, heardRaw);
+  // Advance to the next line regardless of score (encourage, don't block).
+  step++;
+  setTimeout(showStep, 900);
+}
+
+/* ===================== SPEECH RECOGNITION ===================== */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+let listening = false;
+
+if (SR) {
+  recognition = new SR();
+  recognition.lang = 'en-US';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 5;
+
+  recognition.onresult = (e) => {
+    const turn = DIALOG[step];
+    const alts = Array.from(e.results[0]).map(a => a.transcript);
+    // Pick the alternative that best matches the target — reduces false "wrong word".
+    let best = alts[0], bestScore = -1;
+    if (turn && turn.target) {
+      const exp = tokenize(turn.target);
+      alts.forEach(t => {
+        const { matchedExp } = lcsMatch(exp, tokenize(t));
+        if (matchedExp.size > bestScore) { bestScore = matchedExp.size; best = t; }
+      });
+    }
+    const conf = e.results[0][0].confidence;
+    if (conf && conf < 0.4) {
+      status.textContent = '🤔 לא בטוח ששמעתי טוב — אבל בוא/י נראה:';
+    }
+    handleResponse(best);
+  };
+  recognition.onerror = (ev) => {
+    listening = false;
+    micBtn.classList.remove('listening');
+    micBtn.textContent = '🎤 לחץ/י ודבר/י';
+    if (ev.error === 'no-speech') status.textContent = '🔇 לא שמעתי כלום. נסה/י שוב.';
+    else if (ev.error === 'not-allowed') status.textContent = '🚫 צריך לאשר גישה למיקרופון.';
+    else status.textContent = 'שגיאה בזיהוי הדיבור. אפשר להקליד במקום.';
+  };
+  recognition.onend = () => {
+    listening = false;
+    micBtn.classList.remove('listening');
+    micBtn.textContent = '🎤 לחץ/י ודבר/י';
+  };
+
+  micBtn.onclick = () => {
+    if (listening) { recognition.stop(); return; }
+    window.speechSynthesis.cancel();
+    try {
+      recognition.start();
+      listening = true;
+      micBtn.classList.add('listening');
+      micBtn.textContent = '⏺️ מקשיב... (לחץ/י לעצור)';
+      status.textContent = '🎙️ דבר/י עכשיו...';
+    } catch (err) { status.textContent = 'נסה/י שוב.'; }
+  };
+} else {
+  // No speech recognition — fall back to typing.
+  document.getElementById('srWarn').style.display = 'block';
+  controls.style.display = 'none';
+  typeWrap.style.display = 'flex';
+}
+
+/* Typing fallback is always available via the skip button area too. */
+skipBtn.onclick = () => {
+  // Toggle the typing input so a child without a mic can still play.
+  typeWrap.style.display = typeWrap.style.display === 'none' ? 'flex' : 'none';
+  if (typeWrap.style.display === 'flex') typeInput.focus();
+};
+function submitTyped() {
+  const v = typeInput.value.trim();
+  if (!v) return;
+  typeInput.value = '';
+  handleResponse(v);
+}
+sendBtn.onclick = submitTyped;
+typeInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitTyped(); });
+
+/* ===================== START ===================== */
+showStep();
+</script>
+
+</body>
+</html>
