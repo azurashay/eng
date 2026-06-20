@@ -176,6 +176,11 @@ const SCENARIOS = {
   }
 };
 
+/* Personalize the child's name from the ?player= param (passed by english-quest). */
+const NAME_MAP = { tal: 'Tal', elad: 'Elad' };
+const params = new URLSearchParams(location.search);
+const PLAYER_NAME = NAME_MAP[(params.get('player') || '').toLowerCase()] || 'Tal';
+
 let DIALOG = [];
 let step = 0;
 
@@ -325,12 +330,19 @@ function showMenu() {
   game.style.display = 'none';
   menu.style.display = 'grid';
   menuBtn.style.display = 'none';
-  heroSub.textContent = 'בחר/י תרחיש, דבר/י, וקבל/י משוב מילה-מילה';
+  const heName = { Tal: 'טל', Elad: 'אלעד' }[PLAYER_NAME];
+  heroSub.textContent = params.get('player')
+    ? `שלום ${heName}! בחר/י תרחיש, דבר/י, וקבל/י משוב מילה-מילה`
+    : 'בחר/י תרחיש, דבר/י, וקבל/י משוב מילה-מילה';
 }
 
 function startScenario(id) {
   currentId = id;
-  DIALOG = SCENARIOS[id].lines;
+  // Clone lines and swap the placeholder name for the logged-in child's name.
+  DIALOG = SCENARIOS[id].lines.map(l => ({
+    ...l,
+    target: l.target ? l.target.replace(/\bTal\b/g, PLAYER_NAME) : l.target
+  }));
   step = 0;
   chat.innerHTML = '';
   status.textContent = '';
