@@ -21,7 +21,7 @@ body {
   padding: 16px 16px 96px;
   color: #fff;
 }
-.top { width: 100%; max-width: 720px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.top { width: 100%; max-width: 720px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
 .back { color: #fff; text-decoration: none; font-size: 1em; background: rgba(255,255,255,0.18); padding: 10px 16px; border-radius: 14px; border: none; font-family: inherit; cursor: pointer; }
 .xp { background: rgba(0,0,0,0.22); padding: 10px 16px; border-radius: 14px; font-weight: 700; display: flex; gap: 10px; align-items: center; font-size: 0.95em; }
 .hero { text-align: center; padding: 18px 6px 10px; max-width: 720px; }
@@ -180,7 +180,8 @@ td.en, th.en { direction: ltr; text-align: left; font-weight: 700; }
 <body>
 
 <div class="top">
-  <a href="index.html" class="back">→ חזרה</a>
+  <a href="index.html" class="back" id="homeLink">→ חזרה</a>
+  <a href="vocab-quest.html" class="back" id="siblingLink">🗺️ Vocab Quest</a>
   <div class="xp">⭐ <span id="xpVal">0</span> XP <span id="streakBox" style="display:none">🔥<span id="streakVal">0</span></span></div>
 </div>
 
@@ -834,6 +835,8 @@ function showSummary(screenId, score, total, restart) {
 }
 
 /* ===================== INIT ===================== */
+// When hosted on claude.ai the pages are separate artifacts: link to the sibling artifact and hide the hub link.
+if (location.hostname.endsWith('claude.ai')) { $('siblingLink').href = 'https://claude.ai/artifact/C6nhLj3DRJho6Ub9QomvWM'; $('homeLink').style.display = 'none'; }
 renderXP();
 renderDemo();
 </script>

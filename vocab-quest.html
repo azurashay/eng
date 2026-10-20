@@ -13,7 +13,7 @@ body {
   min-height: 100vh; display: flex; flex-direction: column; align-items: center;
   padding: 16px 16px 40px; color: #fff;
 }
-.top { width: 100%; max-width: 720px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.top { width: 100%; max-width: 720px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
 .back { color: #fff; text-decoration: none; font-size: 1em; background: rgba(255,255,255,0.18); padding: 10px 16px; border-radius: 14px; border: none; font-family: inherit; cursor: pointer; min-height: 44px; }
 .xp { background: rgba(0,0,0,0.22); padding: 10px 16px; border-radius: 14px; font-weight: 700; display: flex; gap: 10px; align-items: center; }
 .hero { text-align: center; padding: 16px 6px 8px; max-width: 720px; }
@@ -135,6 +135,7 @@ button.btn { font-family: inherit; font-size: 1em; font-weight: 700; cursor: poi
 
 <div class="top">
   <a href="index.html" class="back" id="backBtn">→ חזרה</a>
+  <a href="grammar.html" class="back" id="siblingLink">🧪 Grammar Lab</a>
   <div class="xp">⭐ <span id="xpVal">0</span> XP</div>
 </div>
 <div class="hero">
@@ -258,7 +259,7 @@ function renderHome() {
   all.innerHTML = `<div class="ic">🏆</div><div><div class="nm">האתגר הגדול</div><div class="cnt">כל ${ALL.length} המילים מעורבבות · ${doneAll} נלמדו</div></div>`;
   all.addEventListener('click', () => openCat({ id: 'all', he: 'האתגר הגדול', icon: '🏆', words: ALL }));
   w.appendChild(all);
-  $('backBtn').textContent = '→ חזרה'; $('backBtn').href = 'index.html'; $('backBtn').onclick = null;
+  $('backBtn').textContent = '→ חזרה'; $('backBtn').href = 'index.html'; $('backBtn').onclick = null; $('backBtn').style.display = HOSTED ? 'none' : '';
   $('heroSub').textContent = 'בחרו עולם מילים, שחקו, ותהפכו למאסטרים של אוצר המילים!';
 }
 function openCat(c) {
@@ -277,6 +278,7 @@ function openCat(c) {
     r.innerHTML = `<button class="speak">🔊</button><span class="e">${w.en}</span><span class="h">${w.he}<br><span class="t">${w.tr}</span></span><span class="m">${'⭐'.repeat(mastery[w.en] || 0)}</span>`;
     r.querySelector('.speak').addEventListener('click', () => speak(w.en)); wl.appendChild(r);
   });
+  $('backBtn').style.display = '';
   $('backBtn').textContent = '→ לעולמות'; $('backBtn').href = '#'; $('backBtn').onclick = e => { e.preventDefault(); renderHome(); show('home'); };
   $('heroSub').textContent = `${c.words.length} מילים · ${c.words.filter(x => (mastery[x.en] || 0) >= 3).length} כבר נלמדו`;
   show('modes');
@@ -294,6 +296,7 @@ function startMode(id) {
   else if (id === 'match') g.qs = [weak.slice(0, 6), weak.slice(6, 12)].filter(x => x.length >= 3);
   else if (id === 'spell') g.qs = weak.filter(w => /^[a-z]+$/i.test(w.en)).slice(0, 8);
   else g.qs = weak.slice(0, 10);
+  $('backBtn').style.display = '';
   $('backBtn').textContent = '→ למשחקים'; $('backBtn').href = '#'; $('backBtn').onclick = e => { e.preventDefault(); openCat(cat); };
   show('play'); render();
 }
@@ -475,6 +478,9 @@ function summary() {
   $('other').addEventListener('click', () => openCat(cat));
 }
 
+// When hosted on claude.ai the pages are separate artifacts: link to the sibling artifact and hide the hub link.
+const HOSTED = location.hostname.endsWith('claude.ai');
+if (HOSTED) $('siblingLink').href = 'https://claude.ai/artifact/WT5RMaGhZeQ5qtMC61eoDg';
 renderXP(); renderHome();
 </script>
 </body>
