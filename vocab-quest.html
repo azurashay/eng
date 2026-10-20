@@ -479,7 +479,8 @@ function summary() {
 }
 
 // When hosted on claude.ai the pages are separate artifacts: link to the sibling artifact and hide the hub link.
-const HOSTED = location.hostname.endsWith('claude.ai');
+// Hosted pages run in a sandboxed frame on a different origin, so detect by URL shape: a local file or a *.html path is the site itself.
+const HOSTED = location.protocol !== 'file:' && !/\.html?$/i.test(location.pathname);
 if (HOSTED) $('siblingLink').href = 'https://claude.ai/artifact/WT5RMaGhZeQ5qtMC61eoDg';
 renderXP(); renderHome();
 </script>
