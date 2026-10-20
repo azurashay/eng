@@ -21,6 +21,9 @@ open index.html
 - `game1-memory.html` — flip-card memory matching game (English ↔ Hebrew pairs)
 - `game2-quiz.html` — multiple-choice quiz
 - `game3-hangman.html` — hangman game
+- `game5-conversation.html` — speech-recognition conversation practice
+- `grammar.html` — Grammar Lab: Present Simple (positive) + parts of speech; learn section plus 4 mini-games (word hunt, sentence painter, verb-form quiz, sentence builder). Self-contained data (`RAW`, `VERB_Q`)
+- `vocab-quest.html` — Vocab Quest: 86-word unit (nouns/verbs/adjectives/noun+verb/other) with Hebrew + transliteration; 5 modes (flashcards, listen, quiz, match, spelling). Self-contained data (`CATS`), progress in localStorage
 - `mate/game4-math.html` — separate math game (percentages & volume), not linked from index
 - `eng-repo/` — backup copy of the main files, not the active version
 

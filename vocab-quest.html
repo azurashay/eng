@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Vocab Quest 🗺️ — אוצר מילים</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Heebo", sans-serif;
+  background: linear-gradient(135deg, #f97316 0%, #ec4899 50%, #8b5cf6 100%);
+  background-attachment: fixed;
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  padding: 16px 16px 40px; color: #fff;
+}
+.top { width: 100%; max-width: 720px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.back { color: #fff; text-decoration: none; font-size: 1em; background: rgba(255,255,255,0.18); padding: 10px 16px; border-radius: 14px; border: none; font-family: inherit; cursor: pointer; min-height: 44px; }
+.xp { background: rgba(0,0,0,0.22); padding: 10px 16px; border-radius: 14px; font-weight: 700; display: flex; gap: 10px; align-items: center; }
+.hero { text-align: center; padding: 16px 6px 8px; max-width: 720px; }
+h1 { font-size: 1.9em; margin-bottom: 6px; text-shadow: 2px 4px 8px rgba(0,0,0,0.2); }
+.subtitle { font-size: 1em; opacity: 0.92; }
+.screen { display: none; width: 100%; max-width: 720px; flex-direction: column; align-items: center; animation: fade 0.3s ease; }
+.screen.active { display: flex; }
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.card { width: 100%; background: rgba(255,255,255,0.16); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 2px solid rgba(255,255,255,0.28); border-radius: 22px; padding: 18px; margin-top: 14px; }
+.card.white { background: rgba(255,255,255,0.95); color: #1e293b; border-color: transparent; }
+
+/* ===== worlds ===== */
+.worlds { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; width: 100%; margin-top: 14px; }
+.world { border-radius: 20px; padding: 18px 14px; color: #fff; cursor: pointer; text-align: center; border: 2px solid rgba(255,255,255,0.35); transition: transform 0.2s; position: relative; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
+.world:active { transform: scale(0.97); }
+.world .ic { font-size: 2.6em; }
+.world .nm { font-weight: 800; font-size: 1.1em; margin-top: 6px; }
+.world .en { font-size: 0.8em; opacity: 0.9; direction: ltr; }
+.world .cnt { font-size: 0.8em; opacity: 0.9; margin-top: 4px; }
+.ring { position: absolute; top: 8px; left: 8px; width: 40px; height: 40px; border-radius: 50%; background: conic-gradient(#fde047 var(--p), rgba(0,0,0,0.25) 0); display: flex; align-items: center; justify-content: center; font-size: 0.65em; font-weight: 800; }
+.ring::after { content: attr(data-t); background: rgba(0,0,0,0.35); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; }
+.world.all { grid-column: 1 / -1; min-height: 100px; flex-direction: row; gap: 14px; background: linear-gradient(135deg, #0f172a, #334155); }
+
+/* ===== modes ===== */
+.modes { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; width: 100%; margin-top: 10px; }
+.mode { background: rgba(255,255,255,0.94); color: #1e293b; border-radius: 18px; padding: 16px 12px; text-align: center; cursor: pointer; transition: transform 0.2s; min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+.mode:active { transform: scale(0.97); }
+.mode .ic { font-size: 2.2em; }
+.mode .nm { font-weight: 800; }
+.mode .ds { font-size: 0.8em; opacity: 0.75; line-height: 1.3; }
+.mode.off { opacity: 0.4; pointer-events: none; }
+.wordlist { width: 100%; margin-top: 10px; }
+.wrow { display: flex; align-items: center; gap: 10px; padding: 10px 6px; border-bottom: 1px solid #e2e8f0; }
+.wrow .e { direction: ltr; text-align: left; font-weight: 800; font-size: 1.05em; min-width: 110px; color: #1e293b; }
+.wrow .h { flex: 1; color: #334155; }
+.wrow .t { color: #7c3aed; font-size: 0.9em; }
+.wrow .m { font-size: 0.9em; }
+.speak { background: rgba(255,255,255,0.2); border: none; color: #fff; border-radius: 50%; width: 44px; height: 44px; font-size: 1.2em; cursor: pointer; font-family: inherit; flex-shrink: 0; }
+.white .speak { background: #e2e8f0; color: #1e293b; }
+
+/* ===== play header ===== */
+.ghead { display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 0.95em; margin-bottom: 6px; gap: 8px; flex-wrap: wrap; }
+.pill { background: rgba(0,0,0,0.2); padding: 6px 12px; border-radius: 999px; font-weight: 700; }
+[id$="Prog"] { direction: ltr; unicode-bidi: isolate; }
+.progress { width: 100%; height: 10px; background: rgba(0,0,0,0.2); border-radius: 999px; overflow: hidden; margin: 8px 0; }
+.progress i { display: block; height: 100%; background: linear-gradient(90deg, #fde047, #22c55e); width: 0; transition: width 0.4s; }
+.task { font-size: 1.1em; font-weight: 800; text-align: center; margin: 6px 0; }
+button.btn { font-family: inherit; font-size: 1em; font-weight: 700; cursor: pointer; border: none; border-radius: 16px; padding: 14px 22px; transition: all 0.2s; min-height: 48px; }
+.btn.primary { background: linear-gradient(135deg, #fde047, #f59e0b); color: #1e293b; box-shadow: 0 6px 16px rgba(0,0,0,0.2); }
+.btn.good { background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; }
+.btn.ghost { background: rgba(255,255,255,0.2); color: #fff; }
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
+.feedback { margin-top: 12px; border-radius: 14px; padding: 12px 14px; line-height: 1.55; display: none; }
+.feedback.show { display: block; animation: fade 0.3s; }
+.feedback.good { background: rgba(34,197,94,0.25); border: 2px solid rgba(34,197,94,0.6); }
+.feedback.bad { background: rgba(239,68,68,0.22); border: 2px solid rgba(239,68,68,0.6); }
+.en { direction: ltr; unicode-bidi: isolate; }
+
+/* ===== flashcard ===== */
+.flip { perspective: 1200px; width: 100%; max-width: 420px; height: 260px; margin: 10px auto; cursor: pointer; }
+.flip-in { position: relative; width: 100%; height: 100%; transition: transform 0.5s; transform-style: preserve-3d; }
+.flip.on .flip-in { transform: rotateY(180deg); }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 18px; text-align: center; box-shadow: 0 12px 30px rgba(0,0,0,0.25); }
+.face.front { background: #fff; color: #1e293b; }
+.face.back { background: linear-gradient(135deg, #8b5cf6, #ec4899); color: #fff; transform: rotateY(180deg); }
+.face .big { font-size: 2.2em; font-weight: 800; direction: ltr; }
+.face .tr { font-size: 1.2em; color: #7c3aed; }
+.face.back .tr { color: #fde68a; }
+.face .pos { font-size: 0.8em; opacity: 0.7; }
+.face .tap { font-size: 0.8em; opacity: 0.6; position: absolute; bottom: 10px; }
+
+/* ===== options ===== */
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-top: 12px; }
+.opt { background: rgba(255,255,255,0.94); color: #1e293b; border: 3px solid transparent; border-radius: 16px; padding: 16px 10px; font-size: 1.15em; font-weight: 800; text-align: center; cursor: pointer; font-family: inherit; min-height: 62px; transition: all 0.15s; }
+.opt.ltr { direction: ltr; }
+.opt:active { transform: scale(0.97); }
+.opt.ok { background: #22c55e; color: #fff; animation: pop 0.3s; }
+.opt.bad { background: #ef4444; color: #fff; animation: shake 0.4s; }
+.opt:disabled { cursor: default; }
+@keyframes pop { 0% { transform: scale(0.85); } 60% { transform: scale(1.1); } 100% { transform: scale(1); } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+.prompt { text-align: center; font-size: 2em; font-weight: 800; margin: 10px 0 2px; }
+.prompt.ltr { direction: ltr; }
+.prompt small { display: block; font-size: 0.5em; font-weight: 600; opacity: 0.85; margin-top: 2px; }
+.bigspeak { width: 110px; height: 110px; border-radius: 50%; font-size: 3em; background: #fff; border: none; cursor: pointer; margin: 10px auto; display: block; box-shadow: 0 10px 24px rgba(0,0,0,0.25); transition: transform 0.15s; }
+.bigspeak:active { transform: scale(0.94); }
+
+/* ===== match ===== */
+.match { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-top: 10px; }
+.mcol { display: flex; flex-direction: column; gap: 10px; }
+.mt { background: rgba(255,255,255,0.94); color: #1e293b; border-radius: 14px; padding: 14px 8px; text-align: center; font-weight: 800; cursor: pointer; border: 3px solid transparent; min-height: 56px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; font-size: 1.05em; }
+.mt.ltr { direction: ltr; }
+.mt.sel { border-color: #f59e0b; background: #fef3c7; transform: scale(1.03); }
+.mt.done { background: #22c55e; color: #fff; opacity: 0.55; pointer-events: none; }
+.mt.bad { animation: shake 0.4s; background: #fecaca; }
+
+/* ===== spelling ===== */
+.slots { direction: ltr; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 12px 0; }
+.slot { width: 40px; height: 48px; border-radius: 10px; background: rgba(0,0,0,0.2); border-bottom: 3px solid rgba(255,255,255,0.6); display: flex; align-items: center; justify-content: center; font-size: 1.4em; font-weight: 800; cursor: pointer; }
+.slot.space { width: 16px; background: none; border: none; }
+.slot.ok { background: #22c55e; }
+.slot.bad { background: #ef4444; animation: shake 0.4s; }
+.tiles { direction: ltr; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.tile { width: 46px; height: 50px; border-radius: 12px; background: #fff; color: #1e293b; font-size: 1.4em; font-weight: 800; border: none; cursor: pointer; font-family: inherit; box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
+.tile.used { visibility: hidden; }
+
+/* ===== confetti / summary ===== */
+.confetti { position: fixed; pointer-events: none; z-index: 100; font-size: 1.6em; animation: fall 1.2s ease-out forwards; }
+@keyframes fall { 0% { transform: translate(0,0) rotate(0); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; } }
+.summary { text-align: center; padding: 10px; }
+.summary .big { font-size: 3em; }
+.stars { font-size: 1.8em; letter-spacing: 4px; margin: 6px 0; }
+@media (max-width: 500px) { h1 { font-size: 1.5em; } .card { padding: 14px; } .prompt { font-size: 1.6em; } .face .big { font-size: 1.8em; } }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <a href="index.html" class="back" id="backBtn">→ חזרה</a>
+  <div class="xp">⭐ <span id="xpVal">0</span> XP</div>
+</div>
+<div class="hero">
+  <h1>🗺️ Vocab Quest</h1>
+  <p class="subtitle" id="heroSub">בחרו עולם מילים, שחקו, ותהפכו למאסטרים של אוצר המילים!</p>
+</div>
+
+<!-- ===== HOME: worlds ===== -->
+<div class="screen active" id="scr-home">
+  <div class="worlds" id="worlds"></div>
+</div>
+
+<!-- ===== MODES ===== -->
+<div class="screen" id="scr-modes">
+  <div class="card">
+    <div class="task" id="modesTitle"></div>
+    <div class="modes" id="modes"></div>
+  </div>
+  <div class="card white">
+    <div class="task" style="color:#1e293b">📋 רשימת המילים <small style="font-weight:400;opacity:0.7">(לחצו 🔊 כדי לשמוע)</small></div>
+    <div class="wordlist" id="wordlist"></div>
+  </div>
+</div>
+
+<!-- ===== PLAY ===== -->
+<div class="screen" id="scr-play">
+  <div class="card" id="playCard">
+    <div class="ghead"><span class="pill" id="playName"></span><span class="pill" id="playProg"></span><span class="pill" id="playScore">✔ 0</span></div>
+    <div class="progress"><i id="playBar"></i></div>
+    <div id="playBody"></div>
+  </div>
+</div>
+
+<script>
+/* ===================== DATA ===================== */
+const CATS = [
+  { id:'noun', he:'שמות עצם', en:'Nouns', icon:'🏠', color:'linear-gradient(135deg,#3b82f6,#1d4ed8)', words:[
+    ['activity','פעילות','אַקְטִיבִיטִי'],['band','להקה','בֶּנְד'],['bowl','קערה','בּוֹל'],['bridge','גשר',"בְּרִידְג'"],['choice','בחירה',"צ'וֹיְס"],
+    ['club','מועדון, חוג','קְלַאבּ'],['danger','סכנה',"דֵיינְגֶ'ר"],['English','אנגלית','אִינְגְלִיש'],['form','טופס','פוֹרְם'],['geography','גאוגרפיה',"גִ'יאוֹגְרַפִי"],
+    ['guide','מדריך','גַאיְד'],['history','היסטוריה','הִיסְטוֹרִי'],['job','עבודה, מקצוע',"ג'וֹבּ"],['journey','מסע',"גֶ'רְנִי"],['lemon','לימון','לֶמוֹן'],
+    ['list','רשימה','לִיסְט'],['math','מתמטיקה',"מַת'"],['meal','ארוחה','מִיל'],['mountain','הר','מַאוּנְטֶן'],['nation','אומה, עם','נֵיישֶן'],
+    ['office','משרד','אוֹפִיס'],['oil','שמן','אוֹיְל'],['pepper','פלפל','פֶּפֶּר'],['physics','פיזיקה','פִיזִיקְס'],['river','נהר','רִיבֶר'],
+    ['salt','מלח','סוֹלְט'],['science','מדע','סַאיֶנְס'],['team','קבוצה','טִים'],['theater','תיאטרון',"ת'ִיאָטֶר"],['variety','מגוון','וַרַאיְאֶטִי'],
+    ['village','כפר',"וִילִידְג'"],['world','עולם','ווֹרְלְד'],['writing','כתיבה','רַאיְטִינְג'],
+  ]},
+  { id:'verb', he:'פעלים', en:'Verbs', icon:'🏃', color:'linear-gradient(135deg,#ef4444,#b91c1c)', words:[
+    ['amaze','להדהים','אַמֵייז'],['continue','להמשיך','קוֹנְטִינְיוּ'],['depend on','להיות תלוי ב-','דִיפֶּנְד אוֹן'],['fall in love','להתאהב (עבר: fell)','פוֹל אִין לַאב'],
+    ['feed','להאכיל','פִיד'],['fill in','למלא (טופס)','פִיל אִין'],['fix','לתקן','פִיקְס'],['follow','לעקוב, ללכת אחרי','פוֹלוֹאוּ'],['imagine','לדמיין',"אִימַגִ'ין"],
+    ['join','להצטרף',"ג'וֹיְן"],['open','לפתוח','אוֹפֶּן'],['prefer','להעדיף','פְּרִיפֶר'],['realize','להבין, לקלוט','רִיאַלַייז'],['receive','לקבל','רִיסִיב'],
+    ['serve','להגיש, לשרת','סֶרְב'],['shake hands','ללחוץ ידיים','שֵייק הֶנְדְז'],['welcome','לקבל בברכה','וֶלְקַם'],
+  ]},
+  { id:'adj', he:'שמות תואר', en:'Adjectives', icon:'🎨', color:'linear-gradient(135deg,#f59e0b,#d97706)', words:[
+    ['amazing','מדהים','אַמֵייזִינְג'],['careful','זהיר','קֶרְפוּל'],['certain','בטוח, מסוים','סֶרְטֶן'],['dangerous','מסוכן',"דֵיינְגֶ'רֶס"],['foreign','זר','פוֹרֶן'],
+    ['interested in','מתעניין ב-','אִינְטְרֶסְטֶד אִין'],['lovely','מקסים','לַאבְלִי'],['main','ראשי, עיקרי','מֵיין'],['possible','אפשרי','פּוֹסִיבֶּל'],['typical','טיפוסי','טִיפִּיקָל'],
+    ['unusual','לא רגיל',"אַנְיוּזְ'וּאָל"],['usual','רגיל',"יוּזְ'וּאָל"],['warm','חם, חמים','ווֹרְם'],['wide','רחב','וַוייְד'],
+  ]},
+  { id:'both', he:'שם עצם + פועל', en:'Nouns & Verbs', icon:'🔁', color:'linear-gradient(135deg,#14b8a6,#0f766e)', words:[
+    ['brush','מברשת / להבריש','בְּרַאש'],['color','צבע / לצבוע','קַאלֶר'],['comb','מסרק / להסתרק','קוֹם'],['drive','נסיעה / לנהוג','דְרַייְב'],['help','עזרה / לעזור','הֶלְפּ'],
+    ['love','אהבה / לאהוב','לַאב'],['pay','תשלום / לשלם','פֵּיי'],['point','נקודה / להצביע','פּוֹיְנְט'],['sleep','שינה / לישון','סְלִיפּ'],['travel','טיול / לטייל','טְרַאבֶל'],['work','עבודה / לעבוד','ווֹרְק'],
+  ]},
+  { id:'other', he:'ביטויים ומילים נוספות', en:'Other', icon:'💬', color:'linear-gradient(135deg,#a855f7,#7e22ce)', words:[
+    ['according to','לפי, על פי','אַקוֹרְדִינְג טוּ'],['across','מעבר ל-, לרוחב','אַקְרוֹס'],['any','כלשהו, כל','אֶנִי'],['anybody','מישהו, כל אחד','אֶנִיבּוֹדִי'],['around here','כאן בסביבה','אַרַאוּנְד הִיר'],
+    ['directly','ישירות','דִירֶקְטְלִי'],["I'd love to",'אשמח מאוד','אַייד לַאב טוּ'],['next to','ליד','נֶקְסְט טוּ'],['Nice to meet you.','נעים להכיר','נַייְס טוּ מִיט יוּ'],
+    ['What about ... ?','מה לגבי...?','ווֹט אַבַּאוּט'],['Would you like ... ?','האם תרצה...?','ווּד יוּ לַייְק'],
+  ]},
+];
+CATS.forEach(c => { c.words = c.words.map(([en, he, tr]) => ({ en, he, tr, cat: c.id })); });
+const ALL = CATS.flatMap(c => c.words);
+const MODES = [
+  { id:'cards', icon:'🃏', nm:'כרטיסיות', ds:'מילה ← הפכו ← משמעות' },
+  { id:'listen', icon:'🎧', nm:'מקשיבים', ds:'שמעו את המילה ובחרו אותה' },
+  { id:'quiz', icon:'🎯', nm:'חידון', ds:'בחרו את התרגום הנכון' },
+  { id:'match', icon:'🧩', nm:'התאמה', ds:'חברו אנגלית לעברית' },
+  { id:'spell', icon:'⌨️', nm:'איות', ds:'הרכיבו את המילה מאותיות' },
+];
+
+/* ===================== HELPERS ===================== */
+const $ = id => document.getElementById(id);
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = (a, n) => shuffle(a).slice(0, n);
+function speak(text, rate) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text.replace(/\.\.\./g, '').replace(/[?.]$/, ''));
+  u.lang = 'en-US'; u.rate = rate || 0.85; speechSynthesis.speak(u);
+}
+let xp = +(localStorage.getItem('vocabXP') || 0);
+let mastery = JSON.parse(localStorage.getItem('vocabMastery') || '{}');
+function renderXP() { $('xpVal').textContent = xp; }
+function addXP(n) { xp += n; localStorage.setItem('vocabXP', xp); renderXP(); }
+function learn(w, good) {
+  mastery[w.en] = Math.max(0, Math.min(3, (mastery[w.en] || 0) + (good ? 1 : -1)));
+  localStorage.setItem('vocabMastery', JSON.stringify(mastery));
+}
+function burst(emoji) {
+  const icons = emoji ? [emoji] : ['🎉','⭐','✨','🎊','💫'];
+  for (let i = 0; i < 14; i++) {
+    const s = document.createElement('span'); s.className = 'confetti'; s.textContent = icons[i % icons.length];
+    s.style.left = (40 + Math.random() * 20) + 'vw'; s.style.top = '40vh';
+    s.style.setProperty('--dx', (Math.random() * 300 - 150) + 'px'); s.style.setProperty('--dy', (Math.random() * 300 - 50) + 'px');
+    document.body.appendChild(s); setTimeout(() => s.remove(), 1300);
+  }
+}
+const stars = (s, t) => { const r = s / t; return r === 1 ? '⭐⭐⭐' : r >= 0.7 ? '⭐⭐☆' : r >= 0.4 ? '⭐☆☆' : '☆☆☆'; };
+function show(name) { document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === 'scr-' + name)); window.scrollTo({ top: 0 }); }
+
+/* ===================== HOME ===================== */
+let cat = null; // current category object (or ALL pseudo-cat)
+function renderHome() {
+  const w = $('worlds'); w.innerHTML = '';
+  CATS.forEach(c => {
+    const done = c.words.filter(x => (mastery[x.en] || 0) >= 3).length;
+    const d = document.createElement('div'); d.className = 'world'; d.style.background = c.color;
+    const pct = Math.round(done / c.words.length * 100);
+    d.innerHTML = `<div class="ring" style="--p:${pct}%" data-t="${pct}%"></div><div class="ic">${c.icon}</div><div class="nm">${c.he}</div><div class="en">${c.en}</div><div class="cnt">${c.words.length} מילים · ${done} נלמדו</div>`;
+    d.addEventListener('click', () => openCat(c));
+    w.appendChild(d);
+  });
+  const all = document.createElement('div'); all.className = 'world all';
+  const doneAll = ALL.filter(x => (mastery[x.en] || 0) >= 3).length;
+  all.innerHTML = `<div class="ic">🏆</div><div><div class="nm">האתגר הגדול</div><div class="cnt">כל ${ALL.length} המילים מעורבבות · ${doneAll} נלמדו</div></div>`;
+  all.addEventListener('click', () => openCat({ id: 'all', he: 'האתגר הגדול', icon: '🏆', words: ALL }));
+  w.appendChild(all);
+  $('backBtn').textContent = '→ חזרה'; $('backBtn').href = 'index.html'; $('backBtn').onclick = null;
+  $('heroSub').textContent = 'בחרו עולם מילים, שחקו, ותהפכו למאסטרים של אוצר המילים!';
+}
+function openCat(c) {
+  cat = c;
+  $('modesTitle').textContent = `${c.icon} ${c.he} — איך רוצים לשחק?`;
+  const m = $('modes'); m.innerHTML = '';
+  const spellable = c.words.filter(w => /^[a-z]+$/i.test(w.en)).length;
+  MODES.forEach(md => {
+    const d = document.createElement('div'); d.className = 'mode' + (md.id === 'spell' && spellable < 4 ? ' off' : '');
+    d.innerHTML = `<div class="ic">${md.icon}</div><div class="nm">${md.nm}</div><div class="ds">${md.ds}</div>`;
+    d.addEventListener('click', () => startMode(md.id)); m.appendChild(d);
+  });
+  const wl = $('wordlist'); wl.innerHTML = '';
+  c.words.forEach(w => {
+    const r = document.createElement('div'); r.className = 'wrow';
+    r.innerHTML = `<button class="speak">🔊</button><span class="e">${w.en}</span><span class="h">${w.he}<br><span class="t">${w.tr}</span></span><span class="m">${'⭐'.repeat(mastery[w.en] || 0)}</span>`;
+    r.querySelector('.speak').addEventListener('click', () => speak(w.en)); wl.appendChild(r);
+  });
+  $('backBtn').textContent = '→ לעולמות'; $('backBtn').href = '#'; $('backBtn').onclick = e => { e.preventDefault(); renderHome(); show('home'); };
+  $('heroSub').textContent = `${c.words.length} מילים · ${c.words.filter(x => (mastery[x.en] || 0) >= 3).length} כבר נלמדו`;
+  show('modes');
+}
+
+/* ===================== PLAY ENGINE ===================== */
+const g = { mode: null, qs: [], i: 0, score: 0, done: false };
+function startMode(id) {
+  g.mode = id; g.i = 0; g.score = 0;
+  const md = MODES.find(m => m.id === id);
+  $('playName').textContent = md.icon + ' ' + md.nm;
+  // prioritise words not yet mastered
+  const weak = shuffle(cat.words).sort((a, b) => (mastery[a.en] || 0) - (mastery[b.en] || 0));
+  if (id === 'cards') g.qs = weak.slice(0, 10);
+  else if (id === 'match') g.qs = [weak.slice(0, 6), weak.slice(6, 12)].filter(x => x.length >= 3);
+  else if (id === 'spell') g.qs = weak.filter(w => /^[a-z]+$/i.test(w.en)).slice(0, 8);
+  else g.qs = weak.slice(0, 10);
+  $('backBtn').textContent = '→ למשחקים'; $('backBtn').href = '#'; $('backBtn').onclick = e => { e.preventDefault(); openCat(cat); };
+  show('play'); render();
+}
+function head() {
+  $('playProg').textContent = `${g.i + 1} / ${g.qs.length}`;
+  $('playScore').textContent = `✔ ${g.score}`;
+  $('playBar').style.width = (g.i / g.qs.length * 100) + '%';
+  g.done = false;
+}
+function next() {
+  g.i++;
+  if (g.i >= g.qs.length) return summary();
+  render();
+}
+function render() {
+  head();
+  ({ cards: renderCards, listen: renderListen, quiz: renderQuiz, match: renderMatch, spell: renderSpell })[g.mode]();
+}
+function result(good, w, extraHtml) {
+  g.done = true;
+  if (good) { g.score++; addXP(10); burst(); } learn(w, good);
+  $('playScore').textContent = `✔ ${g.score}`;
+  const fb = $('fb');
+  fb.innerHTML = (good ? '🎉 נכון! ' : '❌ לא בדיוק. ') + `<b class="en">${w.en}</b> = ${w.he} <span style="opacity:0.85">(${w.tr})</span>` + (extraHtml || '');
+  fb.className = 'feedback show ' + (good ? 'good' : 'bad');
+  $('nextBtn').style.display = '';
+  speak(w.en);
+}
+function nextBtnHtml() { return `<div class="feedback" id="fb"></div><div class="row"><button class="btn primary" id="nextBtn" style="display:none">הבא ➜</button></div>`; }
+function bindNext() { $('nextBtn').addEventListener('click', next); }
+function distractors(w, n, field) {
+  const pool = (cat.words.length >= 6 ? cat.words : ALL).filter(x => x !== w && x[field] !== w[field]);
+  return pick(pool, n);
+}
+
+/* ----- cards ----- */
+function renderCards() {
+  const w = g.qs[g.i];
+  $('playBody').innerHTML = `
+    <div class="task">לחצו על הכרטיס כדי להפוך אותו</div>
+    <div class="flip" id="flip"><div class="flip-in">
+      <div class="face front"><div class="pos">${CATS.find(c => c.id === w.cat).he}</div><div class="big">${w.en}</div><div class="tr">${w.tr}</div><div class="tap">👆 הפכו</div></div>
+      <div class="face back"><div class="big" style="direction:rtl;font-size:1.8em">${w.he}</div><div class="tr">${w.en}</div><div class="tap">👆 הפכו בחזרה</div></div>
+    </div></div>
+    <div class="row">
+      <button class="speak" id="sp" style="width:52px;height:52px">🔊</button>
+      <button class="btn ghost" id="noBtn">🔁 עוד לא</button>
+      <button class="btn good" id="yesBtn">✅ ידעתי!</button>
+    </div>`;
+  $('flip').addEventListener('click', () => $('flip').classList.toggle('on'));
+  $('sp').addEventListener('click', () => speak(w.en));
+  $('yesBtn').addEventListener('click', () => { g.score++; addXP(5); learn(w, true); next(); });
+  $('noBtn').addEventListener('click', () => { learn(w, false); g.qs.push(w); head(); next(); });
+  speak(w.en);
+}
+
+/* ----- listen ----- */
+function renderListen() {
+  const w = g.qs[g.i];
+  const opts = shuffle([w, ...distractors(w, 3, 'en')]);
+  $('playBody').innerHTML = `
+    <div class="task">🎧 הקשיבו ובחרו את המילה ששמעתם</div>
+    <button class="bigspeak" id="sp">🔊</button>
+    <div class="row" style="margin-top:0"><button class="btn ghost" id="slow">🐢 לאט</button></div>
+    <div class="opts" id="opts">${opts.map(o => `<button class="opt ltr">${o.en}</button>`).join('')}</div>${nextBtnHtml()}`;
+  $('sp').addEventListener('click', () => speak(w.en)); $('slow').addEventListener('click', () => speak(w.en, 0.55));
+  $('opts').querySelectorAll('.opt').forEach((b, n) => b.addEventListener('click', () => {
+    if (g.done) return;
+    const good = opts[n] === w;
+    b.classList.add(good ? 'ok' : 'bad');
+    $('opts').querySelectorAll('.opt').forEach((x, k) => { x.disabled = true; if (opts[k] === w) x.classList.add('ok'); });
+    result(good, w);
+  }));
+  bindNext(); setTimeout(() => speak(w.en), 300);
+}
+
+/* ----- quiz ----- */
+function renderQuiz() {
+  const w = g.qs[g.i];
+  const toHe = g.i % 2 === 0; // alternate direction
+  const opts = shuffle([w, ...distractors(w, 3, toHe ? 'he' : 'en')]);
+  $('playBody').innerHTML = `
+    <div class="task">${toHe ? 'מה הפירוש בעברית?' : 'איך אומרים באנגלית?'}</div>
+    <div class="prompt ${toHe ? 'ltr' : ''}">${toHe ? w.en : w.he}${toHe ? `<small>${w.tr}</small>` : ''}</div>
+    ${toHe ? '<div class="row" style="margin-top:4px"><button class="speak" id="sp">🔊</button></div>' : ''}
+    <div class="opts" id="opts">${opts.map(o => `<button class="opt ${toHe ? '' : 'ltr'}">${toHe ? o.he : o.en}</button>`).join('')}</div>${nextBtnHtml()}`;
+  if (toHe) { $('sp').addEventListener('click', () => speak(w.en)); speak(w.en); }
+  $('opts').querySelectorAll('.opt').forEach((b, n) => b.addEventListener('click', () => {
+    if (g.done) return;
+    const good = opts[n] === w;
+    b.classList.add(good ? 'ok' : 'bad');
+    $('opts').querySelectorAll('.opt').forEach((x, k) => { x.disabled = true; if (opts[k] === w) x.classList.add('ok'); });
+    result(good, w);
+  }));
+  bindNext();
+}
+
+/* ----- match ----- */
+function renderMatch() {
+  const set = g.qs[g.i];
+  const left = shuffle(set), right = shuffle(set);
+  let selL = null, selR = null, done = 0, moves = 0;
+  $('playBody').innerHTML = `
+    <div class="task">חברו כל מילה לפירוש שלה</div>
+    <div class="match">
+      <div class="mcol" id="colL">${left.map((w, n) => `<div class="mt ltr" data-n="${n}">${w.en}</div>`).join('')}</div>
+      <div class="mcol" id="colR">${right.map((w, n) => `<div class="mt" data-n="${n}">${w.he}</div>`).join('')}</div>
+    </div>${nextBtnHtml()}`;
+  const tryMatch = () => {
+    if (selL == null || selR == null) return;
+    moves++;
+    const L = $('colL').querySelector(`[data-n="${selL}"]`), R = $('colR').querySelector(`[data-n="${selR}"]`);
+    if (left[selL] === right[selR]) {
+      L.classList.add('done'); R.classList.add('done'); L.classList.remove('sel'); R.classList.remove('sel');
+      learn(left[selL], true); addXP(5); speak(left[selL].en); done++;
+      if (done === set.length) {
+        g.done = true; const perfect = moves === set.length; if (perfect) g.score++; burst(perfect ? '🏆' : undefined);
+        $('fb').innerHTML = perfect ? '🎉 מושלם! בלי אף טעות!' : `✅ סיימתם! ${moves - set.length} טעויות בדרך — ממשיכים לתרגל 💪`;
+        $('fb').className = 'feedback show ' + (perfect ? 'good' : 'bad'); $('nextBtn').style.display = '';
+        $('playScore').textContent = `✔ ${g.score}`;
+      }
+    } else { L.classList.add('bad'); R.classList.add('bad'); learn(left[selL], false); setTimeout(() => { L.classList.remove('bad', 'sel'); R.classList.remove('bad', 'sel'); }, 450); }
+    selL = selR = null;
+  };
+  $('colL').querySelectorAll('.mt').forEach(el => el.addEventListener('click', () => { $('colL').querySelectorAll('.mt').forEach(x => x.classList.remove('sel')); el.classList.add('sel'); selL = +el.dataset.n; speak(left[selL].en); tryMatch(); }));
+  $('colR').querySelectorAll('.mt').forEach(el => el.addEventListener('click', () => { $('colR').querySelectorAll('.mt').forEach(x => x.classList.remove('sel')); el.classList.add('sel'); selR = +el.dataset.n; tryMatch(); }));
+  bindNext();
+}
+
+/* ----- spelling ----- */
+function renderSpell() {
+  const w = g.qs[g.i];
+  const word = w.en.toLowerCase();
+  const extra = pick('abcdefghijklmnoprstuvwy'.split('').filter(ch => !word.includes(ch)), 2);
+  const tiles = shuffle(word.split('').concat(extra));
+  let typed = [];
+  $('playBody').innerHTML = `
+    <div class="task">הרכיבו את המילה באנגלית</div>
+    <div class="prompt">${w.he}<small>${w.tr}</small></div>
+    <div class="row" style="margin-top:4px"><button class="speak" id="sp">🔊</button></div>
+    <div class="slots" id="slots">${word.split('').map(() => '<div class="slot"></div>').join('')}</div>
+    <div class="tiles" id="tiles">${tiles.map((t, n) => `<button class="tile" data-n="${n}">${t}</button>`).join('')}</div>
+    <div class="row"><button class="btn ghost" id="undo">⌫ מחק</button><button class="btn ghost" id="hint">💡 רמז</button></div>${nextBtnHtml()}`;
+  const slots = $('slots').querySelectorAll('.slot');
+  const paint = () => slots.forEach((s, i) => { s.textContent = typed[i] ? typed[i].ch : ''; });
+  const check = () => {
+    const guess = typed.map(t => t.ch).join('');
+    const good = guess === word;
+    slots.forEach((s, i) => s.classList.add(word[i] === guess[i] ? 'ok' : 'bad'));
+    $('tiles').querySelectorAll('.tile').forEach(t => t.disabled = true);
+    result(good, w);
+  };
+  $('sp').addEventListener('click', () => speak(w.en)); speak(w.en);
+  $('tiles').querySelectorAll('.tile').forEach(t => t.addEventListener('click', () => {
+    if (g.done || t.classList.contains('used') || typed.length >= word.length) return;
+    t.classList.add('used'); typed.push({ ch: t.textContent, n: +t.dataset.n }); paint();
+    if (typed.length === word.length) setTimeout(check, 150);
+  }));
+  $('undo').addEventListener('click', () => { if (g.done || !typed.length) return; const t = typed.pop(); $('tiles').querySelector(`.tile[data-n="${t.n}"]`).classList.remove('used'); paint(); });
+  $('hint').addEventListener('click', () => {
+    if (g.done || typed.length >= word.length) return;
+    const need = word[typed.length];
+    const t = [...$('tiles').querySelectorAll('.tile')].find(x => !x.classList.contains('used') && x.textContent === need);
+    if (t) t.click();
+  });
+  bindNext();
+}
+
+/* ===================== SUMMARY ===================== */
+function summary() {
+  const total = g.qs.length, s = g.score;
+  const msg = s === total ? 'מושלם! אלופים! 🏆' : s >= total * 0.7 ? 'כל הכבוד! 💪' : 'יפה, ממשיכים לתרגל! 📚';
+  $('playBar').style.width = '100%';
+  $('playBody').innerHTML = `<div class="summary"><div class="big">${s === total ? '🏆' : '🎯'}</div><div class="stars">${stars(s, total)}</div>
+    <div class="task">${msg}</div><p>${s} מתוך ${total}</p>
+    <div class="row"><button class="btn primary" id="again">שוב 🔁</button><button class="btn ghost" id="other">משחק אחר 🎮</button></div></div>`;
+  if (s === total) burst('🏆');
+  $('again').addEventListener('click', () => startMode(g.mode));
+  $('other').addEventListener('click', () => openCat(cat));
+}
+
+renderXP(); renderHome();
+</script>
+</body>
+</html>
