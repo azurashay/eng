@@ -22,7 +22,7 @@ open index.html
 - `game2-quiz.html` — multiple-choice quiz
 - `game3-hangman.html` — hangman game
 - `mate/game4-math.html` — separate math game (percentages & volume), not linked from index
-- `arabic/index.html` — "יאללה ערבית!", a self-contained Arabic app for 7th grade (Israeli MoE, Hebrew-speaking schools). All data (`LETTER_DATA`, `UNITS`) lives inside the file; 11 units ordered Sept→June (letters by shape family, then vocab themes). Progress is in localStorage key `yallaArabic_v1`. Arabic TTS uses `speechSynthesis` with an `ar-*` voice when the device has one.
+- `arabic/index.html` — "יאללה ערבית!", a self-contained Arabic app for 7th grade (Israeli MoE, Hebrew-speaking schools). All data (`LETTER_DATA`, `UNITS`) lives inside the file; 11 units ordered Sept→June (letters by shape family, then vocab themes). Progress is in localStorage key `yallaArabic_v1`. Pronunciation comes from built-in clips in `arabic/audio.js` (`window.AUDIO_DATA`, keyed by the exact Arabic text spoken); the device's `speechSynthesis` Arabic voice is only a fallback for text without a clip. If you add or change Arabic words, regenerate the clips with `arabic/tools/` (see the docstring in `make_audio.py`).
 - `eng-repo/` — backup copy of the main files, not the active version
 
 ## Vocabulary data

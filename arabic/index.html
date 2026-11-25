@@ -245,6 +245,7 @@ h3{font-size:17px;font-weight:800;margin-bottom:8px}
 <canvas id="confetti"></canvas>
 <div id="modalRoot"></div>
 
+<script src="audio.js"></script>
 <script>
 /* =====================================================================
    יאללה ערבית! — אפליקציה ללימוד ערבית לכיתה ז' (בית ספר דובר עברית)
@@ -406,8 +407,14 @@ function buzz(ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
 let arVoice=null;
 function loadVoices(){ try{const vs=speechSynthesis.getVoices();arVoice=vs.find(v=>/^ar[-_]?/i.test(v.lang))||null;}catch(e){} }
 if("speechSynthesis" in window){ loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
-const voiceOK=()=>!!arVoice;
+const AUDIO=window.AUDIO_DATA||{};
+const HAS_CLIPS=Object.keys(AUDIO).length>0;
+const voiceOK=()=>HAS_CLIPS||!!arVoice;
+let player=null;
 function speak(text,manual){
+  // 1) built-in recorded clip (works on every device)
+  if(AUDIO[text]){ try{ if(player) player.pause(); player=new Audio("data:audio/mpeg;base64,"+AUDIO[text]); const pr=player.play(); if(pr&&pr.catch) pr.catch(()=>{}); }catch(e){} return; }
+  // 2) fallback: the device's own Arabic voice
   if(!("speechSynthesis" in window)){ if(manual) voiceHelp(); return; }
   if(!arVoice) loadVoices();
   if(!arVoice&&manual){ voiceHelp(); return; }
@@ -514,7 +521,7 @@ function kindsFor(it){
   else if(it.type==="sign"){ k.push("ar2he","he2ar"); if(it.sm) k.push("sunmoon","sunmoon"); }
   else if(it.type==="digit") k.push("ar2he","he2ar");
   else { k.push("ar2he","he2ar"); if(it.type==="word"){ k.push("tr"); if(spellable(it)) k.push("spell","spell"); } }
-  if(voiceOK()&&it.type!=="digit") k.push("listen");
+  if(voiceOK()) k.push("listen");
   return k;
 }
 function distract(it,key,pool,n=3){
@@ -641,14 +648,14 @@ function renderLearn(){
   } else {
     const big=Array.from(it.ar).length<=8?"bigar":"midar";
     body=`<div class="${big} ar" style="${big==="bigar"?"font-size:78px":""}">${it.ar}</div><h2>${it.he}</h2>${it.type!=="sign"&&it.type!=="digit"?`<div class="muted" style="font-size:18px;font-weight:700">${it.tr}</div>`:""}
-    ${it.type!=="digit"?sayBtn(it.say):""}`;
+    ${sayBtn(it.say)}`;
   }
   main().innerHTML=`<div class="backbar"><button class="back" onclick="go({tab:'map',unit:${n}})">✕</button><h3 style="margin:0">📖 לימוד · ${i+1}/${items.length}</h3></div>
    <div class="card flash">${body}</div>
    <div class="dots">${items.map((_,k)=>`<i class="${k<=i?"on":""}"></i>`).join("")}</div>
    <div class="row"><button class="btn ghost" style="flex:1" onclick="learnStep(-1)" ${i===0?"disabled":""}>→ הקודם</button>
    <button class="btn" style="flex:2" onclick="learnStep(1)">${i===items.length-1?"סיימתי! 🎉":"הבא ←"}</button></div>`;
-  if(voiceOK()&&it.type!=="digit") setTimeout(()=>speak(it.say),250);
+  if(voiceOK()) setTimeout(()=>speak(it.say),250);
 }
 function learnStep(d){ SFX.tap(); if(GM.i+d>=GM.items.length){ const n=GM.n; if(!S.learnDone[n]){S.learnDone[n]=1; addXP(15); confetti(80); toast("📖 סיימת לעבור על כל הכרטיסים! +15 XP","gold");} save();
     modal(`<div class="center"><div style="font-size:60px">📖✨</div><h2>${G("כל הכבוד","כל הכבוד")}!</h2><p class="muted">עכשיו הזמן לבדוק את עצמך בתרגול</p><div class="sp"></div><button class="btn block" onclick="closeModal();startLesson(${n})">🎯 לתרגול</button><div class="sp"></div><button class="btn ghost block" onclick="closeModal();go({tab:'map',unit:${n}})">חזרה ליחידה</button></div>`); return; }
@@ -673,7 +680,7 @@ function renderQ(){
   const prog=Math.round(Q.correct/Q.total*100);
   let p="";
   const big=(s)=>Array.from(s).length>7?"qs":"q";
-  if(q.kind==="ar2he") p=`<div class="ask">${it.type==="letter"?"איזו אות זו?":it.type==="sign"?"איך קוראים את זה?":it.type==="digit"?"איזה מספר זה?":"מה הפירוש?"}</div><div class="ar ${big(it.ar)}">${it.ar}</div>${it.type!=="digit"&&voiceOK()?sayBtn(it.say,"sm"):""}`;
+  if(q.kind==="ar2he") p=`<div class="ask">${it.type==="letter"?"איזו אות זו?":it.type==="sign"?"איך קוראים את זה?":it.type==="digit"?"איזה מספר זה?":"מה הפירוש?"}</div><div class="ar ${big(it.ar)}">${it.ar}</div>${voiceOK()?sayBtn(it.say,"sm"):""}`;
   else if(q.kind==="he2ar") p=`<div class="ask">${it.type==="letter"?"איפה האות":"איך כותבים בערבית"}</div><div class="heq">${it.he}</div>`;
   else if(q.kind==="listen") p=`<div class="ask">🎧 ${G("הקשיבי","הקשב")} ${G("ובחרי","ובחר")}</div><button class="speak" style="width:90px;height:90px;font-size:42px" onclick="speak('${it.say.replace(/'/g,"\\'")}',true)">🔊</button>`;
   else if(q.kind==="tr") p=`<div class="ask">איך קוראים את המילה?</div><div class="ar ${big(it.ar)}">${it.ar}</div>`;
@@ -716,7 +723,7 @@ function grade(ok,el){
     if(Q.combo===5||Q.combo===10||Q.combo%10===0){ SFX.combo(); confetti(50); toast(`🔥 קומבו ${Q.combo}! XP x${mult}`,"gold"); } else SFX.ok();
     buzz(25); const pr=pick(PRAISE);
     html=`<div class="msg">✅ <span class="ar" style="font-size:24px">${G(pr[0],pr[1])}</span> ${pr[2]}</div><div class="sub">${it.type==="letter"?`<b class="ar" style="font-size:22px">${it.ar}</b> = ${it.he}`:`<b class="ar" style="font-size:22px">${it.ar}</b> = ${it.he}${it.tr&&it.tr!==it.he?` · ${it.tr}`:""}`}</div>`;
-    if(voiceOK()&&it.type!=="digit") speak(it.say);
+    if(voiceOK()) speak(it.say);
   } else {
     Q.combo=0; Q.lives--; Q.wrong++; SFX.bad(); buzz([60,40,60]);
     if(Q.requeue&&!q.again){ const nq=makeQ(it,Q.items,q.kind); nq.again=true; Q.queue.push(nq); }
@@ -891,7 +898,7 @@ function renderReviewTab(){
    <button class="btn purple block" onclick="startReview()">🧠 התחלת חזרה (+בונוס XP)</button></div>
    <div class="card"><h3>📦 קופסאות הזיכרון שלך</h3><div style="display:flex;gap:6px;align-items:flex-end;height:110px">${byBox.map((c,b)=>`<div style="flex:1;text-align:center"><div style="font-weight:800;font-size:13px">${c}</div><div style="height:${Math.max(4,c/Math.max(1,...byBox)*80)}px;background:${["#fca5a5","#fdba74","#fde047","#bef264","#86efac","#22c55e"][b]};border-radius:8px 8px 0 0"></div><small class="muted" style="font-size:10px">${["חדש","1","2","3","4","שולט"][b]}</small></div>`).join("")}</div>
    <p class="note" style="margin-top:8px">כל תשובה נכונה מעבירה פריט לקופסה הבאה. טעות מחזירה אותו אחורה. המטרה: להביא הכל לקופסה הירוקה! 💚</p></div>
-   ${weak.length?`<div class="card"><h3>🎯 הכי מאתגרים אותך</h3><table class="wl">${weak.map(it=>`<tr><td class="ar">${it.ar}</td><td>${it.he}</td><td>${it.type!=="digit"?sayBtn(it.say,"sm"):""}</td></tr>`).join("")}</table></div>`:""}`;
+   ${weak.length?`<div class="card"><h3>🎯 הכי מאתגרים אותך</h3><table class="wl">${weak.map(it=>`<tr><td class="ar">${it.ar}</td><td>${it.he}</td><td>${sayBtn(it.say,"sm")}</td></tr>`).join("")}</table></div>`:""}`;
 }
 
 /* ----- ACHIEVEMENTS ----- */
@@ -963,7 +970,7 @@ function settings(){
    <label class="field-l">איך לפנות אליך?</label><div class="choice"><button class="${S.gender==="f"?"on":""}" onclick="S.gender='f';save();settings()">בת 👧</button><button class="${S.gender==="m"?"on":""}" onclick="S.gender='m';save();settings()">בן 👦</button></div>
    <label class="field-l">יעד יומי</label><div class="choice">${[[30,"קליל"],[50,"רגיל"],[80,"רציני"],[120,"אלוף"]].map(([g,t])=>`<button class="${S.goal===g?"on":""}" onclick="S.goal=${g};save();settings()">${t}<br><small>${g} XP</small></button>`).join("")}</div>
    <label class="field-l">צלילים</label><div class="choice"><button class="${S.sound?"on":""}" onclick="S.sound=true;save();settings()">🔊 פועל</button><button class="${!S.sound?"on":""}" onclick="S.sound=false;save();settings()">🔇 כבוי</button></div>
-   <p class="note" style="margin-top:10px">🗣️ הקראה בערבית: ${voiceOK()?`✅ זמינה (${arVoice.name})</p>`:`❌ לא נמצא קול ערבי במכשיר.</p>${VOICE_HELP}`}
+   <p class="note" style="margin-top:10px">🗣️ הקראה בערבית: ${HAS_CLIPS?`✅ קבצי שמע מובנים באפליקציה (${Object.keys(AUDIO).length} הקלטות)</p>`:voiceOK()?`✅ זמינה (${arVoice.name})</p>`:`❌ לא נמצא קול ערבי במכשיר.</p>${VOICE_HELP}`}
    <label class="field-l">👨‍👩‍👧 מצב הורה</label>
    <div class="choice"><button onclick="askConfirm('לפתוח את כל 11 היחידות?','unlockAll()')">🔓 פתיחת כל היחידות</button>
    <button onclick="askConfirm('למחוק את כל ההתקדמות? אי אפשר לבטל!','resetAll()')" style="color:var(--red)">🗑️ איפוס</button></div>
