@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f766e">
-<title>יאללה ערבית! — כיתה ז'</title>
+<title>יאללה ערבית</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet">
 <style>
-:root{
+:root{color-scheme:light;
   --bg:#fbf4e6; --bg2:#f3e6cc; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --line:#e9dcc2;
   --teal:#0f766e; --teal2:#14b8a6; --gold:#f59e0b; --gold2:#fde68a; --red:#ef4444; --green:#16a34a; --green2:#dcfce7;
   --red2:#fee2e2; --purple:#7c3aed; --blue:#2563eb; --shadow:0 4px 0 rgba(0,0,0,.08), 0 8px 24px rgba(120,90,40,.10);
@@ -652,7 +652,7 @@ function startQuiz(o){
   const qs=o.mode==="review"?buildLesson(o.items,o.count):buildLesson(o.items,o.count);
   Q={...o,queue:qs,idx:0,total:qs.length,lives:o.lives,maxLives:o.lives,combo:0,maxcombo:0,correct:0,wrong:0,xp:0,answered:false}; renderQ();
 }
-function quitQuiz(){ if(Q&&Q.correct>0&&!confirm("לצאת? ההתקדמות בתרגול הזה תאבד (ה-XP נשמר).")) return; const back=Q&&Q.n?{tab:"map",unit:Q.n}:{tab:VIEW.tab==="review"?"review":"map"}; Q=null; go(back); }
+function quitQuiz(force){ if(!force&&Q&&Q.correct>0){ askConfirm("לצאת מהתרגול? ההתקדמות בתרגול הזה תאבד (ה-XP נשמר).","quitQuiz(true)"); return; } const back=Q&&Q.n?{tab:"map",unit:Q.n}:{tab:VIEW.tab==="review"?"review":"map"}; Q=null; go(back); }
 function optLabel(it,show){ return show==="ar"?`<span class="ar">${it.ar}</span>`:(it[show]); }
 function renderQ(){
   const q=Q.queue[Q.idx], it=q.it; Q.answered=false; hideSheet();
@@ -940,6 +940,9 @@ function letterModal(ch){ const it=LETTERS[ch], f=formsOf(ch);
 /* ----- MODAL / SETTINGS / ONBOARDING ----- */
 function modal(html){ document.getElementById("modalRoot").innerHTML=`<div class="modal" onclick="if(event.target===this)closeModal()"><div class="box">${html}</div></div>`; }
 function closeModal(){ document.getElementById("modalRoot").innerHTML=""; }
+function askConfirm(msg,action){ modal(`<div class="center"><div style="font-size:48px">🤔</div><h3 style="margin:8px 0 16px">${msg}</h3><div class="row"><button class="btn ghost" style="flex:1" onclick="closeModal()">ביטול</button><button class="btn red" style="flex:1" onclick="closeModal();${action}">כן</button></div></div>`); }
+function unlockAll(){ S.unlocked=UNITS.length; save(); route(); toast('🔓 כל היחידות פתוחות'); }
+function resetAll(){ try{localStorage.removeItem(KEY)}catch(e){} S=JSON.parse(JSON.stringify(DEF)); VIEW={tab:'map'}; ensureDay(); route(); onboarding(0); }
 function settings(){
   modal(`<h2>⚙️ הגדרות</h2>
    <label class="field-l">שם</label><input class="inp" id="sName" value="${S.name.replace(/"/g,"")}" maxlength="20">
@@ -948,8 +951,8 @@ function settings(){
    <label class="field-l">צלילים</label><div class="choice"><button class="${S.sound?"on":""}" onclick="S.sound=true;save();settings()">🔊 פועל</button><button class="${!S.sound?"on":""}" onclick="S.sound=false;save();settings()">🔇 כבוי</button></div>
    <p class="note" style="margin-top:10px">🗣️ הקראה בערבית: ${voiceOK()?`✅ זמינה (${arVoice.name})`:"❌ לא נמצא קול ערבי במכשיר. בטלפון/מחשב אפשר להוסיף קול ערבי בהגדרות הנגישות / ההקראה של המערכת."}</p>
    <label class="field-l">👨‍👩‍👧 מצב הורה</label>
-   <div class="choice"><button onclick="if(confirm('לפתוח את כל 11 היחידות?')){S.unlocked=${UNITS.length};save();closeModal();route();toast('🔓 כל היחידות פתוחות')}">🔓 פתיחת כל היחידות</button>
-   <button onclick="if(confirm('למחוק את כל ההתקדמות? אי אפשר לבטל!')){try{localStorage.removeItem(KEY)}catch(e){};location.reload()}" style="color:var(--red)">🗑️ איפוס</button></div>
+   <div class="choice"><button onclick="askConfirm('לפתוח את כל 11 היחידות?','unlockAll()')">🔓 פתיחת כל היחידות</button>
+   <button onclick="askConfirm('למחוק את כל ההתקדמות? אי אפשר לבטל!','resetAll()')" style="color:var(--red)">🗑️ איפוס</button></div>
    <div class="sp"></div><button class="btn block" onclick="S.name=document.getElementById('sName').value.trim();save();closeModal();route()">שמירה</button>`);
 }
 function onboarding(step=0,data={gender:"f",goal:50,start:1}){
