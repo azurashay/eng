@@ -407,8 +407,22 @@ let arVoice=null;
 function loadVoices(){ try{const vs=speechSynthesis.getVoices();arVoice=vs.find(v=>/^ar[-_]?/i.test(v.lang))||null;}catch(e){} }
 if("speechSynthesis" in window){ loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
 const voiceOK=()=>!!arVoice;
-function speak(text){ if(!("speechSynthesis" in window)) return; try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=arVoice?arVoice.lang:"ar-SA";if(arVoice)u.voice=arVoice;u.rate=.75;speechSynthesis.speak(u)}catch(e){} }
-function sayBtn(text,cls=""){ return `<button class="speak ${cls}" onclick="event.stopPropagation();speak('${text.replace(/'/g,"\\'")}')" title="הקראה">🔊</button>`; }
+function speak(text,manual){
+  if(!("speechSynthesis" in window)){ if(manual) voiceHelp(); return; }
+  if(!arVoice) loadVoices();
+  if(!arVoice&&manual){ voiceHelp(); return; }
+  try{ speechSynthesis.cancel(); }catch(e){}
+  // Chrome sometimes drops an utterance spoken right after cancel(), so wait a moment
+  setTimeout(()=>{ try{ const u=new SpeechSynthesisUtterance(text); u.lang=arVoice?arVoice.lang:"ar-SA"; if(arVoice) u.voice=arVoice; u.rate=.75; speechSynthesis.resume(); speechSynthesis.speak(u); }catch(e){} },80);
+}
+const VOICE_HELP=`<p style="line-height:1.7">הדפדפן משתמש בקולות ההקראה של המכשיר, ובמכשיר הזה לא מותקן קול בערבית. אחרי שמוסיפים קול צריך <b>לסגור את כרום לגמרי ולפתוח מחדש</b>.</p>
+ <ul class="tips" style="font-size:14px">
+  <li><b>מק:</b> הגדרות מערכת ← נגישות ← תוכן מדובר ← קול המערכת ← ניהול קולות ← ערבית ← להוריד קול (למשל Majed).</li>
+  <li><b>ווינדוס:</b> הגדרות ← זמן ושפה ← שפה ואזור ← הוספת שפה ← ערבית, ולסמן "טקסט לדיבור".</li>
+  <li><b>אנדרואיד:</b> הגדרות ← נגישות / ניהול כללי ← פלט המרת טקסט לדיבור ← מנוע Google ← התקנת נתוני קול ← ערבית.</li>
+  <li><b>אייפון / אייפד:</b> הגדרות ← נגישות ← תוכן מדובר ← קולות ← ערבית ← להוריד קול.</li></ul>`;
+function voiceHelp(){ modal(`<h2>🔇 אין קול בערבית</h2>${VOICE_HELP}<div class="sp"></div><button class="btn block" onclick="closeModal()">הבנתי</button>`); }
+function sayBtn(text,cls=""){ return `<button class="speak ${cls}" onclick="event.stopPropagation();speak('${text.replace(/'/g,"\\'")}',true)" title="הקראה">🔊</button>`; }
 
 const cv=document.getElementById("confetti"),cx=cv.getContext("2d");let parts=[],confRAF=null;
 function confetti(n=120){ cv.width=innerWidth;cv.height=innerHeight;const cols=["#f59e0b","#10b981","#ef4444","#3b82f6","#a855f7","#ec4899","#fde047"];
@@ -661,7 +675,7 @@ function renderQ(){
   const big=(s)=>Array.from(s).length>7?"qs":"q";
   if(q.kind==="ar2he") p=`<div class="ask">${it.type==="letter"?"איזו אות זו?":it.type==="sign"?"איך קוראים את זה?":it.type==="digit"?"איזה מספר זה?":"מה הפירוש?"}</div><div class="ar ${big(it.ar)}">${it.ar}</div>${it.type!=="digit"&&voiceOK()?sayBtn(it.say,"sm"):""}`;
   else if(q.kind==="he2ar") p=`<div class="ask">${it.type==="letter"?"איפה האות":"איך כותבים בערבית"}</div><div class="heq">${it.he}</div>`;
-  else if(q.kind==="listen") p=`<div class="ask">🎧 ${G("הקשיבי","הקשב")} ${G("ובחרי","ובחר")}</div><button class="speak" style="width:90px;height:90px;font-size:42px" onclick="speak('${it.say.replace(/'/g,"\\'")}')">🔊</button>`;
+  else if(q.kind==="listen") p=`<div class="ask">🎧 ${G("הקשיבי","הקשב")} ${G("ובחרי","ובחר")}</div><button class="speak" style="width:90px;height:90px;font-size:42px" onclick="speak('${it.say.replace(/'/g,"\\'")}',true)">🔊</button>`;
   else if(q.kind==="tr") p=`<div class="ask">איך קוראים את המילה?</div><div class="ar ${big(it.ar)}">${it.ar}</div>`;
   else if(q.kind==="form") p=`<div class="ask">איזו אות מסתתרת כאן? <small>(${FORM_NAMES[q.fk]})</small></div><div class="ar q" style="font-size:84px">${q.ftext}</div>`;
   else if(q.kind==="sunmoon") p=`<div class="ask">אות שמש ☀️ או אות ירח 🌙?</div><div class="ar q">${strip(it.ar)}</div>`;
@@ -949,7 +963,7 @@ function settings(){
    <label class="field-l">איך לפנות אליך?</label><div class="choice"><button class="${S.gender==="f"?"on":""}" onclick="S.gender='f';save();settings()">בת 👧</button><button class="${S.gender==="m"?"on":""}" onclick="S.gender='m';save();settings()">בן 👦</button></div>
    <label class="field-l">יעד יומי</label><div class="choice">${[[30,"קליל"],[50,"רגיל"],[80,"רציני"],[120,"אלוף"]].map(([g,t])=>`<button class="${S.goal===g?"on":""}" onclick="S.goal=${g};save();settings()">${t}<br><small>${g} XP</small></button>`).join("")}</div>
    <label class="field-l">צלילים</label><div class="choice"><button class="${S.sound?"on":""}" onclick="S.sound=true;save();settings()">🔊 פועל</button><button class="${!S.sound?"on":""}" onclick="S.sound=false;save();settings()">🔇 כבוי</button></div>
-   <p class="note" style="margin-top:10px">🗣️ הקראה בערבית: ${voiceOK()?`✅ זמינה (${arVoice.name})`:"❌ לא נמצא קול ערבי במכשיר. בטלפון/מחשב אפשר להוסיף קול ערבי בהגדרות הנגישות / ההקראה של המערכת."}</p>
+   <p class="note" style="margin-top:10px">🗣️ הקראה בערבית: ${voiceOK()?`✅ זמינה (${arVoice.name})</p>`:`❌ לא נמצא קול ערבי במכשיר.</p>${VOICE_HELP}`}
    <label class="field-l">👨‍👩‍👧 מצב הורה</label>
    <div class="choice"><button onclick="askConfirm('לפתוח את כל 11 היחידות?','unlockAll()')">🔓 פתיחת כל היחידות</button>
    <button onclick="askConfirm('למחוק את כל ההתקדמות? אי אפשר לבטל!','resetAll()')" style="color:var(--red)">🗑️ איפוס</button></div>
