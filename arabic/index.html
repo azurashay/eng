@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<title>יאללה ערבית! — כיתה ז'</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fbf4e6; --bg2:#f3e6cc; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --line:#e9dcc2;
+  --teal:#0f766e; --teal2:#14b8a6; --gold:#f59e0b; --gold2:#fde68a; --red:#ef4444; --green:#16a34a; --green2:#dcfce7;
+  --red2:#fee2e2; --purple:#7c3aed; --blue:#2563eb; --shadow:0 4px 0 rgba(0,0,0,.08), 0 8px 24px rgba(120,90,40,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:"Heebo",-apple-system,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--ink);
+  background-image:radial-gradient(circle at 20% 0%,#fff7e0 0,transparent 40%),radial-gradient(circle at 100% 100%,#f1e2c2 0,transparent 45%);
+  min-height:100vh;overflow-x:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.ar{font-family:"Noto Naskh Arabic","Geeza Pro","Traditional Arabic","Arial",serif;direction:rtl;unicode-bidi:isolate;line-height:1.6}
+#app{max-width:560px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding-bottom:84px}
+body.ingame #app{padding-bottom:12px}
+/* top bar */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(251,244,230,.92);backdrop-filter:blur(8px);border-bottom:2px solid var(--line)}
+.avatar{width:42px;height:42px;border-radius:50%;background:#fff;border:3px solid var(--teal2);font-size:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pill{display:flex;align-items:center;gap:4px;font-weight:800;font-size:15px;padding:6px 10px;border-radius:999px;background:#fff;box-shadow:0 2px 0 rgba(0,0,0,.06)}
+.pill.fire{color:#ea580c}.pill.gem{color:#0891b2}.pill.dim{opacity:.45;filter:grayscale(1)}
+.lvl{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;align-items:stretch}
+.lvl small{font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{height:8px;border-radius:99px;background:#eadfc8;overflow:hidden}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#fb923c);border-radius:99px;transition:width .6s}
+#main{flex:1;padding:14px}
+/* nav */
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;justify-content:center;background:#fff;border-top:2px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+.nav .in{display:flex;max-width:560px;width:100%;justify-content:space-around}
+.nav button{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:700;color:var(--muted);padding:4px 6px;border-radius:12px;min-width:56px}
+.nav button b{font-size:23px;line-height:1.1}
+.nav button.on{color:var(--teal);background:#e6f6f3}
+.nav .badge{position:absolute;margin:-4px 26px 0 0;background:var(--red);color:#fff;font-size:10px;border-radius:99px;padding:0 5px}
+body.ingame .nav{display:none}
+/* cards & buttons */
+.card{background:var(--card);border-radius:20px;box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:17px;padding:14px 18px;border-radius:16px;background:var(--teal);color:#fff;box-shadow:0 4px 0 #0b5c55;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0b5c55}
+.btn.gold{background:var(--gold);box-shadow:0 4px 0 #b45309}
+.btn.purple{background:var(--purple);box-shadow:0 4px 0 #5b21b6}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:0 4px 0 #d6c8ab;border:2px solid var(--line)}
+.btn.red{background:var(--red);box-shadow:0 4px 0 #b91c1c}
+.btn.block{width:100%}
+.btn[disabled]{opacity:.45;pointer-events:none}
+h2{font-size:22px;font-weight:800;margin-bottom:6px}
+h3{font-size:17px;font-weight:800;margin-bottom:8px}
+.muted{color:var(--muted)}
+.row{display:flex;gap:10px;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* mascot */
+.mascot{display:flex;gap:10px;align-items:flex-end;margin-bottom:12px}
+.mascot .face{font-size:52px;animation:bob 2.4s ease-in-out infinite;flex-shrink:0}
+.bubble{background:#fff;border-radius:18px 18px 18px 4px;padding:12px 14px;box-shadow:var(--shadow);font-weight:600;line-height:1.5;position:relative;flex:1}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-6px) rotate(3deg)}}
+/* daily */
+.daily{display:flex;gap:14px;align-items:center}
+.ring{--p:0;width:74px;height:74px;border-radius:50%;flex-shrink:0;background:conic-gradient(var(--gold) calc(var(--p)*1%),#f1e7d2 0);display:flex;align-items:center;justify-content:center}
+.ring>span{width:58px;height:58px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:14px;line-height:1.1}
+.ring>span small{font-size:10px;color:var(--muted)}
+.quest{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px dashed var(--line);font-size:14px}
+.quest:first-child{border-top:none}
+.quest .qb{flex:1}
+.quest .bar{height:7px;margin-top:3px}
+.quest .bar>i{background:linear-gradient(90deg,var(--teal2),var(--teal))}
+.claim{font-size:13px;padding:6px 10px;border-radius:10px;background:var(--gold);color:#fff;font-weight:800;box-shadow:0 3px 0 #b45309;animation:pulse 1s infinite}
+.done-chip{font-size:12px;color:var(--green);font-weight:800}
+@keyframes pulse{50%{transform:scale(1.08)}}
+/* path */
+.path{position:relative;padding:10px 0 30px}
+.unitrow{display:flex;justify-content:center;margin:6px 0}
+.node{position:relative;width:92px;height:92px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:38px;color:#fff;
+  box-shadow:0 7px 0 rgba(0,0,0,.18);transition:transform .1s}
+.node:active{transform:translateY(4px);box-shadow:0 3px 0 rgba(0,0,0,.18)}
+.node.locked{background:#d9cfbd!important;filter:grayscale(.6);box-shadow:0 7px 0 #b9ad96}
+.node .mring{position:absolute;inset:-8px;border-radius:50%;background:conic-gradient(var(--gold) calc(var(--m)*1%),rgba(0,0,0,.07) 0);z-index:-1}
+.node.current::after{content:"";position:absolute;inset:-14px;border-radius:50%;border:3px dashed var(--teal2);animation:spin 12s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.nodewrap{display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;z-index:1}
+.nodelabel{font-size:13px;font-weight:800;text-align:center;max-width:170px;background:#fff;padding:3px 10px;border-radius:10px;box-shadow:0 2px 0 rgba(0,0,0,.06)}
+.nodestars{font-size:14px;letter-spacing:1px;height:18px}
+.month{font-size:11px;color:var(--muted);font-weight:700}
+.start-tag{position:absolute;top:-30px;background:var(--teal);color:#fff;font-weight:800;font-size:12px;padding:4px 10px;border-radius:10px;animation:bob2 1.4s infinite;white-space:nowrap}
+@keyframes bob2{50%{transform:translateY(-5px)}}
+.review-btn{display:flex;align-items:center;gap:12px;width:100%;text-align:right;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border-radius:20px;padding:14px 16px;box-shadow:0 5px 0 #5b21b6;margin-bottom:14px}
+.review-btn b{font-size:34px}
+/* unit screen */
+.backbar{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.back{font-size:22px;width:40px;height:40px;border-radius:12px;background:#fff;box-shadow:0 2px 0 rgba(0,0,0,.08)}
+.unit-hero{border-radius:22px;padding:18px;color:#fff;margin-bottom:14px;box-shadow:var(--shadow)}
+.unit-hero .big{font-size:44px}
+.tips li{margin:6px 18px 6px 0;line-height:1.6}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.act{background:#fff;border-radius:18px;padding:14px 10px;text-align:center;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;gap:4px;border:2px solid transparent}
+.act b{font-size:36px}
+.act strong{font-size:16px}
+.act small{color:var(--muted);font-size:12px;line-height:1.3}
+.act.hero{grid-column:1/-1;flex-direction:row;justify-content:center;gap:14px;background:linear-gradient(135deg,#fff,#fff7e0);border-color:var(--gold2)}
+/* learn */
+.flash{text-align:center;padding:22px 16px;min-height:330px;display:flex;flex-direction:column;align-items:center;gap:10px;justify-content:center}
+.flash .bigar{font-size:96px;line-height:1.3;color:var(--teal)}
+.flash .midar{font-size:52px;line-height:1.5;color:var(--teal)}
+.forms{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:100%}
+.forms div{background:var(--bg);border-radius:12px;padding:6px 2px}
+.forms .ar{font-size:34px;display:block;line-height:1.5}
+.forms small{font-size:11px;color:var(--muted);font-weight:700}
+.chip{display:inline-flex;align-items:center;gap:8px;background:var(--bg);border-radius:14px;padding:8px 12px;font-weight:700}
+.speak{width:48px;height:48px;border-radius:50%;background:var(--teal2);color:#fff;font-size:22px;box-shadow:0 3px 0 #0d9488;flex-shrink:0}
+.speak.sm{width:36px;height:36px;font-size:16px}
+.dots{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin:8px 0}
+.dots i{width:8px;height:8px;border-radius:50%;background:#e2d5bb}
+.dots i.on{background:var(--teal)}
+/* quiz */
+.qhead{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.qhead .bar{flex:1;height:14px}
+.qhead .bar>i{background:linear-gradient(90deg,#22c55e,#16a34a)}
+.hearts{font-size:18px;white-space:nowrap}
+.combo{text-align:center;font-weight:800;color:#ea580c;height:24px;margin-bottom:4px;transition:transform .2s}
+.combo.pop{animation:pop .35s}
+@keyframes pop{50%{transform:scale(1.5)}}
+.qprompt{text-align:center;margin-bottom:16px}
+.qprompt .ask{font-weight:700;color:var(--muted);margin-bottom:8px;font-size:15px}
+.qprompt .ar.q{font-size:68px;color:var(--teal);line-height:1.45}
+.qprompt .ar.qs{font-size:44px;color:var(--teal);line-height:1.6}
+.qprompt .heq{font-size:30px;font-weight:800}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{background:#fff;border:3px solid var(--line);border-radius:16px;padding:12px 8px;font-weight:700;font-size:17px;min-height:68px;box-shadow:0 4px 0 var(--line);transition:transform .08s}
+.opt:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.opt .ar{font-size:34px;line-height:1.4}
+.opt.ok{background:var(--green2);border-color:var(--green);box-shadow:0 4px 0 var(--green)}
+.opt.bad{background:var(--red2);border-color:var(--red);box-shadow:0 4px 0 var(--red);animation:shake .4s}
+.opt.dim{opacity:.5}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:40;padding:16px 16px calc(16px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .25s}
+.sheet.show{transform:none}
+.sheet .in{max-width:560px;margin:0 auto}
+.sheet.good{background:#dcfce7;border-top:3px solid #86efac}
+.sheet.wrong{background:#fee2e2;border-top:3px solid #fca5a5}
+.sheet .msg{font-weight:800;font-size:19px;margin-bottom:4px}
+.sheet .sub{margin-bottom:12px;line-height:1.5}
+.sheet.good .btn{background:var(--green);box-shadow:0 4px 0 #166534}
+.slots{min-height:84px;border-bottom:3px solid var(--line);margin:4px 20px 16px;display:flex;align-items:center;justify-content:center;font-size:54px;color:var(--teal)}
+.tiles{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:14px}
+.tile{width:58px;height:62px;border-radius:14px;background:#fff;border:3px solid var(--line);box-shadow:0 4px 0 var(--line);font-size:32px}
+.tile.used{opacity:.2;pointer-events:none}
+.xpfloat{position:fixed;z-index:60;font-weight:800;color:var(--gold);font-size:26px;pointer-events:none;animation:float 1s forwards;text-shadow:0 2px 0 #fff}
+@keyframes float{to{transform:translateY(-70px);opacity:0}}
+/* results */
+.result{text-align:center;padding-top:10px}
+.bigstars{font-size:56px;letter-spacing:6px;margin:8px 0}
+.bigstars span{display:inline-block;opacity:.18;filter:grayscale(1);transform:scale(.6);transition:all .4s cubic-bezier(.3,1.8,.5,1)}
+.bigstars span.on{opacity:1;filter:none;transform:scale(1)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.stat{background:#fff;border-radius:16px;padding:10px 4px;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:22px}
+.stat small{font-size:12px;color:var(--muted);font-weight:700}
+.chest{font-size:96px;display:inline-block;cursor:pointer;margin:10px 0}
+.chest.shake{animation:cshake .5s 3}
+@keyframes cshake{25%{transform:rotate(-12deg) scale(1.05)}75%{transform:rotate(12deg) scale(1.05)}}
+.reward{font-size:24px;font-weight:800;animation:pop .5s}
+/* games */
+.hud{display:flex;justify-content:space-between;align-items:center;font-weight:800;margin-bottom:10px;gap:8px}
+.timer{font-size:22px;color:var(--red)}
+.tf-card{text-align:center;padding:28px 16px;min-height:240px;display:flex;flex-direction:column;justify-content:center;gap:12px}
+.tf-card .ar{font-size:64px;color:var(--teal);line-height:1.4}
+.tf-card .he{font-size:26px;font-weight:800}
+.field{position:relative;height:min(62vh,520px);border-radius:22px;background:linear-gradient(#bae6fd,#e0f2fe 60%,#fef3c7);overflow:hidden;box-shadow:inset 0 0 0 3px #93c5fd;touch-action:manipulation}
+.drop{position:absolute;top:0;min-width:64px;height:64px;padding:0 10px;border-radius:32px;background:#fff;box-shadow:0 4px 0 #93c5fd;display:flex;align-items:center;justify-content:center;font-size:30px;color:#0f172a;will-change:transform}
+.drop.hit{background:var(--green2);transform:scale(1.4)!important;opacity:0;transition:all .3s}
+.drop.miss{background:var(--red2);animation:shake .4s}
+.target{background:#fff;border-radius:16px;padding:8px 14px;text-align:center;box-shadow:var(--shadow);font-weight:800;font-size:20px;margin-bottom:10px}
+.mem{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.mcard{aspect-ratio:3/3.4;border-radius:16px;perspective:600px}
+.mcard .inner{position:relative;width:100%;height:100%;transition:transform .4s;transform-style:preserve-3d}
+.mcard.flip .inner{transform:rotateY(180deg)}
+.mcard .f,.mcard .b{position:absolute;inset:0;border-radius:16px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+.mcard .f{background:linear-gradient(135deg,var(--teal2),var(--teal));font-size:34px;color:#fff}
+.mcard .b{background:#fff;transform:rotateY(180deg);font-weight:800;font-size:15px;border:3px solid var(--line)}
+.mcard .b .ar{font-size:30px}
+.mcard.matched .b{background:var(--green2);border-color:var(--green)}
+/* badges & shop */
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.badge{background:#fff;border-radius:16px;padding:12px 6px;text-align:center;box-shadow:var(--shadow)}
+.badge b{font-size:34px;display:block}
+.badge strong{font-size:13px;display:block}
+.badge small{font-size:11px;color:var(--muted);line-height:1.2;display:block;margin-top:2px}
+.badge.off{opacity:.45;filter:grayscale(1)}
+.shop{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sitem{background:#fff;border-radius:16px;padding:12px 6px;text-align:center;box-shadow:var(--shadow);border:3px solid transparent}
+.sitem b{font-size:40px;display:block}
+.sitem.sel{border-color:var(--teal2)}
+.sitem small{font-weight:800;font-size:13px}
+/* dictionary */
+.seg{display:flex;background:#efe3cb;border-radius:14px;padding:4px;margin-bottom:14px}
+.seg button{flex:1;padding:9px;border-radius:10px;font-weight:800;font-size:14px;color:var(--muted)}
+.seg button.on{background:#fff;color:var(--teal);box-shadow:0 2px 0 rgba(0,0,0,.06)}
+.abc{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.abc button{background:#fff;border-radius:14px;padding:6px 2px;box-shadow:var(--shadow)}
+.abc .ar{font-size:38px;display:block;color:var(--teal);line-height:1.4}
+.abc small{font-size:11px;font-weight:700;color:var(--muted)}
+.wl{width:100%;border-collapse:collapse}
+.wl td{padding:8px 4px;border-bottom:1px solid var(--line);vertical-align:middle}
+.wl .ar{font-size:24px;color:var(--teal)}
+.wl .tr{color:var(--muted);font-size:13px}
+.timeline{border-right:3px solid var(--teal2);padding-right:14px;margin-right:6px}
+.timeline div{margin-bottom:12px;position:relative}
+.timeline div::before{content:"";position:absolute;right:-22px;top:5px;width:13px;height:13px;border-radius:50%;background:var(--teal2);border:3px solid var(--bg)}
+.timeline b{color:var(--teal)}
+/* modal + toast */
+.modal{position:fixed;inset:0;z-index:70;background:rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal .box{background:var(--bg);border-radius:24px;padding:20px;max-width:440px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 20px 50px rgba(0,0,0,.3);animation:pop .3s}
+.field-l{display:block;font-weight:800;margin:12px 0 6px}
+.inp{width:100%;font-family:inherit;font-size:18px;padding:12px;border-radius:14px;border:2px solid var(--line);background:#fff}
+.choice{display:flex;gap:8px;flex-wrap:wrap}
+.choice button{flex:1;min-width:80px;padding:11px 8px;border-radius:14px;background:#fff;border:3px solid var(--line);font-weight:800;font-size:15px}
+.choice button.on{border-color:var(--teal2);background:#e6f6f3;color:var(--teal)}
+.toasts{position:fixed;top:12px;left:0;right:0;z-index:90;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;padding:0 12px}
+.toast{background:#1f2937;color:#fff;font-weight:700;padding:12px 18px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.25);animation:tin .35s;max-width:480px;text-align:center}
+.toast.gold{background:linear-gradient(135deg,#f59e0b,#ea580c)}
+@keyframes tin{from{transform:translateY(-40px);opacity:0}}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:95}
+.center{text-align:center}
+.sp{height:10px}
+.note{font-size:13px;line-height:1.6;color:var(--muted)}
+.note a{color:var(--teal)}
+@media (max-width:380px){.qprompt .ar.q{font-size:56px}.opt .ar{font-size:28px}.node{width:80px;height:80px;font-size:32px}.tile{width:50px;height:56px;font-size:28px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top" id="top"></div>
+  <div id="main"></div>
+</div>
+<nav class="nav"><div class="in" id="nav"></div></nav>
+<div class="sheet" id="sheet"><div class="in" id="sheetIn"></div></div>
+<div class="toasts" id="toasts"></div>
+<canvas id="confetti"></canvas>
+<div id="modalRoot"></div>
+
+<script>
+/* =====================================================================
+   יאללה ערבית! — אפליקציה ללימוד ערבית לכיתה ז' (בית ספר דובר עברית)
+   הכל בקובץ אחד, בלי תלויות. ההתקדמות נשמרת ב-localStorage במכשיר.
+   ===================================================================== */
+
+/* ---------------- DATA: 28 האותיות ---------------- */
+// [אות, שם בעברית, מקבילה, שם בערבית (להקראה), תעתיק לטיני, משפחת צורה, יחידה, מילה לדוגמה, טיפ]
+const LETTER_DATA = [
+ ["ا","אַלִף","א","أَلِف","a / ā","",1,"أَسَد|אריה|אַסַד","לא מתחברת לאות שאחריה. משמשת גם כתנועת a ארוכה."],
+ ["ب","בָּא","ב","بَاء","b","b",1,"بَاب|דלת|בַּאבּ","נקודה אחת מתחת."],
+ ["ت","תָּא","ת","تَاء","t","b",1,"تِين|תאנים|תִּין","שתי נקודות מעל."],
+ ["ث","ת'ָא","ת'","ثَاء","th","b",1,"ثَلْج|שלג|ת'ַלְג'","שלוש נקודות מעל. נשמעת כמו th באנגלית (think)."],
+ ["ن","נוּן","נ","نُون","n","b",1,"نَار|אש|נַאר","נקודה אחת מעל. בסוף מילה – קערה עמוקה."],
+ ["ي","יָא","י","يَاء","y / ī","b",1,"يَد|יד|יַד","שתי נקודות מתחת. משמשת גם כתנועת i ארוכה."],
+ ["د","דָאל","ד","دَال","d","d",2,"دُبّ|דוב|דֻבּ","לא מתחברת לאות שאחריה."],
+ ["ذ","ד'ָאל","ד'","ذَال","dh","d",2,"ذَهَب|זהב|ד'ַהַבּ","כמו th באנגלית (this). לא מתחברת לאות שאחריה."],
+ ["ر","רָא","ר","رَاء","r","r",2,"رَأْس|ראש|רַאְס","ר מתגלגלת. לא מתחברת לאות שאחריה."],
+ ["ز","זָאי","ז","زَاي","z","r",2,"زَيْت|שמן|זַיְת","כמו ر עם נקודה. לא מתחברת לאות שאחריה."],
+ ["و","וָאו","ו","وَاو","w / ū","",2,"وَرْدَة|ורד|וַרְדַה","משמשת גם כתנועת u ארוכה. לא מתחברת לאות שאחריה."],
+ ["ج","גִ'ים","ג'","جِيم","j","j",3,"جَمَل|גמל|גַ'מַל","נקודה בתוך הבטן."],
+ ["ح","חָא","ח","حَاء","ḥ","j",3,"حَلِيب|חלב|חַלִיבּ","ח גרונית ועמוקה. בלי נקודות."],
+ ["خ","ח'ָא","ח'","خَاء","kh","j",3,"خُبْز|לחם|ח'ֻבְּז","נקודה מעל. נשמעת כמו כ רפה."],
+ ["ع","עֵין","ע","عَيْن","ʿ","a",3,"عَيْن|עין|עַיְן","ע גרונית אמיתית מהגרון."],
+ ["غ","ע'ֵין","ע'","غَيْن","gh","a",3,"غُرَاب|עורב|ע'ֻרַאבּ","נקודה מעל. נשמעת כמו ר צרפתית."],
+ ["س","סִין","ס","سِين","s","s",4,"سَمَك|דגים|סַמַכּ","שלוש שיניים קטנות."],
+ ["ش","שִׁין","ש","شِين","sh","s",4,"شَمْس|שמש|שַׁמְס","כמו س עם שלוש נקודות מעל."],
+ ["ص","צָאד","צ","صَاد","ṣ","S",4,"صَدِيق|חבר|צַדִיק","ס נחצית (עבה). בתעתיק לעברית מסמנים צ."],
+ ["ض","צ'ָאד","צ'","ضَاد","ḍ","S",4,"ضِفْدَع|צפרדע|צ'ִפְדַע","ד נחצית. ערבית נקראת 'שפת הצ'אד'."],
+ ["ط","טָא","ט","طَاء","ṭ","T",4,"طَالِب|תלמיד|טַאלִבּ","ת נחצית (עבה)."],
+ ["ظ","ט'ָא","ט'","ظَاء","ẓ","T",4,"ظَرْف|מעטפה|ט'ַרְף","ד' נחצית. כמו ط עם נקודה."],
+ ["ف","פָא","פ","فَاء","f","f",5,"فِيل|פיל|פִיל","נקודה אחת מעל."],
+ ["ق","קָאף","ק","قَاف","q","f",5,"قَلَم|עט|קַלַם","ק עמוקה מהגרון. שתי נקודות מעל."],
+ ["ك","כָּאף","כ","كَاف","k","",5,"كَلْب|כלב|כַּלְבּ","בתחילה ובאמצע נראית כמו קו עם 'גג'."],
+ ["ل","לָאם","ל","لَام","l","",5,"لَيْمُون|לימון|לַימוּן","ל + א יחד נכתבות כך: لا"],
+ ["م","מִים","מ","مِيم","m","",5,"مَاء|מים|מַאא","עיגול קטן עם זנב."],
+ ["ه","הָא","ה","هَاء","h","",5,"هِلَال|סהר (ירח)|הִלַאל","משנה צורה מאוד לפי המיקום במילה!"]
+];
+
+/* ---------------- DATA: יחידות השנה ---------------- */
+// word strings: "ערבית|עברית|תעתיק"   sign strings: "ערבית|קריאה|תעתיק|sun/moon"
+const UNITS = [
+ {n:1, emoji:"🌱", color:"#10b981", months:"ספטמבר–אוקטובר", title:"אותיות ראשונות", sub:"ا ب ت ث ن ي + תנועות קצרות",
+  letters:"ا ب ت ث ن ي",
+  tips:["ערבית נכתבת מימין לשמאל – בדיוק כמו עברית 😊","לכל אות יש עד 4 צורות: בודדת, בתחילת מילה, באמצע ובסוף.","ب ت ث ن ي – אותה צורה בסיסית! ההבדל הוא רק בנקודות.","תנועות קצרות: ـَ פַתְחַה (a) · ـِ כַּסְרַה (i) · ـُ צַ'מַּה (u)"],
+  signs:["بَ|בַּ · ba","بِ|בִּ · bi","بُ|בֻּ · bu","تَ|תַּ · ta","تِ|תִּ · ti","تُ|תֻּ · tu","نَ|נַ · na","نِ|נִ · ni","نُ|נֻ · nu","يَ|יַ · ya","ثَ|ת'ַ · tha","ثُ|ת'ֻ · thu"],
+  words:["بَاب|דלת|בַּאבּ","بَيْت|בית|בַּיְת","بِنْت|בת / ילדה|בִּנְת","اِبْن|בן|אִבְּן","أَب|אבא|אַבּ","تِين|תאנים|תִּין","نَبَات|צמח|נַבַּאת","بَنَات|בנות|בַּנַאת","أَنَا|אני|אַנַא","أَنْتَ|אתה|אַנְתַ","أَنْتِ|את|אַנְתִ","اِثْنَان|שניים|אִת'נַאן"]},
+ {n:2, emoji:"🌹", color:"#ec4899", months:"אוקטובר–נובמבר", title:"אותיות שלא מתחברות", sub:"د ذ ر ز و + תנועות ארוכות וסוּכּוּן",
+  letters:"د ذ ر ز و",
+  tips:["6 אותיות לא מתחברות לאות שאחריהן: ا د ذ ر ز و","תנועות ארוכות: ـَا (ā) · ـِي (ī) · ـُو (ū)","סוּכּוּן ـْ = אין תנועה (כמו שווא נח).","د/ذ ו-ر/ز – זוגות! הנקודה עושה את ההבדל."],
+  signs:["بَا|בָּא · bā","بِي|בִּי · bī","بُو|בּוּ · bū","دَا|דָא · dā","رِي|רִי · rī","زُو|זוּ · zū","نُو|נוּ · nū","ذَا|ד'ָא · dhā","بَنْ|בַּן · ban","دَرْ|דַר · dar","زَيْ|זַי · zay","يَوْ|יַו · yaw"],
+  words:["دَار|בית (חצר)|דַאר","نَار|אש|נַאר","نُور|אור|נוּר","وَرْد|ורדים|וַרְד","زَيْت|שמן|זַיְת","زَيْتُون|זיתים|זַיְתוּן","ذَنَب|זנב|ד'ַנַבּ","أُذُن|אוזן|אֻד'ֻן","أَرْنَب|ארנב|אַרְנַבּ","يَد|יד|יַד","بَرْد|קור|בַּרְד","وَزِير|שר (בממשלה)|וַזִיר"]},
+ {n:3, emoji:"🐪", color:"#f59e0b", months:"נובמבר–דצמבר", title:"אותיות הגרון", sub:"ج ح خ ع غ + שַׁדַּה",
+  letters:"ج ح خ ع غ",
+  tips:["ج ح خ – אותה צורה. הנקודה משנה הכל: ג' / ח / ח'","ع غ – ע גרונית, ו-ע' שנשמעת כמו ר צרפתית.","שַׁדַּה ـّ = דגש חזק: האות נשמעת כפולה (جَدّ = גַ'דּ).","טריק: ح בלי נקודה, خ נקודה למעלה, ج נקודה בפנים."],
+  signs:["جَا|ג'ָא · jā","حَا|חָא · ḥā","خَا|ח'ָא · khā","عَا|עָא · ʿā","غَا|ע'ָא · ghā","حِي|חִי · ḥī","خُو|ח'וּ · khū","عِي|עִי · ʿī","غُو|ע'וּ · ghū","جَدّ|גַ'דּ · jadd","دُبّ|דֻבּ · dubb","حَارّ|חַארּ · ḥārr"],
+  words:["بَحْر|ים|בַּחְר","خُبْز|לחם|ח'ֻבְּז","عَيْن|עין|עַיְן","عِنَب|ענבים|עִנַבּ","غُرَاب|עורב|ע'ֻרַאבּ","حَجَر|אבן|חַגַ'ר","خَرُوف|כבש|ח'ַרוּף","دَجَاج|תרנגולות / עוף|דַגַ'אג'","جَدّ|סבא|גַ'דּ","دُبّ|דוב|דֻבּ","حَارّ|חם|חַארּ","جَيِّد|טוב|גַ'יִּד","عَرَبِيّ|ערבי|עַרַבִּי"]},
+ {n:4, emoji:"☀️", color:"#ef4444", months:"דצמבר–ינואר", title:"שיניים ואותיות נחציות", sub:"س ش ص ض ط ظ + תַּנְוִין",
+  letters:"س ش ص ض ط ظ",
+  tips:["س ש-ش: שלוש שיניים (ش עם שלוש נקודות).","אותיות נחציות (עבות, מהגרון): ص ض ط ظ","תַּנְוִין = כפל תנועה בסוף מילה: ـٌ (un) · ـً (an) · ـٍ (in)","תנוין מופיע בשם לא מיודע: بَيْتٌ = בית (כלשהו)."],
+  signs:["سَا|סָא · sā","شَا|שָׁא · shā","صَا|צָא · ṣā","ضَا|צ'ָא · ḍā","طَا|טָא · ṭā","ظَا|ט'ָא · ẓā","بَيْتٌ|בַּיְתֻן · baytun","بَيْتًا|בַּיְתַן · baytan","بَيْتٍ|בַּיְתִן · baytin","شَمْسٌ|שַׁמְסֻן · shamsun","صَدِيقًا|צַדִיקַן · ṣadīqan","طَيْرٍ|טַיְרִן · ṭayrin"],
+  words:["شَمْس|שמש|שַׁמְס","صَدِيق|חבר|צַדִיק","طَبِيب|רופא|טַבִּיבּ","شَارِع|רחוב|שַׁארִע","دَرْس|שיעור|דַרְס","شَجَر|עצים|שַׁגַ'ר","طَيْر|ציפור|טַיְר","ظَبْي|צבי|ט'ַבְּי","سَرِير|מיטה|סַרִיר","عَصِير|מיץ|עַצִיר","شَاي|תה|שַׁאי","أَبْيَض|לבן|אַבְּיַצ'","أَسْوَد|שחור|אַסְוַד","أَخْضَر|ירוק|אַח'צ'ַר"]},
+ {n:5, emoji:"🌙", color:"#6366f1", months:"ינואר–פברואר", title:"סוף האלף-בית", sub:"ف ق ك ل م ه + ة · ال · لا · ء",
+  letters:"ف ق ك ل م ه",
+  tips:["ة תָּא מַרְבּוּטַה – סימן נקבה בסוף מילה, נקראת a (مَدْرَسَة = מַדְרַסַה).","ال – אַל הַיִּדּוּעַ (כמו ה' הידיעה): بَيْت ← اَلْبَيْت","אותיות ירח 🌙: ה-ל נשמעת – اَلْقَمَر = אַלְ-קַמַר","אותיות שמש ☀️: ה-ל לא נשמעת והאות הבאה מוכפלת – اَلشَّمْس = אַשׁ-שַׁמְס","אותיות השמש: ت ث د ذ ر ز س ش ص ض ط ظ ل ن","لا = ل + ا בצורה מיוחדת. ء הַמְזַה = עצירה קטנה בקול."],
+  signs:["اَلْقَمَر|אַלְ-קַמַר · al-qamar|moon","اَلْبَيْت|אַלְ-בַּיְת · al-bayt|moon","اَلْكَلْب|אַלְ-כַּלְבּ · al-kalb|moon","اَلْبَحْر|אַלְ-בַּחְר · al-baḥr|moon","اَلْفِيل|אַלְ-פִיל · al-fīl|moon","اَلْعَيْن|אַלְ-עַיְן · al-ʿayn|moon","اَلشَّمْس|אַשׁ-שַׁמְס · ash-shams|sun","اَلنُّور|אַנ-נוּר · an-nūr|sun","اَلدَّرْس|אַד-דַרְס · ad-dars|sun","اَلطَّبِيب|אַט-טַבִּיבּ · aṭ-ṭabīb|sun","اَلسَّمَك|אַס-סַמַכּ · as-samak|sun","اَلزَّيْت|אַז-זַיְת · az-zayt|sun"],
+  words:["كِتَاب|ספר|כִּתַאבּ","قَلَم|עט|קַלַם","كَلْب|כלב|כַּלְבּ","قِطَّة|חתולה|קִטַּה","فِيل|פיל|פִיל","مَاء|מים|מַאא","قَمَر|ירח|קַמַר","مِفْتَاح|מפתח|מִפְתַאח","فَرَاشَة|פרפר|פַרַאשַׁה","لَيْمُون|לימון|לַימוּן","مَدْرَسَة|בית ספר|מַדְרַסַה","لَا|לא|לַא","نَعَم|כן|נַעַם"]},
+ {n:6, emoji:"👋", color:"#0ea5e9", months:"פברואר", title:"ברכות והיכרות", sub:"שלום, מה שלומך + כינויי גוף",
+  tips:["בערבית מבדילים בין אַנְתַ (אתה) לאַנְתִ (את) – בדיוק כמו בעברית.","תשובה ל-صَبَاحُ الْخَيْرِ היא صَبَاحُ النُّورِ (בוקר אור).","كَيْفَ حَالُكَ؟ – לבן · كَيْفَ حَالُكِ؟ – לבת"],
+  phrases:["مَرْحَبًا|שלום / היי|מַרְחַבַּן","أَهْلًا وَسَهْلًا|ברוכים הבאים|אַהְלַן וַסַהְלַן","اَلسَّلَامُ عَلَيْكُمْ|שלום עליכם|אַסַּלַאמֻ עַלַיְכֻּם","وَعَلَيْكُمُ السَّلَامُ|ועליכם השלום|וַעַלַיְכֻּמֻ סַּלַאם","صَبَاحُ الْخَيْرِ|בוקר טוב|צַבַּאחֻ לְח'ַיְר","صَبَاحُ النُّورِ|בוקר אור (תשובה)|צַבַּאחֻ נּוּר","مَسَاءُ الْخَيْرِ|ערב טוב|מַסַאאֻ לְח'ַיְר","كَيْفَ حَالُكَ؟|מה שלומך? (לבן)|כַּיְפַ חַאלֻכַּ","كَيْفَ حَالُكِ؟|מה שלומך? (לבת)|כַּיְפַ חַאלֻכִּ","بِخَيْرٍ|בסדר / טוב|בִּח'ַיְר","شُكْرًا|תודה|שֻׁכְּרַן","عَفْوًا|על לא דבר|עַפְוַן","مَعَ السَّلَامَةِ|להתראות|מַעַ סַּלַאמַה","مَا اسْمُكَ؟|מה שמך?|מַא סְמֻכַּ","اِسْمِي|השם שלי|אִסְמִי"],
+  words:["أَنَا|אני|אַנַא","أَنْتَ|אתה|אַנְתַ","أَنْتِ|את|אַנְתִ","هُوَ|הוא|הֻוַ","هِيَ|היא|הִיַ","نَحْنُ|אנחנו|נַחְנֻ","أَنْتُمْ|אתם|אַנְתֻם","هُمْ|הם|הֻם"]},
+ {n:7, emoji:"🔢", color:"#8b5cf6", months:"מרץ", title:"מספרים", sub:"0–10 והספרות הערביות",
+  tips:["הספרות בערבית: ٠ ١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩","מספרים נכתבים משמאל לימין – בדיוק כמו אצלנו: ١٠ = 10","טריק: ٢ נראית כמו 2 שהסתובבה, ٣ כמו 3 עם שלוש שיניים."],
+  digits:["٠|0","١|1","٢|2","٣|3","٤|4","٥|5","٦|6","٧|7","٨|8","٩|9","١٠|10"],
+  words:["صِفْر|אפס (0)|צִפְר","وَاحِد|אחת (1)|וַאחִד","اِثْنَان|שתיים (2)|אִת'נַאן","ثَلَاثَة|שלוש (3)|ת'ַלַאת'ַה","أَرْبَعَة|ארבע (4)|אַרְבַּעַה","خَمْسَة|חמש (5)|ח'ַמְסַה","سِتَّة|שש (6)|סִתַּה","سَبْعَة|שבע (7)|סַבְּעַה","ثَمَانِيَة|שמונה (8)|ת'ַמַאנִיַה","تِسْعَة|תשע (9)|תִּסְעַה","عَشَرَة|עשר (10)|עַשַׁרַה"]},
+ {n:8, emoji:"👨‍👩‍👧", color:"#14b8a6", months:"מרץ–אפריל", title:"המשפחה שלי", sub:"בני משפחה + כינויי קניין",
+  tips:["כינויי קניין מתחברים לסוף המילה: ـِي שלי · ـُكَ שלך (לבן) · ـُكِ שלך (לבת) · ـُهُ שלו · ـُهَا שלה","بَيْت ← بَيْتِي (הבית שלי)","עם ة: עַאאִלַה ← عَائِلَتِي – ה-ة הופכת ל-ت."],
+  words:["عَائِلَة|משפחה|עַאאִלַה","أَب|אבא|אַבּ","أُمّ|אמא|אֻםּ","أَخ|אח|אַח'","أُخْت|אחות|אֻח'ְת","اِبْن|בן|אִבְּן","بِنْت|בת|בִּנְת","جَدّ|סבא|גַ'דּ","جَدَّة|סבתא|גַ'דַּה","عَمّ|דוד (אח של אבא)|עַםּ","خَال|דוד (אח של אמא)|ח'ַאל","طِفْل|ילד קטן / תינוק|טִפְל"],
+  phrases:["أَبِي|אבא שלי|אַבִּי","أُمِّي|אמא שלי|אֻמִּי","أَخِي|אח שלי|אַח'ִי","أُخْتِي|אחות שלי|אֻח'ְתִי","بَيْتِي|הבית שלי|בַּיְתִי","بَيْتُكَ|הבית שלך (לבן)|בַּיְתֻכַּ","بَيْتُكِ|הבית שלך (לבת)|בַּיְתֻכִּ","بَيْتُهُ|הבית שלו|בַּיְתֻהֻ","بَيْتُهَا|הבית שלה|בַּיְתֻהַא","عَائِلَتِي|המשפחה שלי|עַאאִלַתִי"]},
+ {n:9, emoji:"🏫", color:"#2563eb", months:"אפריל–מאי", title:"בית הספר", sub:"חפצים בכיתה + هَذَا / هَذِهِ",
+  tips:["هَذَا = זה (לזכר) · هَذِهِ = זאת (לנקבה)","מילה שנגמרת ב-ة היא כמעט תמיד נקבה ← هَذِهِ","هَذَا قَلَمٌ = זה עט (בלי 'הוא' באמצע)."],
+  words:["مَدْرَسَة|בית ספר|מַדְרַסַה","صَفّ|כיתה|צַףּ","مُعَلِّم|מורה|מֻעַלִּם","مُعَلِّمَة|מורה (נקבה)|מֻעַלִּמַה","طَالِب|תלמיד|טַאלִבּ","طَالِبَة|תלמידה|טַאלִבַּה","كِتَاب|ספר|כִּתַאבּ","دَفْتَر|מחברת|דַפְתַר","قَلَم|עט|קַלַם","مِسْطَرَة|סרגל|מִסְטַרַה","حَقِيبَة|תיק|חַקִיבַּה","لَوْح|לוח|לַוְח","كُرْسِيّ|כיסא|כֻּרְסִי","شُبَّاك|חלון|שֻׁבַּאכּ"],
+  phrases:["هَذَا|זה (זכר)|הַאד'ַא","هَذِهِ|זאת (נקבה)|הַאד'ִהִ","هَذَا قَلَمٌ|זה עט|הַאד'ַא קַלַמֻן","هَذِهِ مَدْرَسَةٌ|זה בית ספר|הַאד'ִהִ מַדְרַסַתֻן","هَذَا كِتَابِي|זה הספר שלי|הַאד'ַא כִּתַאבִּי","هَذِهِ حَقِيبَتِي|זה התיק שלי|הַאד'ִהִ חַקִיבַּתִי"]},
+ {n:10, emoji:"🍎", color:"#f97316", months:"מאי", title:"צבעים ואוכל", sub:"אדום, כחול, לחם, חלב…",
+  tips:["לצבעים יש צורת נקבה: أَحْمَر ← حَمْرَاء (אדומה)","בערבית שם התואר בא אחרי שם העצם: تُفَّاحَة حَمْرَاء = תפוח אדום"],
+  words:["أَحْمَر|אדום|אַחְמַר","أَزْرَق|כחול|אַזְרַק","أَصْفَر|צהוב|אַצְפַר","أَخْضَر|ירוק|אַח'צ'ַר","أَبْيَض|לבן|אַבְּיַצ'","أَسْوَد|שחור|אַסְוַד","بُرْتُقَالِيّ|כתום|בֻּרְתֻקַאלִי","بُنِّيّ|חום|בֻּנִּי","خُبْز|לחם|ח'ֻבְּז","حَلِيب|חלב|חַלִיבּ","تُفَّاحَة|תפוח|תֻפַּאחַה","مَوْز|בננה|מַוְז","بَيْض|ביצים|בַּיְצ'","جُبْن|גבינה|גֻ'בְּן","أَرُزّ|אורז|אַרֻזּ","سَمَك|דגים|סַמַכּ"]},
+ {n:11, emoji:"📅", color:"#a855f7", months:"יוני", title:"הגוף וימי השבוע", sub:"ראש, עין, יד + ראשון עד שבת",
+  tips:["השבוע מתחיל ביום ראשון – כמו בישראל.","يَوْم = יום. اَلْجُمْعَة (שישי) – יום המנוחה בעולם המוסלמי."],
+  words:["رَأْس|ראש|רַאְס","عَيْن|עין|עַיְן","أُذُن|אוזן|אֻד'ֻן","أَنْف|אף|אַנְף","فَم|פה|פַם","يَد|יד|יַד","رِجْل|רגל|רִגְ'ל","قَلْب|לב|קַלְבּ","شَعْر|שיער|שַׁעְר","يَوْم|יום|יַוְם"],
+  phrases:["اَلْأَحَد|יום ראשון|אַלְאַחַד","اَلِاثْنَيْن|יום שני|אַלִאת'נַיְן","اَلثُّلَاثَاء|יום שלישי|אַת'-ת'ֻלַאת'ַאא","اَلْأَرْبِعَاء|יום רביעי|אַלְאַרְבִּעַאא","اَلْخَمِيس|יום חמישי|אַלְח'ַמִיס","اَلْجُمْعَة|יום שישי|אַלְגֻ'מְעַה","اَلسَّبْت|שבת|אַס-סַבְּת"]}
+];
+
+/* ---------------- build items ---------------- */
+const TATWEEL = "\u0640";
+const NONJOIN = "اأإآدذرزوؤة";
+const LETTERS = {};
+LETTER_DATA.forEach(([ar,name,heb,arName,lat,fam,unit,word,tip])=>{
+  const [war,whe,wtr] = word.split("|");
+  LETTERS[ar] = {id:"l:"+ar, type:"letter", ar, name, heb, he:`${name} (${heb})`, tr:heb, arName, lat, fam, unit, word:{ar:war,he:whe,tr:wtr}, tip, say:arName};
+});
+const ITEMS = {}; // id -> item (shared across units)
+function reg(it){ if(!ITEMS[it.id]) ITEMS[it.id]=it; return ITEMS[it.id]; }
+UNITS.forEach(u=>{
+  u.items=[];
+  if(u.letters) u.letters.split(" ").forEach(ch=>u.items.push(reg(LETTERS[ch])));
+  (u.signs||[]).forEach(s=>{const [ar,he,sm]=s.split("|"); u.items.push(reg({id:"s:"+ar,type:"sign",ar,he,tr:he,sm:sm||null,say:ar}));});
+  (u.words||[]).forEach(s=>{const [ar,he,tr]=s.split("|"); u.items.push(reg({id:"w:"+ar+":"+he,type:"word",ar,he,tr,say:ar}));});
+  (u.phrases||[]).forEach(s=>{const [ar,he,tr]=s.split("|"); u.items.push(reg({id:"p:"+ar,type:"phrase",ar,he,tr,say:ar}));});
+  (u.digits||[]).forEach(s=>{const [ar,he]=s.split("|"); u.items.push(reg({id:"d:"+ar,type:"digit",ar,he,tr:he,say:ar}));});
+});
+const ALL_ITEMS = Object.values(ITEMS);
+
+/* ---------------- helpers ---------------- */
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const strip=s=>s.replace(/[\u064B-\u0652\u0670\u0640]/g,"");
+const group=t=>(t==="word"||t==="phrase")?"lex":t;
+function dstr(d){return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
+const today=()=>dstr(new Date());
+function dayDiff(a,b){const p=a.split("-").map(Number),q=b.split("-").map(Number);return Math.round((new Date(q[0],q[1]-1,q[2])-new Date(p[0],p[1]-1,p[2]))/864e5)}
+function formsOf(ch){ if(NONJOIN.includes(ch)) return {iso:ch,ini:ch,med:TATWEEL+ch,fin:TATWEEL+ch};
+  return {iso:ch,ini:ch+TATWEEL,med:TATWEEL+ch+TATWEEL,fin:TATWEEL+ch}; }
+const FORM_NAMES={iso:"בודדת",ini:"בתחילת מילה",med:"באמצע מילה",fin:"בסוף מילה"};
+
+/* ---------------- state ---------------- */
+const KEY="yallaArabic_v1";
+const DEF={onboarded:false,name:"",gender:"f",goal:50,sound:true,xp:0,gems:30,streak:0,best:0,last:null,freezes:0,avatar:"🐪",owned:["🐪"],
+  unlocked:1,unitStars:{},learnDone:{},games:{},mastery:{},ach:{},totals:{lessons:0,correct:0,chests:0,reviews:0,perfect:0,maxcombo:0},day:null,dxpUntil:0};
+let S;
+function load(){ let saved={}; try{saved=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){}
+  S=Object.assign(JSON.parse(JSON.stringify(DEF)),saved); S.totals=Object.assign({},DEF.totals,S.totals||{}); }
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} }
+function G(f,m){return S.gender==="m"?m:f}
+
+function ensureDay(){ if(!S.day||S.day.date!==today()) S.day={date:today(),xp:0,lessons:0,correct:0,maxcombo:0,speed:0,review:0,perfect:0,memory:0,rain:0,claimed:[],goalDone:false,allBonus:false}; }
+function checkStreak(){
+  if(!S.last) return; const g=dayDiff(S.last,today()); if(g<=1) return;
+  const missed=g-1;
+  if(S.streak>0 && S.freezes>=missed){ S.freezes-=missed; const y=new Date(); y.setDate(y.getDate()-1); S.last=dstr(y); setTimeout(()=>toast(`❄️ הקפאת רצף הצילה את הרצף שלך (${S.streak} ימים)!`),800); }
+  else if(S.streak>0){ setTimeout(()=>toast("💔 הרצף התאפס… מתחילים רצף חדש היום!"),800); S.streak=0; }
+  save();
+}
+
+/* ---------------- level ---------------- */
+const TITLES=[["צעד ראשון","צעד ראשון"],["חוקרת אותיות","חוקר אותיות"],["קוראת הברות","קורא הברות"],["ציידת מילים","צייד מילים"],["רוכבת גמלים","רוכב גמלים"],["מגלת נווה מדבר","מגלה נווה מדבר"],["מנווטת כוכבים","מנווט כוכבים"],["אמנית השפה","אמן השפה"],["אלופת הערבית","אלוף הערבית"],["אגדה","אגדה"]];
+const TITLE_ICONS=["🌱","🔍","📖","🏹","🐪","🌴","✨","🎨","🏆","👑"];
+function level(xp){let l=1;while(xp>=25*l*(l+1))l++;return l}
+function lvlStart(l){return l===1?0:25*(l-1)*l}
+function lvlTitle(l){const i=Math.min(l-1,TITLES.length-1);return TITLE_ICONS[i]+" "+G(TITLES[i][0],TITLES[i][1])}
+
+/* ---------------- sound / speech / fx ---------------- */
+let AC=null;
+function tone(fs,dur=.12,type="sine",gap=.09,vol=.15){ if(!S.sound) return; try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t0=AC.currentTime+.01;
+  fs.forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;const s=t0+i*gap;g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(vol,s+.015);g.gain.exponentialRampToValueAtTime(.0001,s+dur);o.connect(g);g.connect(AC.destination);o.start(s);o.stop(s+dur+.03)})}catch(e){} }
+const SFX={ok:()=>tone([659,988],.14,"sine",.08,.16),bad:()=>tone([220,165],.2,"square",.12,.06),combo:()=>tone([523,659,784,1047],.12,"triangle",.06,.14),
+  lvl:()=>tone([523,659,784,1047,1319,1568],.22,"triangle",.1,.14),chest:()=>tone([880,1175,1568,2093,2637],.12,"sine",.05,.12),tap:()=>tone([520],.05,"sine",.05,.08),end:()=>tone([392,523,659,784],.2,"triangle",.12,.13)};
+function buzz(ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
+let arVoice=null;
+function loadVoices(){ try{const vs=speechSynthesis.getVoices();arVoice=vs.find(v=>/^ar[-_]?/i.test(v.lang))||null;}catch(e){} }
+if("speechSynthesis" in window){ loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
+const voiceOK=()=>!!arVoice;
+function speak(text){ if(!("speechSynthesis" in window)) return; try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=arVoice?arVoice.lang:"ar-SA";if(arVoice)u.voice=arVoice;u.rate=.75;speechSynthesis.speak(u)}catch(e){} }
+function sayBtn(text,cls=""){ return `<button class="speak ${cls}" onclick="event.stopPropagation();speak('${text.replace(/'/g,"\\'")}')" title="הקראה">🔊</button>`; }
+
+const cv=document.getElementById("confetti"),cx=cv.getContext("2d");let parts=[],confRAF=null;
+function confetti(n=120){ cv.width=innerWidth;cv.height=innerHeight;const cols=["#f59e0b","#10b981","#ef4444","#3b82f6","#a855f7","#ec4899","#fde047"];
+  for(let i=0;i<n;i++)parts.push({x:innerWidth/2+(Math.random()-.5)*120,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*14-4,r:Math.random()*6+4,c:pick(cols),a:Math.random()*6,va:(Math.random()-.5)*.4,life:120+Math.random()*60});
+  if(!confRAF) confRAF=requestAnimationFrame(confStep); }
+function confStep(){ cx.clearRect(0,0,cv.width,cv.height); parts=parts.filter(p=>p.life-->0&&p.y<cv.height+20);
+  parts.forEach(p=>{p.vy+=.35;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.a+=p.va;cx.save();cx.translate(p.x,p.y);cx.rotate(p.a);cx.fillStyle=p.c;cx.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);cx.restore()});
+  confRAF=parts.length?requestAnimationFrame(confStep):(cx.clearRect(0,0,cv.width,cv.height),null); }
+function toast(msg,cls=""){ const t=document.createElement("div");t.className="toast "+cls;t.innerHTML=msg;document.getElementById("toasts").appendChild(t);setTimeout(()=>{t.style.transition="opacity .4s";t.style.opacity=0;setTimeout(()=>t.remove(),400)},2800); }
+function floatXP(n,el){ const r=el?el.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/2,width:0};const f=document.createElement("div");f.className="xpfloat";f.textContent="+"+n+" XP";f.style.left=(r.left+r.width/2-40)+"px";f.style.top=(r.top-10)+"px";document.body.appendChild(f);setTimeout(()=>f.remove(),1000); }
+
+/* ---------------- XP / rewards ---------------- */
+function addXP(n,el){
+  ensureDay(); if(Date.now()<S.dxpUntil) n*=2;
+  const before=level(S.xp); S.xp+=n; S.day.xp+=n;
+  if(S.last!==today()){ S.streak=(S.last&&dayDiff(S.last,today())===1)?S.streak+1:1; S.last=today(); S.best=Math.max(S.best,S.streak);
+    toast(`🔥 ${S.streak===1?"התחלת רצף חדש!":"רצף של "+S.streak+" ימים!"}`,"gold"); }
+  if(!S.day.goalDone&&S.day.xp>=S.goal){ S.day.goalDone=true; S.gems+=15; setTimeout(()=>{toast("🎯 היעד היומי הושג! +15 💎","gold");confetti(80);SFX.combo()},400); }
+  const after=level(S.xp); if(after>before) setTimeout(()=>levelUp(after),600);
+  if(el) floatXP(n,el);
+  checkAch(); save(); renderTop(); return n;
+}
+function levelUp(l){ SFX.lvl(); confetti(200); buzz([60,40,60]); S.gems+=10; save(); renderTop();
+  modal(`<div class="center"><div style="font-size:70px">🎉</div><h2>עלית לשלב ${l}!</h2><p style="font-size:20px;font-weight:800;margin:8px 0">${lvlTitle(l)}</p><p class="muted">קיבלת 10 💎 מתנה</p><div class="sp"></div><button class="btn block" onclick="closeModal()">יאללה ממשיכים!</button></div>`); }
+
+const QUEST_POOL=[
+ {id:"lessons",t:"סיימו 2 תרגולים",n:2,k:"lessons"},{id:"correct",t:"ענו נכון על 30 שאלות",n:30,k:"correct"},{id:"combo",t:"הגיעו לקומבו של 8",n:8,k:"maxcombo"},
+ {id:"speed",t:"השיגו 15 בריצת בזק",n:15,k:"speed"},{id:"review",t:"השלימו חזרה חכמה",n:1,k:"review"},{id:"perfect",t:"תרגול בלי אף טעות",n:1,k:"perfect"},
+ {id:"memory",t:"נצחו במשחק זיכרון",n:1,k:"memory"},{id:"rain",t:"תפסו 15 בגשם מילים",n:15,k:"rain"},{id:"xp",t:"צברו 80 XP היום",n:80,k:"xp"}];
+function dailyQuests(){ ensureDay(); const d=S.day.date; let h=0; for(const c of d) h=(h*31+c.charCodeAt(0))>>>0;
+  const pool=[...QUEST_POOL], out=[]; while(out.length<3){ h=(h*1103515245+12345)>>>0; out.push(pool.splice(h%pool.length,1)[0]); } return out; }
+function claimQuest(id){ ensureDay(); const q=dailyQuests().find(x=>x.id===id); if(!q||S.day.claimed.includes(id)||(S.day[q.k]||0)<q.n) return;
+  S.day.claimed.push(id); S.gems+=20; SFX.chest(); toast("✅ משימה הושלמה! +20 💎","gold");
+  if(S.day.claimed.length===3&&!S.day.allBonus){ S.day.allBonus=true; save(); setTimeout(()=>chestModal("כל המשימות היומיות הושלמו!"),700); }
+  save(); renderTop(); route(); }
+
+function rollChest(){
+  const r=Math.random();
+  if(r<.03){ S.gems+=100; return "💰 ג'קפוט! 100 💎"; }
+  if(r<.10&&S.freezes<2){ S.freezes++; return "❄️ הקפאת רצף! (שומרת על הרצף אם מפספסים יום)"; }
+  if(r<.18){ S.dxpUntil=Math.max(Date.now(),S.dxpUntil)+15*60e3; return "⚡ XP כפול ל-15 דקות!"; }
+  if(r<.30){ const g=40; S.gems+=g; return `💎 ${g} יהלומים!`; }
+  if(r<.42){ addXP(25); return "⭐ 25 XP בונוס!"; }
+  const g=rnd(10,25); S.gems+=g; return `💎 ${g} יהלומים`;
+}
+function chestHTML(id="chestBox"){ return `<div id="${id}"><div class="chest" onclick="openChest('${id}')">🎁</div><div class="muted" style="font-weight:700">${G("לחצי","לחץ")} לפתיחת התיבה!</div></div>`; }
+function openChest(id){ const box=document.getElementById(id); if(!box||box.dataset.open) return; box.dataset.open=1;
+  const c=box.querySelector(".chest"); c.classList.add("shake"); SFX.tap(); buzz(30);
+  setTimeout(()=>{ const txt=rollChest(); S.totals.chests++; checkAch(); save(); renderTop(); SFX.chest(); confetti(90); buzz([40,30,80]);
+    box.innerHTML=`<div class="chest">✨</div><div class="reward">${txt}</div>`; },1500); }
+function chestModal(title){ modal(`<div class="center"><h2>${title}</h2>${chestHTML("mchest")}<div class="sp"></div><button class="btn ghost block" onclick="closeModal()">סגירה</button></div>`); }
+
+/* ---------------- achievements ---------------- */
+const ACH=[
+ {id:"first",i:"👣",t:"צעד ראשון",d:"סיימו תרגול ראשון",c:()=>S.totals.lessons>=1},
+ {id:"perfect",i:"💯",t:"מושלם!",d:"תרגול בלי אף טעות",c:()=>S.totals.perfect>=1},
+ {id:"combo10",i:"🔥",t:"על האש",d:"קומבו של 10",c:()=>S.totals.maxcombo>=10},
+ {id:"combo25",i:"☄️",t:"בלתי ניתן לעצירה",d:"קומבו של 25",c:()=>S.totals.maxcombo>=25},
+ {id:"streak3",i:"📅",t:"3 ימים ברצף",d:"לומדים 3 ימים רצוף",c:()=>S.best>=3},
+ {id:"streak7",i:"🗓️",t:"שבוע שלם",d:"רצף של 7 ימים",c:()=>S.best>=7},
+ {id:"streak30",i:"🏅",t:"חודש של ערבית",d:"רצף של 30 ימים",c:()=>S.best>=30},
+ {id:"letters",i:"🔤",t:"כל 28 האותיות",d:"כוכב ביחידות 1–5",c:()=>[1,2,3,4,5].every(n=>(S.unitStars[n]||0)>=1)},
+ {id:"speed20",i:"⚡",t:"ברק",d:"20 בריצת בזק",c:()=>(S.games.speedBest||0)>=20},
+ {id:"speed35",i:"🚀",t:"מהירות האור",d:"35 בריצת בזק",c:()=>(S.games.speedBest||0)>=35},
+ {id:"rain30",i:"🌧️",t:"אלופי הגשם",d:"30 תפיסות במשחק אחד",c:()=>(S.games.rainBest||0)>=30},
+ {id:"memory",i:"🐘",t:"זיכרון של פיל",d:"משחק זיכרון ב-9 מהלכים או פחות",c:()=>!!S.games.memBest&&S.games.memBest<=9},
+ {id:"xp1000",i:"⭐",t:"אלף נקודות",d:"לצבור 1000 XP",c:()=>S.xp>=1000},
+ {id:"review5",i:"🧠",t:"מוח חד",d:"5 חזרות חכמות",c:()=>S.totals.reviews>=5},
+ {id:"chest10",i:"🎁",t:"ציידי אוצרות",d:"לפתוח 10 תיבות",c:()=>S.totals.chests>=10},
+ {id:"master",i:"👑",t:"שליטה מלאה",d:"100% שליטה ביחידה",c:()=>UNITS.some(u=>mastery(u)>=.999)},
+ {id:"correct500",i:"🎯",t:"500 תשובות נכונות",d:"סך הכל",c:()=>S.totals.correct>=500},
+ {id:"journey",i:"🏆",t:"סוף המסע",d:"כוכב בכל 11 היחידות",c:()=>UNITS.every(u=>(S.unitStars[u.n]||0)>=1)}
+];
+function checkAch(){ let k=0; ACH.forEach(a=>{ if(!S.ach[a.id]&&a.c()){ S.ach[a.id]=Date.now(); S.gems+=25; const d=900+k++*1600; setTimeout(()=>{toast(`🏅 הישג חדש: ${a.i} ${a.t} · +25 💎`,"gold");SFX.combo()},d);} }); }
+
+/* ---------------- spaced repetition ---------------- */
+const BOX_DELAY=[0,10*60e3,864e5,3*864e5,7*864e5,16*864e5];
+function rec(it,ok){ const m=S.mastery[it.id]||{b:0,due:0,c:0,w:0}; if(ok){m.b=Math.min(5,m.b+1);m.c++}else{m.b=Math.max(0,m.b-2);m.w++} m.due=Date.now()+BOX_DELAY[m.b]; S.mastery[it.id]=m; }
+const box=it=>(S.mastery[it.id]||{b:0}).b;
+function mastery(u){ return u.items.reduce((s,it)=>s+box(it),0)/(5*u.items.length); }
+function unlockedItems(){ const ids=new Set(), out=[]; UNITS.filter(u=>u.n<=S.unlocked).forEach(u=>u.items.forEach(it=>{if(!ids.has(it.id)){ids.add(it.id);out.push(it)}})); return out; }
+function dueItems(){ const now=Date.now(); return unlockedItems().filter(it=>S.mastery[it.id]&&S.mastery[it.id].due<=now&&S.mastery[it.id].b<5); }
+
+/* ---------------- question engine ---------------- */
+const spellable=it=>it.type==="word"&&!/[\s؟]/.test(it.ar)&&Array.from(strip(it.ar)).length>=2&&Array.from(strip(it.ar)).length<=6;
+function kindsFor(it){
+  const k=[];
+  if(it.type==="letter") k.push("ar2he","he2ar","form","he2ar","form");
+  else if(it.type==="sign"){ k.push("ar2he","he2ar"); if(it.sm) k.push("sunmoon","sunmoon"); }
+  else if(it.type==="digit") k.push("ar2he","he2ar");
+  else { k.push("ar2he","he2ar"); if(it.type==="word"){ k.push("tr"); if(spellable(it)) k.push("spell","spell"); } }
+  if(voiceOK()&&it.type!=="digit") k.push("listen");
+  return k;
+}
+function distract(it,key,pool,n=3){
+  const seen=new Set([it[key]]), out=[];
+  const add=arr=>{ for(const x of arr){ if(out.length>=n) break; if(!seen.has(x[key])&&group(x.type)===group(it.type)){ seen.add(x[key]); out.push(x);} } };
+  if(it.type==="letter"&&it.fam) add(shuffle(Object.values(LETTERS).filter(x=>x.fam===it.fam)));
+  add(shuffle(pool)); add(shuffle(ALL_ITEMS));
+  return out;
+}
+function makeQ(it,pool,kind){
+  kind=kind||pick(kindsFor(it)); const q={it,kind};
+  if(kind==="ar2he"){ q.opts=shuffle([it,...distract(it,"he",pool)]); q.show="he"; }
+  else if(kind==="he2ar"||kind==="listen"){ q.opts=shuffle([it,...distract(it,"ar",pool)]); q.show="ar"; }
+  else if(kind==="tr"){ q.opts=shuffle([it,...distract(it,"tr",pool)]); q.show="tr"; }
+  else if(kind==="form"){ const f=formsOf(it.ar); const keys=NONJOIN.includes(it.ar)?["iso","fin"]:["ini","med","fin","iso"]; q.fk=pick(keys); q.ftext=f[q.fk]; q.opts=shuffle([it,...distract(it,"he",pool)]); q.show="he"; }
+  else if(kind==="sunmoon"){ q.opts=["sun","moon"]; }
+  else if(kind==="spell"){ const letters=Array.from(strip(it.ar)); const extra=shuffle(Object.keys(LETTERS).filter(c=>!letters.includes(c))).slice(0,2);
+    q.target=letters; q.tiles=shuffle([...letters,...extra]); q.built=[]; }
+  return q;
+}
+function buildLesson(items,n){
+  // prioritize weaker items, but keep variety
+  const sorted=shuffle(items).sort((a,b)=>(box(a)+Math.random()*2)-(box(b)+Math.random()*2));
+  const chosen=[]; let i=0; while(chosen.length<n){ chosen.push(sorted[i%sorted.length]); i++; }
+  return shuffle(chosen).map(it=>makeQ(it,items));
+}
+
+/* ---------------- routing / rendering ---------------- */
+let VIEW={tab:"map"}; let Q=null; let GM=null;
+const main=()=>document.getElementById("main");
+function go(v){ stopGame(); VIEW=v; document.body.classList.toggle("ingame",!!v.game); hideSheet(); route(); window.scrollTo(0,0); }
+function route(){
+  renderTop(); renderNav();
+  const v=VIEW;
+  if(v.tab==="map"&&v.unit) return renderUnit(v.unit);
+  if(v.tab==="map") return renderMap();
+  if(v.tab==="review") return renderReviewTab();
+  if(v.tab==="ach") return renderAch();
+  if(v.tab==="shop") return renderShop();
+  if(v.tab==="dict") return renderDict();
+}
+function renderTop(){
+  const l=level(S.xp), s=lvlStart(l), e=lvlStart(l+1), p=Math.round((S.xp-s)/(e-s)*100);
+  const dx=Date.now()<S.dxpUntil?` · ⚡x2`:"";
+  document.getElementById("top").innerHTML=`
+   <button class="avatar" onclick="settings()" title="הגדרות">${S.avatar}</button>
+   <div class="lvl"><small>שלב ${l} · ${lvlTitle(l)}${dx}</small><div class="bar"><i style="width:${p}%"></i></div></div>
+   <div class="pill fire ${S.last===today()?"":"dim"}" title="רצף ימים">🔥${S.streak}</div>
+   <div class="pill gem" title="יהלומים">💎${S.gems}</div>`;
+}
+function renderNav(){
+  const due=dueItems().length;
+  const tabs=[["map","🗺️","מסע"],["review","🧠","חזרה"],["ach","🏆","הישגים"],["shop","🛒","חנות"],["dict","📚","מילון"]];
+  document.getElementById("nav").innerHTML=tabs.map(([k,i,t])=>`<button class="${VIEW.tab===k?"on":""}" onclick="go({tab:'${k}'})"><b>${i}</b>${t}${k==="review"&&due?`<span class="badge">${due}</span>`:""}</button>`).join("");
+}
+
+/* ----- MAP ----- */
+function mascotLine(){
+  ensureDay(); const due=dueItems().length, left=Math.max(0,S.goal-S.day.xp), nm=S.name||"";
+  const opts=[];
+  if(S.streak>0&&S.last!==today()) opts.push(`🔥 יש לך רצף של ${S.streak} ימים – אל ${G("תשברי","תשבור")} אותו היום!`);
+  if(due>=5) opts.push(`🧠 ${due} מילים ואותיות מחכות לחזרה. רגע לפני שהן נשכחות!`);
+  if(left>0&&S.day.xp>0) opts.push(`עוד ${left} XP ${G("ואת","ואתה")} ${G("מגיעה","מגיע")} ליעד היומי! 🎯`);
+  if(S.day.goalDone) opts.push(`${G("וואו","וואו")}, היעד היומי הושג! כל XP נוסף הוא בונוס 💪`);
+  opts.push(`كَيْفَ حَالُكِ؟ = מה שלומך? בואו נלמד משהו חדש! ✨`.replace("حَالُكِ",G("حَالُكِ","حَالُكَ")));
+  return `<span class="ar" style="font-size:20px">أَهْلًا</span> ${nm}! ${opts[0]}`;
+}
+function renderMap(){
+  ensureDay(); const qs=dailyQuests(); const pct=Math.min(100,Math.round(S.day.xp/S.goal*100)); const due=dueItems().length;
+  let h=`<div class="mascot"><div class="face">${S.avatar}</div><div class="bubble">${mascotLine()}</div></div>
+  <div class="card"><div class="daily"><div class="ring" style="--p:${pct}"><span>${S.day.xp}<small>/${S.goal} XP</small></span></div>
+   <div style="flex:1"><h3 style="margin-bottom:2px">משימות היום</h3>${qs.map(q=>{const v=Math.min(q.n,S.day[q.k]||0),done=v>=q.n,cl=S.day.claimed.includes(q.id);
+     return `<div class="quest"><div class="qb">${q.t}<div class="bar"><i style="width:${v/q.n*100}%"></i></div></div>${cl?`<span class="done-chip">✔️</span>`:done?`<button class="claim" onclick="claimQuest('${q.id}')">+20💎</button>`:`<small class="muted">${v}/${q.n}</small>`}</div>`}).join("")}</div></div></div>`;
+  if(due>0) h+=`<button class="review-btn" onclick="startReview()"><b>🧠</b><div><div style="font-weight:800;font-size:17px">חזרה חכמה</div><div style="opacity:.9;font-size:14px">${due} פריטים מחכים לך · בונוס XP</div></div></button>`;
+  h+=`<div class="path">`;
+  UNITS.forEach((u,i)=>{
+    const locked=u.n>S.unlocked, cur=u.n===S.unlocked, st=S.unitStars[u.n]||0, m=Math.round(mastery(u)*100);
+    const off=[0,60,90,60,0,-60,-90,-60][i%8];
+    h+=`<div class="unitrow"><div class="nodewrap" style="transform:translateX(${off}px)">
+      ${cur?`<div class="start-tag">${st?"ממשיכים!":"מתחילים כאן!"}</div>`:""}
+      <button class="node ${locked?"locked":""} ${cur?"current":""}" style="background:${u.color};--m:${m}" onclick="go({tab:'map',unit:${u.n}})">${locked?"🔒":u.emoji}<span class="mring" style="--m:${locked?0:m}"></span></button>
+      <div class="nodestars">${locked?"":"⭐".repeat(st)+"☆".repeat(3-st)}</div>
+      <div class="nodelabel">${u.n}. ${u.title}</div><div class="month">${u.months}${locked?"":` · שליטה ${m}%`}</div>
+    </div></div>`;
+  });
+  h+=`<div class="center" style="font-size:40px;margin-top:10px">🏁</div></div>`;
+  main().innerHTML=h;
+}
+
+/* ----- UNIT ----- */
+function renderUnit(n){
+  const u=UNITS[n-1], locked=n>S.unlocked, m=Math.round(mastery(u)*100), st=S.unitStars[n]||0;
+  let h=`<div class="backbar"><button class="back" onclick="go({tab:'map'})">→</button><h2 style="margin:0">יחידה ${n}</h2></div>
+  <div class="unit-hero" style="background:linear-gradient(135deg,${u.color},${u.color}cc)">
+    <div class="row"><div class="big">${u.emoji}</div><div><h2 style="margin:0">${u.title}</h2><div style="opacity:.95">${u.sub}</div><div style="opacity:.85;font-size:13px;margin-top:2px">📅 ${u.months}</div></div></div>
+    ${locked?"":`<div style="margin-top:12px;font-weight:700;font-size:13px">שליטה ביחידה: ${m}% · ${"⭐".repeat(st)}${"☆".repeat(3-st)}</div><div class="bar" style="background:rgba(255,255,255,.35);margin-top:4px"><i style="width:${m}%;background:#fff"></i></div>`}
+  </div>`;
+  if(locked){
+    h+=`<div class="card center"><div style="font-size:48px">🔒</div><h3>היחידה עוד נעולה</h3><p class="muted" style="margin-bottom:12px">כדי לפתוח: ${G("סיימי","סיים")} את התרגול של היחידה הקודמת.<br>כבר ${G("יודעת","יודע")} את החומר? ${G("נסי","נסה")} מבחן קפיצה – 12 שאלות, מותר עד 2 טעויות.</p>
+      <button class="btn purple block" onclick="startSkip(${n})">🚀 מבחן קפיצה</button></div>`;
+    main().innerHTML=h; return;
+  }
+  h+=`<div class="card"><h3>💡 מה לומדים כאן</h3><ul class="tips">${u.tips.map(t=>`<li>${t}</li>`).join("")}</ul></div>
+  <div class="acts">
+   <button class="act hero" onclick="startLesson(${n})"><b>🎯</b><div style="text-align:right"><strong>תרגול</strong><br><small>10 שאלות · 3 לבבות · תיבת הפתעה בסוף</small></div></button>
+   <button class="act" onclick="startLearn(${n})"><b>📖</b><strong>לימוד</strong><small>${u.items.length} כרטיסים עם הקראה${S.learnDone[n]?" ✔️":""}</small></button>
+   <button class="act" onclick="startSpeed(${n})"><b>⚡</b><strong>ריצת בזק</strong><small>נכון או לא? 60 שניות${S.games["sp"+n]?` · שיא ${S.games["sp"+n]}`:""}</small></button>
+   <button class="act" onclick="startRain(${n})"><b>🌧️</b><strong>גשם ${u.letters?"אותיות":"מילים"}</strong><small>תפסו את הנכונים${S.games["rn"+n]?` · שיא ${S.games["rn"+n]}`:""}</small></button>
+   <button class="act" onclick="startMemory(${n})"><b>🃏</b><strong>זיכרון</strong><small>מצאו את הזוגות${S.games["mm"+n]?` · שיא ${S.games["mm"+n]} מהלכים`:""}</small></button>
+  </div>`;
+  main().innerHTML=h;
+}
+
+/* ----- LEARN (flashcards) ----- */
+function startLearn(n){ VIEW={tab:"map",unit:n,game:"learn"}; document.body.classList.add("ingame"); GM={type:"learn",n,i:0,items:UNITS[n-1].items}; renderLearn(); }
+function renderLearn(){
+  const {items,i,n}=GM, it=items[i]; let body="";
+  if(it.type==="letter"){ const f=formsOf(it.ar);
+    body=`<div class="bigar ar">${it.ar}</div><div class="row" style="justify-content:center"><h2 style="margin:0">${it.name} · ${it.heb}</h2>${sayBtn(it.say,"sm")}</div>
+    <div class="muted" style="font-weight:700">${it.lat}</div>
+    <div class="forms">${["iso","ini","med","fin"].map(k=>`<div><span class="ar">${f[k]}</span><small>${FORM_NAMES[k]}</small></div>`).join("")}</div>
+    <div class="chip"><span class="ar" style="font-size:28px">${it.word.ar}</span> ${it.word.he} · <span class="muted">${it.word.tr}</span> ${sayBtn(it.word.ar,"sm")}</div>
+    <div class="note">💡 ${it.tip}</div>`;
+  } else {
+    const big=Array.from(it.ar).length<=8?"bigar":"midar";
+    body=`<div class="${big} ar" style="${big==="bigar"?"font-size:78px":""}">${it.ar}</div><h2>${it.he}</h2>${it.type!=="sign"&&it.type!=="digit"?`<div class="muted" style="font-size:18px;font-weight:700">${it.tr}</div>`:""}
+    ${it.type!=="digit"?sayBtn(it.say):""}`;
+  }
+  main().innerHTML=`<div class="backbar"><button class="back" onclick="go({tab:'map',unit:${n}})">✕</button><h3 style="margin:0">📖 לימוד · ${i+1}/${items.length}</h3></div>
+   <div class="card flash">${body}</div>
+   <div class="dots">${items.map((_,k)=>`<i class="${k<=i?"on":""}"></i>`).join("")}</div>
+   <div class="row"><button class="btn ghost" style="flex:1" onclick="learnStep(-1)" ${i===0?"disabled":""}>→ הקודם</button>
+   <button class="btn" style="flex:2" onclick="learnStep(1)">${i===items.length-1?"סיימתי! 🎉":"הבא ←"}</button></div>`;
+  if(voiceOK()&&it.type!=="digit") setTimeout(()=>speak(it.say),250);
+}
+function learnStep(d){ SFX.tap(); if(GM.i+d>=GM.items.length){ const n=GM.n; if(!S.learnDone[n]){S.learnDone[n]=1; addXP(15); confetti(80); toast("📖 סיימת לעבור על כל הכרטיסים! +15 XP","gold");} save();
+    modal(`<div class="center"><div style="font-size:60px">📖✨</div><h2>${G("כל הכבוד","כל הכבוד")}!</h2><p class="muted">עכשיו הזמן לבדוק את עצמך בתרגול</p><div class="sp"></div><button class="btn block" onclick="closeModal();startLesson(${n})">🎯 לתרגול</button><div class="sp"></div><button class="btn ghost block" onclick="closeModal();go({tab:'map',unit:${n}})">חזרה ליחידה</button></div>`); return; }
+  GM.i=Math.max(0,GM.i+d); renderLearn(); }
+
+/* ----- QUIZ / LESSON ----- */
+function startLesson(n){ const u=UNITS[n-1]; startQuiz({mode:"lesson",n,items:u.items,count:10,lives:3,requeue:true}); }
+function startSkip(n){ const u=UNITS[n-1]; const items=UNITS.filter(x=>x.n<=n&&x.n>=Math.max(1,n-1)).flatMap(x=>x.items); startQuiz({mode:"skip",n,items,count:12,lives:3,requeue:false}); }
+function startReview(){ let items=dueItems().sort((a,b)=>box(a)-box(b)).slice(0,10);
+  if(items.length<6){ const extra=unlockedItems().filter(it=>S.mastery[it.id]&&!items.includes(it)).sort((a,b)=>box(a)-box(b)).slice(0,10-items.length); items=items.concat(extra); }
+  if(items.length<4){ toast(`${G("סיימי","סיים")} קודם תרגול ביחידה 1 – ואז תהיה לך חזרה חכמה 🧠`); return; }
+  startQuiz({mode:"review",items,count:Math.min(10,Math.max(items.length,8)),lives:5,requeue:true}); }
+function startQuiz(o){
+  VIEW={tab:VIEW.tab,unit:VIEW.unit,game:"quiz"}; document.body.classList.add("ingame");
+  const qs=o.mode==="review"?buildLesson(o.items,o.count):buildLesson(o.items,o.count);
+  Q={...o,queue:qs,idx:0,total:qs.length,lives:o.lives,maxLives:o.lives,combo:0,maxcombo:0,correct:0,wrong:0,xp:0,answered:false}; renderQ();
+}
+function quitQuiz(){ if(Q&&Q.correct>0&&!confirm("לצאת? ההתקדמות בתרגול הזה תאבד (ה-XP נשמר).")) return; const back=Q&&Q.n?{tab:"map",unit:Q.n}:{tab:VIEW.tab==="review"?"review":"map"}; Q=null; go(back); }
+function optLabel(it,show){ return show==="ar"?`<span class="ar">${it.ar}</span>`:(it[show]); }
+function renderQ(){
+  const q=Q.queue[Q.idx], it=q.it; Q.answered=false; hideSheet();
+  const prog=Math.round(Q.correct/Q.total*100);
+  let p="";
+  const big=(s)=>Array.from(s).length>7?"qs":"q";
+  if(q.kind==="ar2he") p=`<div class="ask">${it.type==="letter"?"איזו אות זו?":it.type==="sign"?"איך קוראים את זה?":it.type==="digit"?"איזה מספר זה?":"מה הפירוש?"}</div><div class="ar ${big(it.ar)}">${it.ar}</div>${it.type!=="digit"&&voiceOK()?sayBtn(it.say,"sm"):""}`;
+  else if(q.kind==="he2ar") p=`<div class="ask">${it.type==="letter"?"איפה האות":"איך כותבים בערבית"}</div><div class="heq">${it.he}</div>`;
+  else if(q.kind==="listen") p=`<div class="ask">🎧 ${G("הקשיבי","הקשב")} ${G("ובחרי","ובחר")}</div><button class="speak" style="width:90px;height:90px;font-size:42px" onclick="speak('${it.say.replace(/'/g,"\\'")}')">🔊</button>`;
+  else if(q.kind==="tr") p=`<div class="ask">איך קוראים את המילה?</div><div class="ar ${big(it.ar)}">${it.ar}</div>`;
+  else if(q.kind==="form") p=`<div class="ask">איזו אות מסתתרת כאן? <small>(${FORM_NAMES[q.fk]})</small></div><div class="ar q" style="font-size:84px">${q.ftext}</div>`;
+  else if(q.kind==="sunmoon") p=`<div class="ask">אות שמש ☀️ או אות ירח 🌙?</div><div class="ar q">${strip(it.ar)}</div>`;
+  else if(q.kind==="spell") p=`<div class="ask">${G("הרכיבי","הרכב")} בערבית:</div><div class="heq">${it.he}</div>`;
+  let body="";
+  if(q.kind==="sunmoon") body=`<div class="opts"><button class="opt" onclick="answer(0)" style="font-size:22px">☀️ שמש</button><button class="opt" onclick="answer(1)" style="font-size:22px">🌙 ירח</button></div>`;
+  else if(q.kind==="spell") body=`<div class="slots ar" id="slots">${q.built.map(i=>q.tiles[i]).join("")||"&nbsp;"}</div>
+     <div class="tiles">${q.tiles.map((c,i)=>`<button class="tile ar ${q.built.includes(i)?"used":""}" onclick="tileTap(${i})">${c}</button>`).join("")}</div>
+     <div class="row"><button class="btn ghost" style="flex:1" onclick="tileBack()">⌫ מחיקה</button><button class="btn" style="flex:2" onclick="spellCheck()" ${q.built.length?"":"disabled"}>בדיקה</button></div>`;
+  else body=`<div class="opts">${q.opts.map((o,i)=>`<button class="opt" onclick="answer(${i})">${optLabel(o,q.show)}</button>`).join("")}</div>`;
+  const hearts="❤️".repeat(Q.lives)+"🤍".repeat(Math.max(0,Q.maxLives-Q.lives));
+  const tag=Q.mode==="review"?"🧠 חזרה חכמה":Q.mode==="skip"?"🚀 מבחן קפיצה":`🎯 יחידה ${Q.n}`;
+  main().innerHTML=`<div class="qhead"><button class="back" onclick="quitQuiz()">✕</button><div class="bar"><i style="width:${prog}%"></i></div><div class="hearts">${hearts}</div></div>
+   <div class="muted center" style="font-size:12px;font-weight:700;margin-top:-8px">${tag}</div>
+   <div class="combo" id="combo">${Q.combo>=3?`🔥 קומבו ${Q.combo}${Q.combo>=10?" · XP x3":Q.combo>=5?" · XP x2":""}`:""}</div>
+   <div class="qprompt">${p}</div>${body}`;
+  if(q.kind==="listen") setTimeout(()=>speak(it.say),300);
+}
+function tileTap(i){ const q=Q.queue[Q.idx]; if(Q.answered||q.built.includes(i)) return; SFX.tap(); q.built.push(i); renderQ(); }
+function tileBack(){ const q=Q.queue[Q.idx]; if(Q.answered) return; q.built.pop(); renderQ(); }
+function spellCheck(){ const q=Q.queue[Q.idx]; if(Q.answered) return; const s=q.built.map(i=>q.tiles[i]).join(""); grade(s===q.target.join(""),document.getElementById("slots")); }
+function answer(i){
+  if(Q.answered) return; const q=Q.queue[Q.idx]; const btns=[...document.querySelectorAll(".opt")];
+  let ok, ci;
+  if(q.kind==="sunmoon"){ ci=q.it.sm==="sun"?0:1; ok=i===ci; }
+  else { ci=q.opts.indexOf(q.it); ok=i===ci; }
+  btns.forEach((b,k)=>{ if(k===ci) b.classList.add("ok"); else if(k===i) b.classList.add("bad"); else b.classList.add("dim"); });
+  grade(ok,btns[i]);
+}
+const PRAISE=[["أَحْسَنْتِ!","أَحْسَنْتَ!","כל הכבוד!"],["مُمْتَاز!","مُمْتَاز!","מצוין!"],["رَائِع!","رَائِع!","נהדר!"],["جَيِّد جِدًّا!","جَيِّد جِدًّا!","טוב מאוד!"],["يَا سَلَام!","يَا سَلَام!","וואו!"]];
+function grade(ok,el){
+  Q.answered=true; const q=Q.queue[Q.idx], it=q.it; ensureDay(); rec(it,ok);
+  let html;
+  if(ok){
+    Q.combo++; Q.correct++; Q.maxcombo=Math.max(Q.maxcombo,Q.combo); S.totals.correct++; S.day.correct++;
+    S.totals.maxcombo=Math.max(S.totals.maxcombo,Q.combo); S.day.maxcombo=Math.max(S.day.maxcombo,Q.combo);
+    const mult=Q.combo>=10?3:Q.combo>=5?2:1; const got=addXP(10*mult,el); Q.xp+=got;
+    if(Q.combo===5||Q.combo===10||Q.combo%10===0){ SFX.combo(); confetti(50); toast(`🔥 קומבו ${Q.combo}! XP x${mult}`,"gold"); } else SFX.ok();
+    buzz(25); const pr=pick(PRAISE);
+    html=`<div class="msg">✅ <span class="ar" style="font-size:24px">${G(pr[0],pr[1])}</span> ${pr[2]}</div><div class="sub">${it.type==="letter"?`<b class="ar" style="font-size:22px">${it.ar}</b> = ${it.he}`:`<b class="ar" style="font-size:22px">${it.ar}</b> = ${it.he}${it.tr&&it.tr!==it.he?` · ${it.tr}`:""}`}</div>`;
+    if(voiceOK()&&it.type!=="digit") speak(it.say);
+  } else {
+    Q.combo=0; Q.lives--; Q.wrong++; SFX.bad(); buzz([60,40,60]);
+    if(Q.requeue&&!q.again){ const nq=makeQ(it,Q.items,q.kind); nq.again=true; Q.queue.push(nq); }
+    const right=q.kind==="sunmoon"?(it.sm==="sun"?"☀️ אות שמש – ה-ל לא נשמעת":"🌙 אות ירח – ה-ל נשמעת"):"";
+    html=`<div class="msg">😅 כמעט! התשובה הנכונה:</div><div class="sub"><b class="ar" style="font-size:24px">${it.ar}</b> = ${it.he}${it.tr&&it.tr!==it.he?` · ${it.tr}`:""} ${right?`<br>${right}`:""}${Q.requeue&&!q.again?`<br><small>👀 השאלה תחזור שוב בהמשך</small>`:""}</div>`;
+  }
+  save();
+  showSheet(ok?"good":"wrong",html+`<button class="btn block" onclick="nextQ()">${Q.lives<=0?"אוי…":"המשך ←"}</button>`);
+  const c=document.getElementById("combo"); if(c){ c.innerHTML=Q.combo>=3?`🔥 קומבו ${Q.combo}${Q.combo>=10?" · XP x3":Q.combo>=5?" · XP x2":""}`:""; c.classList.remove("pop"); void c.offsetWidth; if(ok&&Q.combo>=3) c.classList.add("pop"); }
+}
+function nextQ(){ hideSheet(); Q.idx++; if(Q.lives<=0) return endQuiz(false); if(Q.idx>=Q.queue.length) return endQuiz(true); renderQ(); }
+function showSheet(cls,html){ const s=document.getElementById("sheet"); s.className="sheet show "+cls; document.getElementById("sheetIn").innerHTML=html; }
+function hideSheet(){ document.getElementById("sheet").className="sheet"; }
+
+function endQuiz(win){
+  ensureDay(); const o=Q; let title, stars=0, extra="", chest=false, again="";
+  if(o.mode==="lesson"){
+    if(win){ stars=o.wrong===0?3:o.wrong<=2?2:1; const prev=S.unitStars[o.n]||0; S.unitStars[o.n]=Math.max(prev,stars);
+      S.totals.lessons++; S.day.lessons++; if(o.wrong===0){S.totals.perfect++;S.day.perfect++;}
+      addXP(15+stars*5); o.xp+=15+stars*5; chest=true;
+      if(o.n===S.unlocked&&o.n<UNITS.length){ S.unlocked=o.n+1; extra=`<div class="card" style="background:#ecfdf5"><b>🔓 יחידה ${o.n+1} נפתחה: ${UNITS[o.n].title}!</b></div>`; }
+      title=stars===3?"מושלם! 🌟":stars===2?"עבודה מצוינת! 💪":"הצלחת! 👏";
+    } else title="נגמרו הלבבות 💔";
+    again=`startLesson(${o.n})`;
+  } else if(o.mode==="review"){
+    if(win){ S.totals.reviews++; S.day.review++; addXP(25); o.xp+=25; chest=true; title="המוח שלך חד! 🧠"; stars=o.wrong===0?3:o.wrong<=2?2:1; } else title="נגמרו הלבבות 💔";
+    again="startReview()";
+  } else {
+    if(win){ S.unlocked=Math.max(S.unlocked,o.n); title="קפיצה מוצלחת! 🚀"; stars=3; extra=`<div class="card" style="background:#ecfdf5"><b>🔓 יחידה ${o.n} נפתחה!</b></div>`; chest=true; addXP(30); o.xp+=30; }
+    else { title="לא הפעם… 😅"; extra=`<p class="muted">מבחן קפיצה מאפשר עד 2 טעויות. אפשר לנסות שוב, או להתקדם ביחידות לפי הסדר.</p>`; }
+    again=`startSkip(${o.n})`;
+  }
+  checkAch(); save(); win?SFX.end():SFX.bad(); if(win) confetti(stars===3?200:110);
+  const acc=Math.round(o.correct/Math.max(1,o.correct+o.wrong)*100);
+  const back=o.n?`go({tab:'map',unit:${o.mode==="skip"&&win?o.n:o.n}})`:`go({tab:'map'})`;
+  main().innerHTML=`<div class="result"><h2 style="font-size:28px">${title}</h2>
+   ${win?`<div class="bigstars">${[1,2,3].map(k=>`<span id="st${k}">⭐</span>`).join("")}</div>`:`<div style="font-size:70px">🐪💤</div><p class="muted">${G("טעית","טעית")} 3 פעמים – זה בסדר גמור, ככה לומדים! ${G("נסי","נסה")} שוב.</p>`}
+   <div class="stats"><div class="stat"><b>+${o.xp}</b><small>XP</small></div><div class="stat"><b>${acc}%</b><small>דיוק</small></div><div class="stat"><b>🔥${o.maxcombo}</b><small>קומבו שיא</small></div></div>
+   ${extra}${chest?`<div class="card">${chestHTML()}</div>`:""}
+   <div class="row"><button class="btn ghost" style="flex:1" onclick="${back}">${o.mode==="review"?"למפה":"ליחידה"}</button><button class="btn" style="flex:1" onclick="${again}">🔁 עוד סיבוב</button></div></div>`;
+  hideSheet(); Q=null;
+  if(win) [1,2,3].forEach(k=>setTimeout(()=>{const e=document.getElementById("st"+k);if(e&&k<=stars){e.classList.add("on");SFX.tap();}},400+k*350));
+}
+
+/* ----- SPEED RUN ----- */
+function stopGame(){ if(GM&&GM.timer) clearInterval(GM.timer); if(GM&&GM.raf) cancelAnimationFrame(GM.raf); if(GM) GM.dead=true; GM=null; }
+function startSpeed(n){
+  stopGame(); VIEW={tab:"map",unit:n,game:"speed"}; document.body.classList.add("ingame");
+  const items=UNITS[n-1].items;
+  main().innerHTML=`<div class="backbar"><button class="back" onclick="go({tab:'map',unit:${n}})">✕</button><h3 style="margin:0">⚡ ריצת בזק · יחידה ${n}</h3></div>
+  <div class="card center"><div style="font-size:64px">⚡</div><h2>נכון או לא נכון?</h2><p class="muted" style="line-height:1.7">יופיעו מילה/אות בערבית ותרגום.<br>${G("החליטי","החלט")} מהר אם הם מתאימים!<br>60 שניות · טעות = מינוס 3 שניות.<br>שיא: <b>${S.games["sp"+n]||0}</b></p><div class="sp"></div>
+  <button class="btn gold block" onclick="speedGo(${n})">🚀 התחלה!</button></div>`;
+}
+function speedGo(n){
+  const items=UNITS[n-1].items; GM={type:"speed",n,items,score:0,time:60,combo:0};
+  GM.timer=setInterval(()=>{ if(!GM) return; GM.time-=.1; const t=document.getElementById("tm"); if(t) t.textContent=Math.max(0,GM.time).toFixed(1); if(GM.time<=0) speedEnd(); },100);
+  speedNext();
+}
+function speedNext(){
+  const it=pick(GM.items); const match=Math.random()<.5; const shown=match?it:(distract(it,"he",GM.items,1)[0]||it);
+  GM.cur={it,shown,match:shown===it};
+  main().innerHTML=`<div class="hud"><button class="back" onclick="go({tab:'map',unit:${GM.n}})">✕</button><span>⏱️ <span class="timer" id="tm">${GM.time.toFixed(1)}</span></span><span>✅ ${GM.score}</span><span style="color:#ea580c">${GM.combo>=3?"🔥"+GM.combo:""}</span></div>
+   <div class="card tf-card" id="tfc"><div class="ar">${it.ar}</div><div class="muted">=</div><div class="he">${shown.he}</div></div>
+   <div class="grid2"><button class="btn red" style="font-size:22px;padding:20px" onclick="speedAns(false)">✖️ לא</button><button class="btn" style="font-size:22px;padding:20px;background:var(--green);box-shadow:0 4px 0 #166534" onclick="speedAns(true)">✔️ נכון</button></div>
+   <p class="center muted" style="margin-top:10px;font-size:13px">מקלדת: ← נכון · → לא</p>`;
+}
+function speedAns(yes){
+  if(!GM||GM.type!=="speed"||GM.time<=0) return; const ok=yes===GM.cur.match; ensureDay(); rec(GM.cur.it,ok);
+  if(ok){ GM.score++; GM.combo++; SFX.ok(); addXP(GM.combo>=10?6:3); S.totals.correct++; S.day.correct++; }
+  else { GM.combo=0; GM.time-=3; SFX.bad(); buzz(80); const c=document.getElementById("tfc"); if(c){c.style.animation="shake .4s"} }
+  setTimeout(()=>{ if(GM&&GM.type==="speed"&&GM.time>0) speedNext(); }, ok?120:450);
+}
+function speedEnd(){
+  const n=GM.n, sc=GM.score; clearInterval(GM.timer); GM=null; ensureDay();
+  const key="sp"+n, prev=S.games[key]||0, rec_=sc>prev; if(rec_) S.games[key]=sc; S.games.speedBest=Math.max(S.games.speedBest||0,sc); S.day.speed=Math.max(S.day.speed,sc);
+  checkAch(); save(); SFX.end(); if(rec_&&sc>0) confetti(150);
+  main().innerHTML=`<div class="result"><div style="font-size:64px">⚡</div><h2>${rec_&&sc>0?"🏆 שיא חדש!":"הזמן נגמר!"}</h2><div class="stats" style="grid-template-columns:1fr 1fr"><div class="stat"><b>${sc}</b><small>תשובות נכונות</small></div><div class="stat"><b>${Math.max(prev,sc)}</b><small>השיא שלך</small></div></div>
+   ${sc>=10?`<div class="card">${chestHTML()}</div>`:`<p class="muted">השיגו 10 ומעלה כדי לקבל תיבת הפתעה 🎁</p>`}
+   <div class="row"><button class="btn ghost" style="flex:1" onclick="go({tab:'map',unit:${n}})">ליחידה</button><button class="btn gold" style="flex:1" onclick="speedGo(${n})">🔁 שוב!</button></div></div>`;
+}
+document.addEventListener("keydown",e=>{ if(GM&&GM.type==="speed"){ if(e.key==="ArrowLeft") speedAns(true); if(e.key==="ArrowRight") speedAns(false); }
+  if(Q&&!Q.answered&&/^[1-4]$/.test(e.key)) answer(+e.key-1); else if(Q&&Q.answered&&e.key==="Enter") nextQ(); });
+
+/* ----- RAIN ----- */
+function startRain(n){
+  stopGame(); VIEW={tab:"map",unit:n,game:"rain"}; document.body.classList.add("ingame");
+  main().innerHTML=`<div class="backbar"><button class="back" onclick="go({tab:'map',unit:${n}})">✕</button><h3 style="margin:0">🌧️ גשם · יחידה ${n}</h3></div>
+  <div class="card center"><div style="font-size:64px">🌧️</div><h2>${G("תפסי","תפוס")} את הנכונים!</h2><p class="muted" style="line-height:1.7">למעלה יופיע מה לחפש (בעברית).<br>${G("לחצי","לחץ")} על הבועות הנכונות בערבית לפני שהן נופלות.<br>3 לבבות · 60 שניות · זה הולך ונהיה מהיר! 😈<br>שיא: <b>${S.games["rn"+n]||0}</b></p><div class="sp"></div>
+  <button class="btn gold block" onclick="rainGo(${n})">🚀 התחלה!</button></div>`;
+}
+function rainGo(n){
+  const items=UNITS[n-1].items.filter(it=>Array.from(it.ar).length<=12);
+  GM={type:"rain",n,items,score:0,lives:3,time:60,drops:[],target:pick(items),last:performance.now(),spawn:0,elapsed:0};
+  main().innerHTML=`<div class="hud"><button class="back" onclick="go({tab:'map',unit:${n}})">✕</button><span>⏱️ <span class="timer" id="tm">60</span></span><span id="rsc">✅ 0</span><span id="rlv">❤️❤️❤️</span></div>
+   <div class="target" id="rtg"></div><div class="field" id="field"></div>`;
+  rainTarget(GM.target); GM.raf=requestAnimationFrame(rainLoop);
+}
+function rainTarget(it){ GM.target=it; const t=document.getElementById("rtg"); if(t) t.innerHTML=`🎯 ${G("תפסי","תפוס")}: ${it.he}`; }
+function rainLoop(ts){
+  if(!GM||GM.type!=="rain"||GM.dead) return; const dt=Math.min(50,ts-GM.last); GM.last=ts; GM.elapsed+=dt; GM.time=60-GM.elapsed/1000;
+  const f=document.getElementById("field"); if(!f) return; const H=f.clientHeight, W=f.clientWidth;
+  const tm=document.getElementById("tm"); if(tm) tm.textContent=Math.max(0,Math.ceil(GM.time));
+  const lvl=GM.elapsed/60000; const every=1150-lvl*600, speed=.07+lvl*.09;
+  GM.spawn-=dt; if(GM.spawn<=0){ GM.spawn=every;
+    const isT=Math.random()<.42 || !GM.drops.some(d=>d.it===GM.target); const it=isT?GM.target:(distract(GM.target,"ar",GM.items,1)[0]||GM.target);
+    const el=document.createElement("button"); el.className="drop ar"; el.textContent=it.ar; f.appendChild(el);
+    const w=el.offsetWidth; const x=Math.random()*(W-w-8)+4; const d={el,it,x,y:-70,v:speed*(0.85+Math.random()*.3)}; el.style.left=x+"px";
+    el.onpointerdown=(e)=>{e.preventDefault();rainHit(d)}; GM.drops.push(d); }
+  GM.drops.forEach(d=>{ if(d.gone) return; d.y+=d.v*dt; d.el.style.transform=`translateY(${d.y}px)`;
+    if(d.y>H){ d.gone=true; d.el.remove(); if(d.it===GM.target){ rainLose(); } } });
+  GM.drops=GM.drops.filter(d=>!d.gone);
+  if(GM.time<=0||GM.lives<=0) return rainEnd();
+  GM.raf=requestAnimationFrame(rainLoop);
+}
+function rainHit(d){ if(!GM||d.gone) return;
+  if(d.it===GM.target){ d.gone=true; d.el.classList.add("hit"); setTimeout(()=>d.el.remove(),300); GM.score++; SFX.ok(); buzz(20); ensureDay(); rec(d.it,true); addXP(3); S.day.rain++;
+    document.getElementById("rsc").textContent="✅ "+GM.score; if(voiceOK()) speak(d.it.say);
+    const others=GM.items.filter(x=>x!==GM.target); rainTarget(pick(others.length?others:GM.items)); }
+  else { d.el.classList.add("miss"); rec(GM.target,false); rainLose(); }
+}
+function rainLose(){ GM.lives--; SFX.bad(); buzz(80); const l=document.getElementById("rlv"); if(l) l.textContent="❤️".repeat(Math.max(0,GM.lives))+"🤍".repeat(3-Math.max(0,GM.lives)); }
+function rainEnd(){
+  const n=GM.n, sc=GM.score; cancelAnimationFrame(GM.raf); GM=null; ensureDay();
+  const key="rn"+n, prev=S.games[key]||0, rec_=sc>prev; if(rec_) S.games[key]=sc; S.games.rainBest=Math.max(S.games.rainBest||0,sc);
+  checkAch(); save(); SFX.end(); if(rec_&&sc>0) confetti(150);
+  main().innerHTML=`<div class="result"><div style="font-size:64px">🌧️</div><h2>${rec_&&sc>0?"🏆 שיא חדש!":"המשחק נגמר!"}</h2><div class="stats" style="grid-template-columns:1fr 1fr"><div class="stat"><b>${sc}</b><small>תפיסות</small></div><div class="stat"><b>${Math.max(prev,sc)}</b><small>השיא שלך</small></div></div>
+   ${sc>=10?`<div class="card">${chestHTML()}</div>`:`<p class="muted">10 תפיסות ומעלה = תיבת הפתעה 🎁</p>`}
+   <div class="row"><button class="btn ghost" style="flex:1" onclick="go({tab:'map',unit:${n}})">ליחידה</button><button class="btn gold" style="flex:1" onclick="rainGo(${n})">🔁 שוב!</button></div></div>`;
+}
+
+/* ----- MEMORY ----- */
+function startMemory(n){
+  stopGame(); VIEW={tab:"map",unit:n,game:"memory"}; document.body.classList.add("ingame");
+  const pool=shuffle(UNITS[n-1].items).sort((a,b)=>box(a)-box(b)); const chosen=[], hs=new Set();
+  for(const it of pool){ if(chosen.length>=6) break; if(!hs.has(it.he)&&Array.from(it.ar).length<=14){hs.add(it.he);chosen.push(it)} }
+  const cards=shuffle(chosen.flatMap(it=>[{it,face:"ar"},{it,face:"he"}]));
+  GM={type:"memory",n,cards,open:[],moves:0,matched:0,lock:false,t0:Date.now()}; renderMemory();
+}
+function renderMemory(){
+  main().innerHTML=`<div class="hud"><button class="back" onclick="go({tab:'map',unit:${GM.n}})">✕</button><span>🃏 זיכרון</span><span>מהלכים: <b id="mv">${GM.moves}</b></span></div>
+   <div class="mem">${GM.cards.map((c,i)=>`<div class="mcard" id="mc${i}" onclick="memFlip(${i})"><div class="inner"><div class="f">🐪</div><div class="b">${c.face==="ar"?`<span class="ar">${c.it.ar}</span>`:c.it.he}</div></div></div>`).join("")}</div>
+   <p class="center muted" style="margin-top:12px">${G("מצאי","מצא")} כל מילה בערבית עם התרגום שלה</p>`;
+}
+function memFlip(i){
+  if(!GM||GM.lock) return; const c=GM.cards[i]; if(c.done||GM.open.includes(i)) return;
+  document.getElementById("mc"+i).classList.add("flip"); SFX.tap(); if(c.face==="ar"&&voiceOK()) speak(c.it.say);
+  GM.open.push(i);
+  if(GM.open.length===2){ GM.moves++; document.getElementById("mv").textContent=GM.moves; const [a,b]=GM.open.map(k=>GM.cards[k]);
+    if(a.it===b.it){ a.done=b.done=true; GM.matched++; GM.open.forEach(k=>document.getElementById("mc"+k).classList.add("matched")); GM.open=[]; SFX.ok(); rec(a.it,true); addXP(4);
+      if(GM.matched===6) setTimeout(memEnd,600); }
+    else { GM.lock=true; SFX.bad(); setTimeout(()=>{ if(!GM||GM.type!=="memory") return; GM.open.forEach(k=>document.getElementById("mc"+k)?.classList.remove("flip")); GM.open=[]; GM.lock=false; },900); }
+  }
+}
+function memEnd(){
+  const n=GM.n, mv=GM.moves, secs=Math.round((Date.now()-GM.t0)/1000); GM=null; ensureDay();
+  const stars=mv<=9?3:mv<=13?2:1; const key="mm"+n, prev=S.games[key], rec_=!prev||mv<prev; if(rec_) S.games[key]=mv;
+  S.games.memBest=Math.min(S.games.memBest||99,mv); S.day.memory++; addXP(10+stars*5);
+  checkAch(); save(); SFX.end(); confetti(stars*60);
+  main().innerHTML=`<div class="result"><h2>${rec_?"🏆 שיא חדש!":"ניצחון! 🎉"}</h2><div class="bigstars">${[1,2,3].map(k=>`<span class="${k<=stars?"on":""}">⭐</span>`).join("")}</div>
+   <div class="stats" style="grid-template-columns:1fr 1fr"><div class="stat"><b>${mv}</b><small>מהלכים</small></div><div class="stat"><b>${secs}״</b><small>זמן</small></div></div>
+   <div class="card">${chestHTML()}</div>
+   <div class="row"><button class="btn ghost" style="flex:1" onclick="go({tab:'map',unit:${n}})">ליחידה</button><button class="btn gold" style="flex:1" onclick="startMemory(${n})">🔁 שוב!</button></div></div>`;
+}
+
+/* ----- REVIEW TAB ----- */
+function renderReviewTab(){
+  const due=dueItems(), all=unlockedItems(), seen=all.filter(it=>S.mastery[it.id]);
+  const byBox=[0,1,2,3,4,5].map(b=>seen.filter(it=>box(it)===b).length);
+  const weak=seen.filter(it=>(S.mastery[it.id].w||0)>0).sort((a,b)=>(S.mastery[b.id].w-S.mastery[b.id].c*.3)-(S.mastery[a.id].w-S.mastery[a.id].c*.3)).slice(0,8);
+  main().innerHTML=`<h2>🧠 חזרה חכמה</h2><p class="muted" style="margin-bottom:12px">האפליקציה זוכרת מה קשה לך ומחזירה את זה בדיוק כשזה עומד להישכח (שיטת "חזרה מרווחת").</p>
+   <div class="card center"><div style="font-size:48px">${due.length?"⏰":"😎"}</div><h3>${due.length?`${due.length} פריטים מחכים לחזרה`:"אין כרגע פריטים לחזרה!"}</h3>
+   <button class="btn purple block" onclick="startReview()">🧠 התחלת חזרה (+בונוס XP)</button></div>
+   <div class="card"><h3>📦 קופסאות הזיכרון שלך</h3><div style="display:flex;gap:6px;align-items:flex-end;height:110px">${byBox.map((c,b)=>`<div style="flex:1;text-align:center"><div style="font-weight:800;font-size:13px">${c}</div><div style="height:${Math.max(4,c/Math.max(1,...byBox)*80)}px;background:${["#fca5a5","#fdba74","#fde047","#bef264","#86efac","#22c55e"][b]};border-radius:8px 8px 0 0"></div><small class="muted" style="font-size:10px">${["חדש","1","2","3","4","שולט"][b]}</small></div>`).join("")}</div>
+   <p class="note" style="margin-top:8px">כל תשובה נכונה מעבירה פריט לקופסה הבאה. טעות מחזירה אותו אחורה. המטרה: להביא הכל לקופסה הירוקה! 💚</p></div>
+   ${weak.length?`<div class="card"><h3>🎯 הכי מאתגרים אותך</h3><table class="wl">${weak.map(it=>`<tr><td class="ar">${it.ar}</td><td>${it.he}</td><td>${it.type!=="digit"?sayBtn(it.say,"sm"):""}</td></tr>`).join("")}</table></div>`:""}`;
+}
+
+/* ----- ACHIEVEMENTS ----- */
+function renderAch(){
+  const got=ACH.filter(a=>S.ach[a.id]).length; const l=level(S.xp);
+  main().innerHTML=`<h2>🏆 הישגים</h2>
+   <div class="stats"><div class="stat"><b>${S.xp}</b><small>XP סה״כ</small></div><div class="stat"><b>🔥${S.best}</b><small>רצף שיא</small></div><div class="stat"><b>${S.totals.correct}</b><small>תשובות נכונות</small></div></div>
+   <div class="card"><b>שלב ${l}: ${lvlTitle(l)}</b><div class="bar" style="margin-top:6px"><i style="width:${(S.xp-lvlStart(l))/(lvlStart(l+1)-lvlStart(l))*100}%"></i></div><small class="muted">עוד ${lvlStart(l+1)-S.xp} XP לשלב הבא</small></div>
+   <h3>תגים (${got}/${ACH.length})</h3><div class="badges">${ACH.map(a=>`<div class="badge ${S.ach[a.id]?"":"off"}"><b>${a.i}</b><strong>${a.t}</strong><small>${a.d}</small></div>`).join("")}</div>`;
+}
+
+/* ----- SHOP ----- */
+const AVATARS=[["🐪",0],["🦊",40],["🐱",40],["🐢",60],["🦉",80],["🐬",100],["🦁",120],["🐼",120],["🤖",150],["🦚",200],["🦄",250],["🐉",350]];
+function renderShop(){
+  const dx=Date.now()<S.dxpUntil?Math.ceil((S.dxpUntil-Date.now())/60000):0;
+  main().innerHTML=`<h2>🛒 החנות</h2><p class="muted" style="margin-bottom:12px">יש לך <b>💎${S.gems}</b>. משיגים יהלומים במשימות יומיות, תיבות והישגים.</p>
+   <div class="card"><h3>⚡ חיזוקים</h3>
+    <div class="row" style="margin-bottom:10px"><div style="font-size:34px">❄️</div><div style="flex:1"><b>הקפאת רצף</b><br><small class="muted">שומרת על הרצף אם מפספסים יום (יש לך ${S.freezes}/2)</small></div><button class="btn gold" style="padding:10px 12px;font-size:15px" onclick="buy('freeze')" ${S.freezes>=2||S.gems<60?"disabled":""}>💎60</button></div>
+    <div class="row"><div style="font-size:34px">⚡</div><div style="flex:1"><b>XP כפול ל-15 דקות</b><br><small class="muted">${dx?`פעיל! עוד ${dx} דק׳`:"כל XP שווה פי 2"}</small></div><button class="btn gold" style="padding:10px 12px;font-size:15px" onclick="buy('dxp')" ${S.gems<80?"disabled":""}>💎80</button></div></div>
+   <div class="card"><h3>🎭 דמויות</h3><div class="shop">${AVATARS.map(([a,c])=>{const own=S.owned.includes(a);return `<button class="sitem ${S.avatar===a?"sel":""}" onclick="buyAvatar('${a}',${c})"><b>${a}</b><small>${S.avatar===a?"✔️ בשימוש":own?"בחירה":"💎"+c}</small></button>`}).join("")}</div></div>`;
+}
+function buy(k){ if(k==="freeze"&&S.gems>=60&&S.freezes<2){S.gems-=60;S.freezes++;toast("❄️ נקנתה הקפאת רצף!");}
+  if(k==="dxp"&&S.gems>=80){S.gems-=80;S.dxpUntil=Math.max(Date.now(),S.dxpUntil)+15*60e3;toast("⚡ XP כפול הופעל ל-15 דקות!","gold");confetti(60);}
+  SFX.chest(); save(); route(); }
+function buyAvatar(a,c){ if(S.owned.includes(a)){S.avatar=a;SFX.tap();save();route();return}
+  if(S.gems<c){toast(`חסרים לך ${c-S.gems} 💎`);SFX.bad();return}
+  S.gems-=c; S.owned.push(a); S.avatar=a; SFX.chest(); confetti(100); toast(`${a} ${G("הצטרפה","הצטרף")} אלייך!`.replace("אלייך",G("אלייך","אליך")),"gold"); save(); route(); }
+
+/* ----- DICTIONARY ----- */
+function renderDict(){
+  const seg=VIEW.seg||"abc";
+  let h=`<h2>📚 מילון ומפת השנה</h2><div class="seg">${[["abc","אותיות"],["words","מילים"],["year","מפת השנה"]].map(([k,t])=>`<button class="${seg===k?"on":""}" onclick="VIEW.seg='${k}';route()">${t}</button>`).join("")}</div>`;
+  if(seg==="abc"){
+    h+=`<p class="muted" style="margin-bottom:10px">${G("לחצי","לחץ")} על אות כדי לראות את כל הצורות שלה ולשמוע אותה.</p><div class="abc">${LETTER_DATA.map(([ar,name,heb])=>`<button onclick="letterModal('${ar}')"><span class="ar">${ar}</span><small>${name}</small></button>`).join("")}</div>
+    <div class="card" style="margin-top:14px"><h3>סימני ניקוד (חַרַכַּאת)</h3><table class="wl">
+     <tr><td class="ar">بَ</td><td>פַתְחַה – a</td></tr><tr><td class="ar">بِ</td><td>כַּסְרַה – i</td></tr><tr><td class="ar">بُ</td><td>צַ'מַּה – u</td></tr>
+     <tr><td class="ar">بْ</td><td>סֻכּוּן – בלי תנועה</td></tr><tr><td class="ar">بّ</td><td>שַׁדַּה – אות כפולה</td></tr>
+     <tr><td class="ar">بٌ بً بٍ</td><td>תַּנְוִין – un / an / in</td></tr><tr><td class="ar">ة</td><td>תָּא מַרְבּוּטַה – סימן נקבה</td></tr><tr><td class="ar">ء أ إ ؤ ئ</td><td>הַמְזַה – עצירה בקול</td></tr><tr><td class="ar">لا</td><td>לָאם + אַלִף</td></tr></table></div>`;
+  } else if(seg==="words"){
+    UNITS.forEach(u=>{ const list=u.items.filter(it=>it.type!=="letter"&&it.type!=="sign"&&it.type!=="digit");
+      h+=`<div class="card"><h3>${u.emoji} ${u.n}. ${u.title}</h3><table class="wl">${list.map(it=>`<tr><td class="ar">${it.ar}</td><td>${it.he}<div class="tr">${it.tr}</div></td><td>${sayBtn(it.say,"sm")}</td></tr>`).join("")}</table></div>`; });
+  } else {
+    h+=`<div class="card"><h3>🗓️ סדר הלימוד בכיתה ז'</h3><p class="note" style="margin-bottom:12px">ערבית ספרותית לבית הספר הדובר עברית – שנה ראשונה. הסדר מבוסס על דרישות תוכנית הלימודים של משרד החינוך לכיתה ז' (זיהוי, קריאה והגייה של 28 האותיות בכל צורותיהן, תנועות, סימני כתב, אַל הידיעה, תא מרבוטה, כינויי קניין וכינויי רמז) ועל הסדר המקובל בספרי הלימוד – לפי משפחות צורה.</p>
+     <div class="timeline">${UNITS.map(u=>`<div><b>${u.months}</b> – ${u.emoji} ${u.title}<br><small class="muted">${u.sub}</small></div>`).join("")}</div>
+     <p class="note">⚠️ כל מורה מתאים/ה את הקצב לכיתה. אם הסדר בכיתה שונה – אפשר לפתוח כל יחידה עם "מבחן קפיצה", או לפתוח הכל מההגדרות (מצב הורה).</p></div>
+     <div class="card note"><b>מקורות:</b><br>
+      <a href="https://pop.education.gov.il/tchumey_daat/arabic-for-hebrew-speakers/junior-high/pedagogy/curriculum/" target="_blank" rel="noopener">פורטל עובדי הוראה – תוכנית הלימודים בערבית לחטיבת הביניים</a><br>
+      <a href="https://pop.education.gov.il/tchumey_daat/arabic-for-hebrew-speakers/junior-high/teaching-materials/letters-numbers-7th-grade/" target="_blank" rel="noopener">אותיות ומספרים – כיתה ז'</a><br>
+      <a href="https://pop.education.gov.il/tchumey_daat/arabic-for-hebrew-speakers/junior-high/teaching-materials/vocabulary-7g/" target="_blank" rel="noopener">מאגר אוצר מילים ז'–י"ב</a><br>
+      <a href="https://edu.gov.il/special/Curriculum/Junior-High/seventh-grade/arabic/Pages/Knowledge.aspx" target="_blank" rel="noopener">משרד החינוך – ערבית כיתה ז': ידע</a></div>`;
+  }
+  main().innerHTML=h;
+}
+function letterModal(ch){ const it=LETTERS[ch], f=formsOf(ch);
+  modal(`<div class="center"><div class="ar" style="font-size:90px;color:var(--teal);line-height:1.3">${ch}</div><div class="row" style="justify-content:center"><h2 style="margin:0">${it.name} · ${it.heb}</h2>${sayBtn(it.say,"sm")}</div>
+   <div class="sp"></div><div class="forms">${["iso","ini","med","fin"].map(k=>`<div><span class="ar">${f[k]}</span><small>${FORM_NAMES[k]}</small></div>`).join("")}</div><div class="sp"></div>
+   <div class="chip"><span class="ar" style="font-size:26px">${it.word.ar}</span> ${it.word.he} ${sayBtn(it.word.ar,"sm")}</div><p class="note" style="margin:10px 0">💡 ${it.tip}<br>יחידה ${it.unit}</p>
+   <button class="btn block" onclick="closeModal()">סגירה</button></div>`); if(voiceOK()) speak(it.say); }
+
+/* ----- MODAL / SETTINGS / ONBOARDING ----- */
+function modal(html){ document.getElementById("modalRoot").innerHTML=`<div class="modal" onclick="if(event.target===this)closeModal()"><div class="box">${html}</div></div>`; }
+function closeModal(){ document.getElementById("modalRoot").innerHTML=""; }
+function settings(){
+  modal(`<h2>⚙️ הגדרות</h2>
+   <label class="field-l">שם</label><input class="inp" id="sName" value="${S.name.replace(/"/g,"")}" maxlength="20">
+   <label class="field-l">איך לפנות אליך?</label><div class="choice"><button class="${S.gender==="f"?"on":""}" onclick="S.gender='f';save();settings()">בת 👧</button><button class="${S.gender==="m"?"on":""}" onclick="S.gender='m';save();settings()">בן 👦</button></div>
+   <label class="field-l">יעד יומי</label><div class="choice">${[[30,"קליל"],[50,"רגיל"],[80,"רציני"],[120,"אלוף"]].map(([g,t])=>`<button class="${S.goal===g?"on":""}" onclick="S.goal=${g};save();settings()">${t}<br><small>${g} XP</small></button>`).join("")}</div>
+   <label class="field-l">צלילים</label><div class="choice"><button class="${S.sound?"on":""}" onclick="S.sound=true;save();settings()">🔊 פועל</button><button class="${!S.sound?"on":""}" onclick="S.sound=false;save();settings()">🔇 כבוי</button></div>
+   <p class="note" style="margin-top:10px">🗣️ הקראה בערבית: ${voiceOK()?`✅ זמינה (${arVoice.name})`:"❌ לא נמצא קול ערבי במכשיר. בטלפון/מחשב אפשר להוסיף קול ערבי בהגדרות הנגישות / ההקראה של המערכת."}</p>
+   <label class="field-l">👨‍👩‍👧 מצב הורה</label>
+   <div class="choice"><button onclick="if(confirm('לפתוח את כל 11 היחידות?')){S.unlocked=${UNITS.length};save();closeModal();route();toast('🔓 כל היחידות פתוחות')}">🔓 פתיחת כל היחידות</button>
+   <button onclick="if(confirm('למחוק את כל ההתקדמות? אי אפשר לבטל!')){try{localStorage.removeItem(KEY)}catch(e){};location.reload()}" style="color:var(--red)">🗑️ איפוס</button></div>
+   <div class="sp"></div><button class="btn block" onclick="S.name=document.getElementById('sName').value.trim();save();closeModal();route()">שמירה</button>`);
+}
+function onboarding(step=0,data={gender:"f",goal:50,start:1}){
+  window._ob=data;
+  if(step===0) modal(`<div class="center"><div style="font-size:80px;animation:bob 2s infinite">🐪</div><h2>أَهْلًا وَسَهْلًا!</h2><p style="font-size:18px;margin-bottom:6px">ברוכים הבאים ל<b>יאללה ערבית!</b></p>
+    <p class="muted" style="line-height:1.6">מסע של שנה שלמה בערבית של כיתה ז' – מהאות הראשונה ועד שיחה בסיסית. עם משחקים, תיבות הפתעה, רצפים והישגים 🎁🔥🏆</p><div class="sp"></div>
+    <button class="btn block" onclick="onboarding(1,_ob)">יאללה, מתחילים! ←</button></div>`);
+  if(step===1) modal(`<h2>נעים להכיר! 👋</h2><label class="field-l">מה השם שלך?</label><input class="inp" id="obName" maxlength="20" placeholder="השם שלך" value="${data.name||""}">
+    <label class="field-l">איך לפנות אליך?</label><div class="choice"><button class="${data.gender==="f"?"on":""}" onclick="_ob.name=obName.value;_ob.gender='f';onboarding(1,_ob)">בת 👧</button><button class="${data.gender==="m"?"on":""}" onclick="_ob.name=obName.value;_ob.gender='m';onboarding(1,_ob)">בן 👦</button></div>
+    <label class="field-l">כמה לתרגל כל יום?</label><div class="choice">${[[30,"קליל","~5 דק׳"],[50,"רגיל","~10 דק׳"],[80,"רציני","~15 דק׳"]].map(([g,t,m])=>`<button class="${data.goal===g?"on":""}" onclick="_ob.name=obName.value;_ob.goal=${g};onboarding(1,_ob)">${t}<br><small>${m}</small></button>`).join("")}</div>
+    <div class="sp"></div><button class="btn block" onclick="_ob.name=obName.value;onboarding(2,_ob)">הבא ←</button>`);
+  if(step===2) modal(`<h2>איפה ${data.gender==="m"?"אתה":"את"} בכיתה? 📍</h2><p class="muted" style="margin-bottom:10px">כדי לא להתחיל מאפס אם כבר למדתם חלק.</p>
+    <div style="display:flex;flex-direction:column;gap:8px">${[[1,"🌱 רק מתחילים","יחידה 1 – האותיות הראשונות"],[2,"🌹 למדנו כמה אותיות","ا ب ت ث ن ي כבר מוכרות"],[3,"🐪 למדנו בערך חצי","עד ر ز و + תנועות ארוכות"],[5,"🌙 כמעט כל האותיות","עד ص ض ط ظ"],[6,"👋 סיימנו את האותיות","עוברים למילים ומשפטים"]].map(([n,t,s])=>`<button class="opt" style="text-align:right;min-height:auto;${data.start===n?"border-color:var(--teal2);background:#e6f6f3":""}" onclick="_ob.start=${n};onboarding(2,_ob)"><b>${t}</b><br><small class="muted">${s}</small></button>`).join("")}</div>
+    <div class="sp"></div><button class="btn block gold" onclick="finishOnboarding()">🚀 יוצאים למסע!</button>`);
+}
+function finishOnboarding(){ const d=window._ob; S.name=(d.name||"").trim().slice(0,20); S.gender=d.gender; S.goal=d.goal; S.unlocked=d.start; S.onboarded=true; save(); closeModal(); confetti(160); SFX.lvl(); route(); }
+
+/* ---------------- init ---------------- */
+load(); ensureDay(); checkStreak(); route();
+if(!S.onboarded) onboarding(0);
+</script>
+</body>
+</html>

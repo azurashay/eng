@@ -22,6 +22,7 @@ open index.html
 - `game2-quiz.html` — multiple-choice quiz
 - `game3-hangman.html` — hangman game
 - `mate/game4-math.html` — separate math game (percentages & volume), not linked from index
+- `arabic/index.html` — "יאללה ערבית!", a self-contained Arabic app for 7th grade (Israeli MoE, Hebrew-speaking schools). All data (`LETTER_DATA`, `UNITS`) lives inside the file; 11 units ordered Sept→June (letters by shape family, then vocab themes). Progress is in localStorage key `yallaArabic_v1`. Arabic TTS uses `speechSynthesis` with an `ar-*` voice when the device has one.
 - `eng-repo/` — backup copy of the main files, not the active version
 
 ## Vocabulary data
